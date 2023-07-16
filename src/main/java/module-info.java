@@ -11,4 +11,5 @@ module editorfx {
 	
 	opens ua.vboden;
 	opens ua.vboden.controllers;
+	opens ua.vboden.dto;
 }

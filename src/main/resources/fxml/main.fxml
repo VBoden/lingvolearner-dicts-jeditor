@@ -45,7 +45,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.vboden.controllers.MainWindowController">
+<VBox prefHeight="511.0" prefWidth="827.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.vboden.controllers.MainWindowController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -99,10 +99,11 @@
                   <content>
                     <AnchorPane prefHeight="93.0" prefWidth="640.0">
                            <children>
-                              <TableView layoutX="-6.0" layoutY="14.0" prefHeight="315.0" prefWidth="248.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <TableView fx:id="mainTable" editable="true" layoutX="-6.0" layoutY="14.0" prefHeight="453.0" prefWidth="585.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="242.0" AnchorPane.topAnchor="0.0">
                                 <columns>
-                                  <TableColumn prefWidth="75.0" text="C1" />
-                                  <TableColumn prefWidth="75.0" text="C2" />
+                                  <TableColumn fx:id="selectionRow" editable="true" prefWidth="75.0" />
+                                  <TableColumn fx:id="wordRow" editable="true" minWidth="100.0" prefWidth="100.0" text="Word" />
+                                    <TableColumn fx:id="translationWord" editable="false" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="500.0" text="Translation" />
                                 </columns>
                               </TableView>
                            </children>
