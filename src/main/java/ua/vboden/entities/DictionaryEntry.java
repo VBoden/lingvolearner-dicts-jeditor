@@ -6,28 +6,35 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "words_dictionaryentry")
 public class DictionaryEntry {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private int id;
 	@OneToOne
 	private Word word;
 	private String transcription;
 	@OneToOne
 	private Word translation;
 	@ManyToMany
+	@JoinTable(name = "words_dictionaryentry_dictionary",
+    joinColumns = @JoinColumn(name = "dictionaryentry_id"),
+    inverseJoinColumns = @JoinColumn(name = "dictionary_id"))
 	private List<Dictionary> dictionary;
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

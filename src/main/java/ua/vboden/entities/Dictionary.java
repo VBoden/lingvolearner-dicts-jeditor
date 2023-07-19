@@ -1,28 +1,34 @@
 package ua.vboden.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "words_dictionary")
 public class Dictionary {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private int id;
 	private String name;
 	@OneToOne
-	private Language from;
+	@JoinColumn(name = "language_from_id")
+	private Language languageFrom;
 	@OneToOne
-	private Language to;
+	@JoinColumn(name = "language_to_id")
+	private Language languageTo;
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -34,20 +40,20 @@ public class Dictionary {
 		this.name = name;
 	}
 
-	public Language getFrom() {
-		return from;
+	public Language getLanguageFrom() {
+		return languageFrom;
 	}
 
-	public void setFrom(Language from) {
-		this.from = from;
+	public void setLanguageFrom(Language languageFrom) {
+		this.languageFrom = languageFrom;
 	}
 
-	public Language getTo() {
-		return to;
+	public Language getLanguageTo() {
+		return languageTo;
 	}
 
-	public void setTo(Language to) {
-		this.to = to;
+	public void setLanguageTo(Language languageTo) {
+		this.languageTo = languageTo;
 	}
 
 }
