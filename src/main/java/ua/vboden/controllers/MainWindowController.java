@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import ua.vboden.dto.TranslationRow;
+import ua.vboden.services.EntryService;
 
 @Component
 public class MainWindowController implements ApplicationContextAware, Initializable {
@@ -40,6 +42,9 @@ public class MainWindowController implements ApplicationContextAware, Initializa
 
 	@FXML
 	private TableColumn<TranslationRow, String> translationWord;
+
+	@Autowired
+	private EntryService entryService;
 
 	private ApplicationContext applicationContext;
 
@@ -78,6 +83,8 @@ public class MainWindowController implements ApplicationContextAware, Initializa
 		wordRow.setCellValueFactory((new PropertyValueFactory<TranslationRow, String>("word")));
 		translationWord.setCellValueFactory((new PropertyValueFactory<TranslationRow, String>("translation")));
 		translations = FXCollections.observableArrayList();
+		entryService.getAllEntries().forEach(entry -> translations
+				.add(new TranslationRow(entry.getId(), entry.getWord().getWord(), entry.getTranslation().getWord())));
 		translations.add(new TranslationRow(0L, "www", "ttt"));
 		translations.add(new TranslationRow(1L, "www1", "ttt1"));
 		translations.add(new TranslationRow(2L, "www2", "ttt2"));

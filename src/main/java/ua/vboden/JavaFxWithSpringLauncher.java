@@ -26,9 +26,9 @@ import javafx.stage.Stage;
 import ua.vboden.controllers.MainWindowController;
 
 @Configuration
-@EnableJpaRepositories("ua.vboden.repositories")
+//@EnableJpaRepositories("ua.vboden.repositories")
 @SpringBootApplication//(exclude = {DataSourceAutoConfiguration.class })
-@EnableAutoConfiguration
+//@EnableAutoConfiguration
 public class JavaFxWithSpringLauncher extends Application {
 
 	private static ConfigurableApplicationContext applicationContext;
@@ -93,7 +93,11 @@ public class JavaFxWithSpringLauncher extends Application {
 	@Override
 	public void start(Stage stage) throws IOException {
 		System.out.println();
-		Parent parent = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
+		final MainWindowController controller = applicationContext.getBean(MainWindowController.class);
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
+		fxmlLoader.setController(controller);
+		Parent parent = fxmlLoader.load();
+//		Parent parent = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
 
         Scene scene = new Scene(parent, 510, 325);
         stage.setScene(scene);
