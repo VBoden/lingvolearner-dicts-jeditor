@@ -5,6 +5,7 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -23,12 +25,16 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import ua.vboden.dto.IdString;
 import ua.vboden.dto.TranslationRow;
+import ua.vboden.services.EntryService;
 
 @Component
 public class MainWindowController extends AbstractController {
@@ -53,6 +59,12 @@ public class MainWindowController extends AbstractController {
 
 	@FXML
 	private ToggleButton findButton;
+
+	@FXML
+	private TextField findWordField;
+
+	@FXML
+	private CheckBox inTranslationsCheck;
 
 	@FXML
 	private Button filterButton;
@@ -80,6 +92,11 @@ public class MainWindowController extends AbstractController {
 
 	@Autowired
 	private CategoryEditorController categoryEditorController;
+
+	@Autowired
+	private EntryService entryService;
+
+	private boolean filtered;
 
 	@Override
 	String getFXML() {
@@ -110,9 +127,13 @@ public class MainWindowController extends AbstractController {
 
 	private void loadTranslations() {
 		ObservableList<TranslationRow> translations = getSessionService().getTranslations();
-		mainTable.setItems(translations);
+		updateTranslations(translations);
 		mainTable.getSelectionModel().select(translations.size() - 1);
 		mainTable.scrollTo(translations.size());
+	}
+
+	private void updateTranslations(ObservableList<TranslationRow> translations) {
+		mainTable.setItems(translations);
 		statusMessage1
 				.setText(MessageFormat.format(getResources().getString("translations.status"), translations.size()));
 	}
@@ -154,6 +175,7 @@ public class MainWindowController extends AbstractController {
 	}
 
 	private void doFiltering(List<Integer> selectedIds, boolean condition) {
+		findButton.setSelected(false);
 		String selected = catOrDictSelector.getSelectionModel().getSelectedItem();
 		if (getResources().getString("filters.selection.categories").equals(selected)) {
 			getSessionService().loadTranslationsByCategories(selectedIds, condition);
@@ -161,12 +183,15 @@ public class MainWindowController extends AbstractController {
 			getSessionService().loadTranslationsByDictionaries(selectedIds, condition);
 		}
 		loadTranslations();
+		filtered = true;
 	}
 
 	@FXML
 	void resetFilters(ActionEvent event) {
 		getSessionService().loadTranslations();
 		loadTranslations();
+		filtered = false;
+		findButton.setSelected(false);
 	}
 
 	@FXML
@@ -175,6 +200,51 @@ public class MainWindowController extends AbstractController {
 			IdString selectedItem = catDictsList.getSelectionModel().getSelectedItem();
 			doFiltering(List.of(selectedItem.getId()), false);
 		}
+	}
+
+	@FXML
+	void findWords(ActionEvent event) {
+		findWords();
+	}
+
+	@FXML
+	void findWordsEnter(KeyEvent event) {
+		if (event.getCode().equals(KeyCode.ENTER)) {
+			findButton.setSelected(true);
+			findWords();
+		}
+	}
+
+	private void findWords() {
+		if (findButton.isSelected()) {
+			ObservableList<TranslationRow> translations = FXCollections.observableArrayList();
+			List<TranslationRow> searchResults;
+			String word = findWordField.getText();
+			if (inTranslationsCheck.isSelected()) {
+				if (filtered) {
+					searchResults = findInDisplayed(TranslationRow::getTranslation, word);
+				} else {
+					searchResults = entryService.getAllByTranslation(word);
+				}
+			} else {
+				if (filtered) {
+					searchResults = findInDisplayed(TranslationRow::getWord, word);
+				} else {
+					searchResults = entryService.getAllByWord(word);
+				}
+			}
+			translations.addAll(searchResults);
+			updateTranslations(translations);
+		} else {
+			ObservableList<TranslationRow> translations = getSessionService().getTranslations();
+			updateTranslations(translations);
+		}
+	}
+
+	private List<TranslationRow> findInDisplayed(Function<TranslationRow, String> getter, String word) {
+		return getSessionService().getTranslations().stream()
+				.filter(row -> getter.apply(row).toLowerCase().contains(word.toLowerCase()))
+				.collect(Collectors.toList());
 	}
 
 	@FXML

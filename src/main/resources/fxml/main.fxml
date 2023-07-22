@@ -119,10 +119,10 @@
                         <TableColumn fx:id="translationWord" editable="false" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="500.0" text="Translation" />
                     </columns>
                   </TableView>
-                  <TextField layoutX="67.0" layoutY="6.0" prefHeight="24.0" prefWidth="183.0" />
-                  <CheckBox layoutX="261.0" layoutY="9.0" mnemonicParsing="false" text="CheckBox" />
-                  <Label layoutX="14.0" layoutY="10.0" text="Label" />
-                  <ToggleButton fx:id="findButton" layoutX="353.0" layoutY="6.0" mnemonicParsing="false" text="%search.find" AnchorPane.leftAnchor="353.0" />
+                  <TextField fx:id="findWordField" layoutX="67.0" layoutY="6.0" onKeyPressed="#findWordsEnter" prefHeight="24.0" prefWidth="171.0" />
+                  <CheckBox fx:id="inTranslationsCheck" layoutX="245.0" layoutY="9.0" mnemonicParsing="false" text="%search.in.translations" />
+                  <Label layoutX="14.0" layoutY="10.0" text="%search.text" />
+                  <ToggleButton fx:id="findButton" layoutX="359.0" layoutY="6.0" mnemonicParsing="false" onAction="#findWords" text="%search.find" AnchorPane.leftAnchor="359.0" />
                </children>
             </AnchorPane>
           <AnchorPane prefHeight="557.0" prefWidth="250.0" SplitPane.resizableWithParent="false">

@@ -6,6 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javafx.collections.FXCollections;
+import ua.vboden.converters.TranslationConverter;
+import ua.vboden.dto.TranslationRow;
 import ua.vboden.entities.DictionaryEntry;
 import ua.vboden.repositories.EntryRepository;
 
@@ -14,6 +17,9 @@ public class EntryService {
 
 	@Autowired
 	private EntryRepository entryRepository;
+
+	@Autowired
+	private TranslationConverter translationConverter;
 
 	public List<DictionaryEntry> getAllEntries() {
 		List<DictionaryEntry> result = new ArrayList<>();
@@ -55,8 +61,16 @@ public class EntryService {
 			}
 			return result;
 		} else {
-		return entryRepository.findByDictionaryIdIn(selectedIds);
+			return entryRepository.findByDictionaryIdIn(selectedIds);
 		}
+	}
+
+	public List<TranslationRow> getAllByWord(String word) {
+		return translationConverter.convertAll(entryRepository.findByWordWordContaining(word));
+	}
+
+	public List<TranslationRow> getAllByTranslation(String word) {
+		return translationConverter.convertAll(entryRepository.findByTranslationWordContaining(word));
 	}
 
 }

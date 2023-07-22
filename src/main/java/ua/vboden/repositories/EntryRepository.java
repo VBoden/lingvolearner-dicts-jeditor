@@ -15,4 +15,8 @@ public interface EntryRepository extends CrudRepository<DictionaryEntry, Integer
 	List<DictionaryEntry> findByDictionaryId(Integer dictionaryId);
 
 	List<DictionaryEntry> findByDictionaryIdIn(List<Integer> dictionaryIds);
+	
+	List<DictionaryEntry> findByWordWordContaining(String word);
+	
+	List<DictionaryEntry> findByTranslationWordContaining(String word);
 }
