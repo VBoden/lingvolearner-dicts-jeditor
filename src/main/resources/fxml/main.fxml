@@ -51,7 +51,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="511.0" prefWidth="827.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -73,6 +73,9 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
           <items>
+            <MenuItem fx:id="menuManageCategories" mnemonicParsing="false" onAction="#manageCategories" text="%menu.manage.categories" />
+            <MenuItem mnemonicParsing="false" text="Unselect All" />
+            <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Undo" />
             <MenuItem mnemonicParsing="false" text="Redo" />
             <SeparatorMenuItem mnemonicParsing="false" />
@@ -80,9 +83,6 @@
             <MenuItem mnemonicParsing="false" text="Copy" />
             <MenuItem mnemonicParsing="false" text="Paste" />
             <MenuItem mnemonicParsing="false" text="Delete" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Select All" />
-            <MenuItem mnemonicParsing="false" text="Unselect All" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">

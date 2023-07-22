@@ -1,12 +1,11 @@
 package ua.vboden.controllers;
 
+import java.io.IOException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import javafx.application.Platform;
@@ -15,32 +14,28 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Callback;
 import ua.vboden.dto.IdString;
 import ua.vboden.dto.TranslationRow;
-import ua.vboden.entities.Category;
-import ua.vboden.entities.Dictionary;
-import ua.vboden.repositories.CategoryRepository;
-import ua.vboden.repositories.DictionaryRepository;
-import ua.vboden.services.EntryService;
 
 @Component
-public class MainWindowController implements ApplicationContextAware, Initializable {
+public class MainWindowController extends AbstractController {
+
+	@FXML
+	private MenuItem menuManageCategories;
 
 	@FXML
 	private MenuItem menuQuit;
 
 	@FXML
 	private TableView<TranslationRow> mainTable;
+
 	@FXML
 	private ListView<IdString> catDictsList;
 
@@ -66,113 +61,63 @@ public class MainWindowController implements ApplicationContextAware, Initializa
 	private TableColumn<TranslationRow, String> translationWord;
 
 	@Autowired
-	private EntryService entryService;
-
-	@Autowired
-	private CategoryRepository categoryRepository;
-
-	@Autowired
-	private DictionaryRepository dictionaryRepository;
-
-	private ApplicationContext applicationContext;
-
-	private ObservableList<TranslationRow> translations;
-
-	private ObservableList<IdString> categories;
-
-	private ObservableList<IdString> dictionaries;
+	private CategoryEditorController categoryEditorController;
 
 	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		if (this.applicationContext != null) {
-			return;
-		}
-		this.applicationContext = applicationContext;
+	String getFXML() {
+		return "/fxml/main.fxml";
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		getSessionService().loadData();
+
 		selectionRow.setCellValueFactory(cd -> cd.getValue().getSelected());
 		selectionRow.setCellFactory(CheckBoxTableCell.forTableColumn(selectionRow));
-//		selectionRow.setOnEditStart(e -> {
-//			System.out.println(translations.get(0));
-//			System.out.println(translations.get(1));
-//			System.out.println(translations.get(2));
-//            System.out.println("The check box was clicked!");
-//        });
-//		selectionRow.setOnEditCommit(e -> {
-//			System.out.println(translations.get(0));
-//			System.out.println(translations.get(1));
-//			System.out.println(translations.get(2));
-//            System.out.println("The check box was commit!");
-//        });
-//		selectionRow.setOnEditCancel(e -> {
-//			System.out.println(translations.get(0));
-//			System.out.println(translations.get(1));
-//			System.out.println(translations.get(2));
-//			System.out.println("The check box was cancel!");
-//        });
 		wordRow.setCellValueFactory((new PropertyValueFactory<TranslationRow, String>("word")));
 		translationWord.setCellValueFactory((new PropertyValueFactory<TranslationRow, String>("translation")));
 		loadTranslations();
 		catOrDictSelector.setItems(FXCollections.observableArrayList("Categories", "Ditctionaries"));
 		catOrDictSelector.getSelectionModel().select(0);
-//		catDictsList.setCellFactory(new Callback<ListView<TranslationRow>, ListCell<TranslationRow>>() {
-//			
-//			@Override
-//			public ListCell<TranslationRow> call(ListView<TranslationRow> param) {
-//				System.out.println(param);
-//				final ListCell<TranslationRow> cell = new ListCell<TranslationRow>() {
-//		              @Override
-//		              public void updateItem(TranslationRow item, boolean empty) {
-//		                super.updateItem(item, empty);
-//		                if (item != null) {
-//		                  setText(item.getWord());
-//		                }
-//		              }
-//		            }; // ListCell
-//		            return cell;
-//			}
-//		});
 		loadCategories();
+		statusMessage3.setText(MessageFormat.format(resources.getString("dictionary.status"),
+				getSessionService().getDictionaries().size()));
 
 	}
 
 	private void loadTranslations() {
-		translations = FXCollections.observableArrayList();
-		entryService.getAllEntries().forEach(entry -> translations
-				.add(new TranslationRow(entry.getId(), entry.getWord().getWord(), entry.getTranslation().getWord())));
-//		translations.add(new TranslationRow(0L, "www", "ttt"));
-//		translations.add(new TranslationRow(1L, "www1", "ttt1"));
-//		translations.add(new TranslationRow(2L, "www2", "ttt2"));
+		ObservableList<TranslationRow> translations = getSessionService().getTranslations();
 		mainTable.setItems(translations);
-		statusMessage1.setText("Всього слів у словнику: " + String.valueOf(translations.size()));
+		statusMessage1
+				.setText(MessageFormat.format(getResources().getString("translations.status"), translations.size()));
 	}
 
 	private void loadCategories() {
-		categories = FXCollections.observableArrayList();
-		categoryRepository.findAll()
-				.forEach(entry -> categories.add(new IdString(entry.getId(), entry.getName())));
+		ObservableList<IdString> categories = getSessionService().getCategories();
 		catDictsList.setItems(categories);
-		statusMessage2.setText("Всього категорій: " + String.valueOf(categories.size()));
+		statusMessage2.setText(MessageFormat.format(getResources().getString("category.status"), categories.size()));
 	}
 
 	private void loadDictionaries() {
-		dictionaries = FXCollections.observableArrayList();
-		dictionaryRepository.findAll()
-				.forEach(entry -> dictionaries.add(new IdString(entry.getId(), entry.getName()+" ("+entry.getLanguageFrom().getName()+"-"+entry.getLanguageTo().getName()+")")));
+		ObservableList<IdString> dictionaries = getSessionService().getDictionaries();
 		catDictsList.setItems(dictionaries);
-		statusMessage3.setText("Всього словників: " + String.valueOf(dictionaries.size()));
+		statusMessage3
+				.setText(MessageFormat.format(getResources().getString("dictionary.status"), dictionaries.size()));
 	}
 
 	@FXML
 	void catOrDictChanged(ActionEvent event) {
 		String selected = catOrDictSelector.getSelectionModel().getSelectedItem();
-		if("Categories".equals(selected)) {
+		if ("Categories".equals(selected)) {
 			loadCategories();
-		}else {
+		} else {
 			loadDictionaries();
 		}
+	}
+
+	@FXML
+	void manageCategories(ActionEvent event) throws IOException {
+		categoryEditorController.showStage(null);
 	}
 
 	@FXML
