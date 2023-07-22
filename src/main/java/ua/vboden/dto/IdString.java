@@ -1,6 +1,6 @@
 package ua.vboden.dto;
 
-public class IdString {
+public class IdString implements Comparable<IdString> {
 	private int id;
 	private String value;
 
@@ -29,6 +29,11 @@ public class IdString {
 	@Override
 	public String toString() {
 		return value;
+	}
+
+	@Override
+	public int compareTo(IdString another) {
+		return value.compareTo(another.value);
 	}
 
 }

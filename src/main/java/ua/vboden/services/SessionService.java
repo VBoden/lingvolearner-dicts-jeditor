@@ -1,5 +1,9 @@
 package ua.vboden.services;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,8 +45,10 @@ public class SessionService {
 	}
 
 	public void loadCategories() {
-		categories = FXCollections.observableArrayList();
-		categoryRepository.findAll().forEach(entry -> categories.add(new IdString(entry.getId(), entry.getName())));
+		List<IdString> categoryModels = new ArrayList<>();
+		categoryRepository.findAll().forEach(entry -> categoryModels.add(new IdString(entry.getId(), entry.getName())));
+		Collections.sort(categoryModels);
+		categories = FXCollections.observableArrayList(categoryModels);
 	}
 
 	public void loadDictionaries() {
