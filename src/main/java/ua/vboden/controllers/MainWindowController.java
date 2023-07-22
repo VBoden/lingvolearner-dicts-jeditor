@@ -24,6 +24,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ua.vboden.dto.IdString;
@@ -146,16 +147,20 @@ public class MainWindowController extends AbstractController {
 		if (!selectedItems.isEmpty()) {
 
 			List<Integer> selectedIds = selectedItems.stream().map(IdString::getId).collect(Collectors.toList());
-			String selected = catOrDictSelector.getSelectionModel().getSelectedItem();
 			boolean condition = getResources().getString("filters.selection.and")
 					.equals(conditionSelector.getSelectionModel().getSelectedItem());
-			if (getResources().getString("filters.selection.categories").equals(selected)) {
-				getSessionService().loadTranslationsByCategories(selectedIds, condition);
-			} else {
-				getSessionService().loadTranslationsByDictionaries(selectedIds, condition);
-			}
-			loadTranslations();
+			doFiltering(selectedIds, condition);
 		}
+	}
+
+	private void doFiltering(List<Integer> selectedIds, boolean condition) {
+		String selected = catOrDictSelector.getSelectionModel().getSelectedItem();
+		if (getResources().getString("filters.selection.categories").equals(selected)) {
+			getSessionService().loadTranslationsByCategories(selectedIds, condition);
+		} else {
+			getSessionService().loadTranslationsByDictionaries(selectedIds, condition);
+		}
+		loadTranslations();
 	}
 
 	@FXML
@@ -165,8 +170,11 @@ public class MainWindowController extends AbstractController {
 	}
 
 	@FXML
-	void resertFilters(ActionEvent event) {
-
+	void onCatDictMouseClick(MouseEvent event) {
+		if (event.getClickCount() == 2) {
+			IdString selectedItem = catDictsList.getSelectionModel().getSelectedItem();
+			doFiltering(List.of(selectedItem.getId()), false);
+		}
 	}
 
 	@FXML

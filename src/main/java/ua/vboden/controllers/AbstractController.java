@@ -52,7 +52,8 @@ public abstract class AbstractController implements ApplicationContextAware, Ini
 		Parent parent = fxmlLoader.load();
 //		Parent parent = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
 
-		Scene scene = new Scene(parent, 510, 325);
+		Scene scene = new Scene(parent);
+//		Scene scene = new Scene(parent, 510, 325);
 		if (stage == null) {
 			stage = new Stage();
 		}
