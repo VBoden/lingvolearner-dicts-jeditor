@@ -14,11 +14,49 @@ public class EntryService {
 
 	@Autowired
 	private EntryRepository entryRepository;
-	
-	public List<DictionaryEntry> getAllEntries(){
+
+	public List<DictionaryEntry> getAllEntries() {
 		List<DictionaryEntry> result = new ArrayList<>();
 		entryRepository.findAll().forEach(result::add);
-		return result;		
+		return result;
 	}
-	
+
+	public List<DictionaryEntry> getAllByCategoryIds(List<Integer> selectedIds, boolean conditionAnd) {
+		if (conditionAnd) {
+			boolean firstId = true;
+			List<DictionaryEntry> result = new ArrayList<>();
+			for (Integer id : selectedIds) {
+				List<DictionaryEntry> resultOne = entryRepository.findByWordCategoryId(id);
+				if (firstId) {
+					result = resultOne;
+					firstId = false;
+				} else {
+					result.retainAll(resultOne);
+				}
+			}
+			return result;
+		} else {
+			return entryRepository.findByWordCategoryIdIn(selectedIds);
+		}
+	}
+
+	public List<DictionaryEntry> getAllByDictionaryIds(List<Integer> selectedIds, boolean conditionAnd) {
+		if (conditionAnd) {
+			boolean firstId = true;
+			List<DictionaryEntry> result = new ArrayList<>();
+			for (Integer id : selectedIds) {
+				List<DictionaryEntry> resultOne = entryRepository.findByDictionaryId(id);
+				if (firstId) {
+					result = resultOne;
+					firstId = false;
+				} else {
+					result.retainAll(resultOne);
+				}
+			}
+			return result;
+		} else {
+		return entryRepository.findByDictionaryIdIn(selectedIds);
+		}
+	}
+
 }

@@ -3,7 +3,9 @@ package ua.vboden.controllers;
 import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,12 +15,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ua.vboden.dto.IdString;
@@ -41,6 +46,18 @@ public class MainWindowController extends AbstractController {
 
 	@FXML
 	private ComboBox<String> catOrDictSelector;
+
+	@FXML
+	private ComboBox<String> conditionSelector;
+
+	@FXML
+	private ToggleButton findButton;
+
+	@FXML
+	private Button filterButton;
+
+	@FXML
+	private Button resetButton;
 
 	@FXML
 	private Label statusMessage1;
@@ -77,8 +94,13 @@ public class MainWindowController extends AbstractController {
 		wordRow.setCellValueFactory((new PropertyValueFactory<TranslationRow, String>("word")));
 		translationWord.setCellValueFactory((new PropertyValueFactory<TranslationRow, String>("translation")));
 		loadTranslations();
-		catOrDictSelector.setItems(FXCollections.observableArrayList("Categories", "Ditctionaries"));
+		catOrDictSelector
+				.setItems(FXCollections.observableArrayList(getResources().getString("filters.selection.categories"),
+						getResources().getString("filters.selection.dictionaries")));
+		conditionSelector.setItems(FXCollections.observableArrayList(getResources().getString("filters.selection.or"),
+				getResources().getString("filters.selection.and")));
 		catOrDictSelector.getSelectionModel().select(0);
+		conditionSelector.getSelectionModel().select(0);
 		loadCategories();
 		statusMessage3.setText(MessageFormat.format(resources.getString("dictionary.status"),
 				getSessionService().getDictionaries().size()));
@@ -88,6 +110,8 @@ public class MainWindowController extends AbstractController {
 	private void loadTranslations() {
 		ObservableList<TranslationRow> translations = getSessionService().getTranslations();
 		mainTable.setItems(translations);
+		mainTable.getSelectionModel().select(translations.size() - 1);
+		mainTable.scrollTo(translations.size());
 		statusMessage1
 				.setText(MessageFormat.format(getResources().getString("translations.status"), translations.size()));
 	}
@@ -95,6 +119,7 @@ public class MainWindowController extends AbstractController {
 	private void loadCategories() {
 		ObservableList<IdString> categories = getSessionService().getCategories();
 		catDictsList.setItems(categories);
+		catDictsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		statusMessage2.setText(MessageFormat.format(getResources().getString("category.status"), categories.size()));
 	}
 
@@ -108,11 +133,40 @@ public class MainWindowController extends AbstractController {
 	@FXML
 	void catOrDictChanged(ActionEvent event) {
 		String selected = catOrDictSelector.getSelectionModel().getSelectedItem();
-		if ("Categories".equals(selected)) {
+		if (getResources().getString("filters.selection.categories").equals(selected)) {
 			loadCategories();
 		} else {
 			loadDictionaries();
 		}
+	}
+
+	@FXML
+	void doFiltering(ActionEvent event) {
+		ObservableList<IdString> selectedItems = catDictsList.getSelectionModel().getSelectedItems();
+		if (!selectedItems.isEmpty()) {
+
+			List<Integer> selectedIds = selectedItems.stream().map(IdString::getId).collect(Collectors.toList());
+			String selected = catOrDictSelector.getSelectionModel().getSelectedItem();
+			boolean condition = getResources().getString("filters.selection.and")
+					.equals(conditionSelector.getSelectionModel().getSelectedItem());
+			if (getResources().getString("filters.selection.categories").equals(selected)) {
+				getSessionService().loadTranslationsByCategories(selectedIds, condition);
+			} else {
+				getSessionService().loadTranslationsByDictionaries(selectedIds, condition);
+			}
+			loadTranslations();
+		}
+	}
+
+	@FXML
+	void resetFilters(ActionEvent event) {
+		getSessionService().loadTranslations();
+		loadTranslations();
+	}
+
+	@FXML
+	void resertFilters(ActionEvent event) {
+
 	}
 
 	@FXML

@@ -1,6 +1,7 @@
 package ua.vboden.entities;
 
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,9 +26,7 @@ public class DictionaryEntry {
 	@OneToOne
 	private Word translation;
 	@ManyToMany
-	@JoinTable(name = "words_dictionaryentry_dictionary",
-    joinColumns = @JoinColumn(name = "dictionaryentry_id"),
-    inverseJoinColumns = @JoinColumn(name = "dictionary_id"))
+	@JoinTable(name = "words_dictionaryentry_dictionary", joinColumns = @JoinColumn(name = "dictionaryentry_id"), inverseJoinColumns = @JoinColumn(name = "dictionary_id"))
 	private List<Dictionary> dictionary;
 
 	public int getId() {
@@ -68,6 +67,23 @@ public class DictionaryEntry {
 
 	public void setDictionary(List<Dictionary> dictionary) {
 		this.dictionary = dictionary;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DictionaryEntry other = (DictionaryEntry) obj;
+		return id == other.id;
 	}
 
 }

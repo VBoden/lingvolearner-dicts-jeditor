@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import ua.vboden.converters.TranslationConverter;
 import ua.vboden.dto.IdString;
 import ua.vboden.dto.TranslationRow;
 import ua.vboden.repositories.CategoryRepository;
@@ -26,6 +27,9 @@ public class SessionService {
 	@Autowired
 	private DictionaryRepository dictionaryRepository;
 
+	@Autowired
+	private TranslationConverter translationConverter;
+
 	private ObservableList<TranslationRow> translations;
 
 	private ObservableList<IdString> categories;
@@ -40,8 +44,7 @@ public class SessionService {
 
 	public void loadTranslations() {
 		translations = FXCollections.observableArrayList();
-		entryService.getAllEntries().forEach(entry -> translations
-				.add(new TranslationRow(entry.getId(), entry.getWord().getWord(), entry.getTranslation().getWord())));
+		translations.addAll(translationConverter.convertAll(entryService.getAllEntries()));
 	}
 
 	public void loadCategories() {
@@ -67,6 +70,19 @@ public class SessionService {
 
 	public ObservableList<IdString> getDictionaries() {
 		return dictionaries;
+	}
+
+	public void loadTranslationsByCategories(List<Integer> selectedIds, boolean conditionAnd) {
+		translations = FXCollections.observableArrayList();
+		translations
+				.addAll(translationConverter.convertAll(entryService.getAllByCategoryIds(selectedIds, conditionAnd)));
+	}
+
+	public void loadTranslationsByDictionaries(List<Integer> selectedIds, boolean conditionAnd) {
+		translations = FXCollections.observableArrayList();
+		translations
+				.addAll(translationConverter.convertAll(entryService.getAllByDictionaryIds(selectedIds, conditionAnd)));
+//		entryService.getAllEntries().forEach(entry -> translations.add(translationConverter.convert(entry)));
 	}
 
 }

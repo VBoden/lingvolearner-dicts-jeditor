@@ -9,6 +9,10 @@ public class TranslationRow {
 	private BooleanProperty selected;
 	private String word;
 	private String translation;
+	
+	public TranslationRow() {
+		super();
+	}
 
 	public TranslationRow(long recordId, String word, String translation) {
 		super();

@@ -3,6 +3,7 @@ package ua.vboden.entities;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,7 +24,7 @@ public class Word {
 	@OneToOne
 	@JoinColumn(name = "language_id")
 	private Language language;
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Category> category;
 
 	public int getId() {
