@@ -100,6 +100,9 @@ public class MainWindowController extends AbstractController {
 	private CategoryEditorController categoryEditorController;
 
 	@Autowired
+	private DictionaryEditorController dictionaryEditorController;
+
+	@Autowired
 	private EntryService entryService;
 
 	private boolean filtered;
@@ -258,6 +261,11 @@ public class MainWindowController extends AbstractController {
 		return getSessionService().getTranslations().stream()
 				.filter(row -> getter.apply(row).toLowerCase().contains(word.toLowerCase()))
 				.collect(Collectors.toList());
+	}
+
+	@FXML
+	void manageDictionaries(ActionEvent event) throws IOException {
+		dictionaryEditorController.showStage(null);
 	}
 
 	@FXML

@@ -6,4 +6,6 @@ import ua.vboden.entities.Language;
 
 public interface LanguageRepository extends CrudRepository<Language, Integer> {
 
+	Language findByCode(String code);
+
 }

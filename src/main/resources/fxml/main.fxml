@@ -74,6 +74,7 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
           <items>
+            <MenuItem fx:id="menuManageDictionaries" mnemonicParsing="false" onAction="#manageDictionaries" text="%menu.manage.dictionaries" />
             <MenuItem fx:id="menuManageCategories" mnemonicParsing="false" onAction="#manageCategories" text="%menu.manage.categories" />
             <MenuItem mnemonicParsing="false" text="Unselect All" />
             <SeparatorMenuItem mnemonicParsing="false" />
