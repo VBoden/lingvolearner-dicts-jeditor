@@ -82,13 +82,19 @@ public class MainWindowController extends AbstractController {
 	private Label statusMessage3;
 
 	@FXML
-	private TableColumn<TranslationRow, Boolean> selectionRow;
+	private TableColumn<TranslationRow, Integer> numberColumn;
 
 	@FXML
-	private TableColumn<TranslationRow, String> wordRow;
+	private TableColumn<TranslationRow, String> wordColumn;
 
 	@FXML
-	private TableColumn<TranslationRow, String> translationWord;
+	private TableColumn<TranslationRow, String> translationColumn;
+
+	@FXML
+	private TableColumn<TranslationRow, String> categoryColumn;
+
+	@FXML
+	private TableColumn<TranslationRow, String> dictionaryColumn;
 
 	@Autowired
 	private CategoryEditorController categoryEditorController;
@@ -107,10 +113,11 @@ public class MainWindowController extends AbstractController {
 	public void initialize(URL location, ResourceBundle resources) {
 		getSessionService().loadData();
 
-		selectionRow.setCellValueFactory(cd -> cd.getValue().getSelected());
-		selectionRow.setCellFactory(CheckBoxTableCell.forTableColumn(selectionRow));
-		wordRow.setCellValueFactory((new PropertyValueFactory<TranslationRow, String>("word")));
-		translationWord.setCellValueFactory((new PropertyValueFactory<TranslationRow, String>("translation")));
+		numberColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, Integer>("number"));
+		wordColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, String>("word"));
+		translationColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, String>("translation"));
+		categoryColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, String>("categories"));
+		dictionaryColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, String>("dictionaries"));
 		loadTranslations();
 		catOrDictSelector
 				.setItems(FXCollections.observableArrayList(getResources().getString("filters.selection.categories"),
@@ -122,14 +129,15 @@ public class MainWindowController extends AbstractController {
 		loadCategories();
 		statusMessage3.setText(MessageFormat.format(resources.getString("dictionary.status"),
 				getSessionService().getDictionaries().size()));
+		mainTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 	}
 
 	private void loadTranslations() {
 		ObservableList<TranslationRow> translations = getSessionService().getTranslations();
 		updateTranslations(translations);
-		mainTable.getSelectionModel().select(translations.size() - 1);
-		mainTable.scrollTo(translations.size());
+//		mainTable.getSelectionModel().select(translations.size() - 1);
+//		mainTable.scrollTo(translations.size());
 	}
 
 	private void updateTranslations(ObservableList<TranslationRow> translations) {

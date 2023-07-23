@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,7 +26,7 @@ public class DictionaryEntry {
 	private String transcription;
 	@OneToOne
 	private Word translation;
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "words_dictionaryentry_dictionary", joinColumns = @JoinColumn(name = "dictionaryentry_id"), inverseJoinColumns = @JoinColumn(name = "dictionary_id"))
 	private List<Dictionary> dictionary;
 

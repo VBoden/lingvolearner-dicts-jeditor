@@ -1,41 +1,39 @@
 package ua.vboden.dto;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-
 public class TranslationRow {
 
-	private long recordId;
-	private BooleanProperty selected;
+	private int recordId;
+	private int number;
 	private String word;
 	private String translation;
-	
+	private String categories;
+	private String dictionaries;
+
 	public TranslationRow() {
 		super();
 	}
 
-	public TranslationRow(long recordId, String word, String translation) {
+	public TranslationRow(int recordId, String word, String translation) {
 		super();
 		this.recordId = recordId;
 		this.word = word;
 		this.translation = translation;
-		this.selected = new SimpleBooleanProperty(false);
 	}
 
-	public long getRecordId() {
+	public int getRecordId() {
 		return recordId;
 	}
 
-	public void setRecordId(long recordId) {
+	public void setRecordId(int recordId) {
 		this.recordId = recordId;
 	}
 
-	public BooleanProperty getSelected() {
-		return selected;
+	public int getNumber() {
+		return number;
 	}
 
-	public void setSelected(BooleanProperty selected) {
-		this.selected = selected;
+	public void setNumber(int number) {
+		this.number = number;
 	}
 
 	public String getWord() {
@@ -52,6 +50,22 @@ public class TranslationRow {
 
 	public void setTranslation(String translation) {
 		this.translation = translation;
+	}
+
+	public String getCategories() {
+		return categories;
+	}
+
+	public void setCategories(String categories) {
+		this.categories = categories;
+	}
+
+	public String getDictionaries() {
+		return dictionaries;
+	}
+
+	public void setDictionaries(String dictionaries) {
+		this.dictionaries = dictionaries;
 	}
 
 }
