@@ -28,6 +28,8 @@ public abstract class AbstractController implements ApplicationContextAware, Ini
 
 	abstract String getFXML();
 
+	abstract String getTitle();
+
 	public ApplicationContext getApplicationContext() {
 		return applicationContext;
 	}
@@ -58,6 +60,7 @@ public abstract class AbstractController implements ApplicationContextAware, Ini
 			stage = new Stage();
 		}
 		this.stage = stage;
+		stage.setTitle(getTitle());
 		stage.setScene(scene);
 
 		stage.show();

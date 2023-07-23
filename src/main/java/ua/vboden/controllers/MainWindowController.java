@@ -110,6 +110,11 @@ public class MainWindowController extends AbstractController {
 	}
 
 	@Override
+	String getTitle() {
+		return null;
+	}
+
+	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		getSessionService().loadData();
 

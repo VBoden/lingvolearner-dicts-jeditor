@@ -44,6 +44,13 @@
 		<version>5.2.3.Final</version>
 		</dependency>
 -->
+<!-- https://mvnrepository.com/artifact/com.sun.activation/javax.activation -->
+<!--<dependency>
+    <groupId>com.sun.activation</groupId>
+    <artifactId>javax.activation</artifactId>
+    <version>1.2.0</version>
+</dependency>-->
+
 
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
@@ -88,6 +95,10 @@
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
 			<version>17.0.7</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
 		</dependency>
 	</dependencies>
 
