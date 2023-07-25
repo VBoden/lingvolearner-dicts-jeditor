@@ -106,6 +106,15 @@ public class MainWindowController extends AbstractController {
 	private DictionaryEditorController dictionaryEditorController;
 
 	@Autowired
+	private DictionaryEntryEditorController dictionaryEntryEditorController;
+
+	@Autowired
+	private WordEditorController wordEditorController;
+
+	@Autowired
+	private LanguageEditorController languageEditorController;
+
+	@Autowired
 	private EntryService entryService;
 
 	private boolean filtered;
@@ -267,13 +276,28 @@ public class MainWindowController extends AbstractController {
 	}
 
 	@FXML
+	void manageCategories(ActionEvent event) throws IOException {
+		categoryEditorController.showStage(null);
+	}
+
+	@FXML
 	void manageDictionaries(ActionEvent event) throws IOException {
 		dictionaryEditorController.showStage(null);
 	}
 
 	@FXML
-	void manageCategories(ActionEvent event) throws IOException {
-		categoryEditorController.showStage(null);
+	void manageDictionaryEntries(ActionEvent event) throws IOException {
+		dictionaryEntryEditorController.showStage(null);
+	}
+
+	@FXML
+	void manageWords(ActionEvent event) throws IOException {
+		wordEditorController.showStage(null);
+	}
+
+	@FXML
+	void manageLanguages(ActionEvent event) throws IOException {
+		languageEditorController.showStage(null);
 	}
 
 	@FXML

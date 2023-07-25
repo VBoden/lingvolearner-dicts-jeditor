@@ -74,8 +74,11 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
           <items>
+            <MenuItem fx:id="menuManageDictionaryEntries" mnemonicParsing="false" onAction="#manageDictionaryEntries" text="%menu.manage.dictionaryEntries" />
             <MenuItem fx:id="menuManageDictionaries" mnemonicParsing="false" onAction="#manageDictionaries" text="%menu.manage.dictionaries" />
             <MenuItem fx:id="menuManageCategories" mnemonicParsing="false" onAction="#manageCategories" text="%menu.manage.categories" />
+            <MenuItem fx:id="menuManageWords" mnemonicParsing="false" onAction="#manageWords" text="%menu.manage.words" />
+            <MenuItem fx:id="menuManageLanguages" mnemonicParsing="false" onAction="#manageLanguages" text="%menu.manage.languages" />
             <MenuItem mnemonicParsing="false" text="Unselect All" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Undo" />

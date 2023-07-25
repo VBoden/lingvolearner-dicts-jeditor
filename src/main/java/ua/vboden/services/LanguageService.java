@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import ua.vboden.dto.CodeString;
 import ua.vboden.entities.Language;
 import ua.vboden.repositories.LanguageRepository;
@@ -31,6 +32,10 @@ public class LanguageService {
 
 	public Language getByCode(String code) {
 		return languageRepository.findByCode(code);
+	}
+
+	public void deleteSelected(ObservableList<CodeString> selected) {
+		selected.stream().map(CodeString::getCode).map(this::getByCode).forEach(languageRepository::delete);
 	}
 
 }
