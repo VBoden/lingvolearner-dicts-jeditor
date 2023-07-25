@@ -14,7 +14,7 @@ import ua.vboden.entities.Language;
 import ua.vboden.repositories.LanguageRepository;
 
 @Service
-public class LanguageService {
+public class LanguageService implements EntityService<CodeString, Language> {
 
 	@Autowired
 	private LanguageRepository languageRepository;
@@ -34,8 +34,14 @@ public class LanguageService {
 		return languageRepository.findByCode(code);
 	}
 
-	public void deleteSelected(ObservableList<CodeString> selected) {
+	@Override
+	public void deleteSelected(ObservableList<? extends CodeString> selected) {
 		selected.stream().map(CodeString::getCode).map(this::getByCode).forEach(languageRepository::delete);
+	}
+
+	@Override
+	public Language findEntity(CodeString current) {
+		return getByCode(current.getCode());
 	}
 
 }

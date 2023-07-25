@@ -2,19 +2,15 @@ package ua.vboden.controllers;
 
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -25,17 +21,13 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import ua.vboden.dto.CodeString;
-import ua.vboden.dto.DictionaryData;
-import ua.vboden.dto.TranslationRow;
-import ua.vboden.entities.Dictionary;
 import ua.vboden.entities.Language;
-import ua.vboden.repositories.DictionaryRepository;
 import ua.vboden.repositories.LanguageRepository;
+import ua.vboden.services.EntityService;
 import ua.vboden.services.LanguageService;
-import ua.vboden.services.SessionService;
 
 @Component
-public class LanguageEditorController extends AbstractEditorController {
+public class LanguageEditorController extends AbstractEditorController<CodeString, Language> {
 
 	@FXML
 	private TableView<CodeString> languagesTable;
@@ -76,6 +68,16 @@ public class LanguageEditorController extends AbstractEditorController {
 	private CodeString current;
 
 	@Override
+	String getFXML() {
+		return "/fxml/languageEditor.fxml";
+	}
+
+	@Override
+	String getTitle() {
+		return getResources().getString("menu.manage.languages");
+	}
+
+	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 //		generalInit(resources);
 		languagesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -84,7 +86,8 @@ public class LanguageEditorController extends AbstractEditorController {
 		initView();
 	}
 
-	private void initView() {
+	@Override
+	protected void initView() {
 		languageService.loadLanguages();
 		ObservableList<CodeString> languages = getSessionService().getLanguages();
 		languagesTable.setItems(languages);
@@ -92,13 +95,29 @@ public class LanguageEditorController extends AbstractEditorController {
 	}
 
 	@Override
-	String getFXML() {
-		return "/fxml/languageEditor.fxml";
+	protected EntityService<CodeString, Language> getService() {
+		return languageService;
 	}
 
 	@Override
-	String getTitle() {
-		return getResources().getString("menu.manage.languages");
+	protected CodeString getCurrent() {
+		return current;
+	}
+
+	@Override
+	protected ObservableList<CodeString> getSelected() {
+		return languagesTable.getSelectionModel().getSelectedItems();
+	}
+
+	@Override
+	protected Language createNew() {
+		return new Language();
+	}
+
+	@Override
+	protected boolean isNotFilledFields() {
+		String newTitle = languageTitle.getText();
+		return StringUtils.isBlank(newTitle);
 	}
 
 	@FXML
@@ -112,48 +131,14 @@ public class LanguageEditorController extends AbstractEditorController {
 	}
 
 	@FXML
-	void removeSelected(ActionEvent event) {
-		ObservableList<CodeString> selected = languagesTable.getSelectionModel().getSelectedItems();
-		languageService.deleteSelected(selected);
-		updateView();
-	}
-
-
-	protected void save() {
-		String newTitle = languageTitle.getText();
-		if (StringUtils.isBlank(newTitle)) {
-			return;
-		}
-		Language entity = null;
-		if (current != null) {
-			entity = languageRepository.findByCode(current.getCode());
-		}
-		if (entity == null) {
-			entity = new Language();
-		}
-		save(entity);
-	}
-
-	@FXML
 	void saveEnter(KeyEvent event) {
 		if (event.getCode().equals(KeyCode.ENTER)) {
 			save();
 		}
 	}
 
-	@FXML
-	void saveNew(ActionEvent event) {
-		save(new Language());
-	}
-
-	protected void save(Language entity) {
-		populateEntity(entity);
-		languageRepository.save(entity);
-		resetEditing();
-		updateView();
-	}
-
-	protected void populateEntity(Language entity) {
+	@Override
+	protected void saveEntity(Language entity) {
 		String newCode = languageCode.getText();
 		if (StringUtils.isBlank(newCode)) {
 			return;
@@ -164,21 +149,14 @@ public class LanguageEditorController extends AbstractEditorController {
 		}
 		entity.setCode(newCode);
 		entity.setName(newTitle);
+		languageRepository.save(entity);
 	}
 
-	private void updateView() {
-		initView();
-	}
-
-	private void resetEditing() {
+	@Override
+	protected void resetEditing() {
 		languageCode.setText("");
 		languageTitle.setText("");
 		languageCode.setEditable(true);
 		current = null;
-	}
-
-	@FXML
-	void close(ActionEvent event) {
-		getStage().close();
 	}
 }
