@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -22,7 +21,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import ua.vboden.dto.CodeString;
 import ua.vboden.entities.Language;
-import ua.vboden.repositories.LanguageRepository;
 import ua.vboden.services.EntityService;
 import ua.vboden.services.LanguageService;
 
@@ -45,22 +43,7 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 	private TextField languageTitle;
 
 	@FXML
-	private Button closeButton;
-
-	@FXML
-	private Button removeDictionary;
-
-	@FXML
-	private Button saveAsNewDictionary;
-
-	@FXML
-	private Button saveDictionary;
-
-	@FXML
 	private Label statusMessage;
-
-	@Autowired
-	private LanguageRepository languageRepository;
 
 	@Autowired
 	private LanguageService languageService;
@@ -125,7 +108,7 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 		if (event.getClickCount() == 2) {
 			current = languagesTable.getSelectionModel().getSelectedItem();
 			languageCode.setText(current.getCode());
-			languageCode.setEditable(false);
+//			languageCode.setEditable(false);
 			languageTitle.setText(current.getValue());
 		}
 	}
@@ -138,7 +121,7 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 	}
 
 	@Override
-	protected void saveEntity(Language entity) {
+	protected void populateEntity(Language entity) {
 		String newCode = languageCode.getText();
 		if (StringUtils.isBlank(newCode)) {
 			return;
@@ -149,7 +132,6 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 		}
 		entity.setCode(newCode);
 		entity.setName(newTitle);
-		languageRepository.save(entity);
 	}
 
 	@Override

@@ -8,4 +8,6 @@ public interface EntityService<T, E> {
 
 	E findEntity(T current);
 
+	void save(E entity);
+
 }

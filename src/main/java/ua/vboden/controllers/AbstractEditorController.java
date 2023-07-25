@@ -15,7 +15,7 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 
 	protected abstract void resetEditing();
 
-	protected abstract void saveEntity(E entity);
+	protected abstract void populateEntity(E entity);
 
 	protected abstract E createNew();
 
@@ -55,7 +55,8 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 	}
 
 	protected void save(E entity) {
-		saveEntity(entity);
+		populateEntity(entity);
+		getService().save(entity);
 		resetEditing();
 		initView();
 	}

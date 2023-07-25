@@ -44,4 +44,9 @@ public class LanguageService implements EntityService<CodeString, Language> {
 		return getByCode(current.getCode());
 	}
 
+	@Override
+	public void save(Language entity) {
+		languageRepository.save(entity);
+	}
+
 }
