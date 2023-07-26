@@ -38,7 +38,7 @@
                   <Button fx:id="closeButton" layoutX="208.0" layoutY="384.0" mnemonicParsing="false" onAction="#close" text="%close" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                   <Label layoutX="24.0" layoutY="180.0" text="%language.title" AnchorPane.leftAnchor="24.0" />
                   <TextField fx:id="languageTitle" layoutX="15.0" layoutY="204.0" onKeyPressed="#saveEnter" prefHeight="24.0" prefWidth="239.0" />
-                  <Button fx:id="cleanFields" layoutX="14.0" layoutY="417.0" mnemonicParsing="false" onAction="#cleanFields" text="%cleanFields" AnchorPane.leftAnchor="15.0" />
+                  <Button fx:id="cleanFields" layoutX="14.0" layoutY="417.0" mnemonicParsing="false" onAction="#cleanFields" text="%cleanFields" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
                </children>
             </AnchorPane>
         </items>

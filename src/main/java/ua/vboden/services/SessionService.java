@@ -15,6 +15,7 @@ import ua.vboden.dto.CodeString;
 import ua.vboden.dto.DictionaryData;
 import ua.vboden.dto.IdString;
 import ua.vboden.dto.TranslationRow;
+import ua.vboden.dto.WordData;
 import ua.vboden.repositories.CategoryRepository;
 import ua.vboden.repositories.DictionaryRepository;
 
@@ -39,6 +40,8 @@ public class SessionService {
 	private ObservableList<TranslationRow> translations;
 
 	private ObservableList<CodeString> languages;
+
+	private ObservableList<WordData> words;
 
 	private ObservableList<IdString> categories;
 
@@ -104,7 +107,6 @@ public class SessionService {
 		translations = FXCollections.observableArrayList();
 		translations
 				.addAll(translationConverter.convertAll(entryService.getAllByDictionaryIds(selectedIds, conditionAnd)));
-//		entryService.getAllEntries().forEach(entry -> translations.add(translationConverter.convert(entry)));
 	}
 
 	public ObservableList<CodeString> getLanguages() {
@@ -113,6 +115,14 @@ public class SessionService {
 
 	public void setLanguages(ObservableList<CodeString> languages) {
 		this.languages = languages;
+	}
+
+	public ObservableList<WordData> getWords() {
+		return words;
+	}
+
+	public void setWords(ObservableList<WordData> words) {
+		this.words = words;
 	}
 
 }

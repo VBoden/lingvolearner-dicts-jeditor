@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import ua.vboden.dto.IdString;
 import ua.vboden.entities.Category;
@@ -49,7 +50,7 @@ public class CategoryEditorController extends AbstractEditorController<IdString,
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		generalInit(resources);
+//		generalInit(resources);
 		categoriesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		initView();
 	}
@@ -108,5 +109,10 @@ public class CategoryEditorController extends AbstractEditorController<IdString,
 	@Override
 	protected void populateFields(IdString current) {
 		categoryName.setText(current.getValue());
+	}
+
+	@Override
+	protected TableView<IdString> getTable() {
+		return null;
 	}
 }

@@ -3,6 +3,7 @@ package ua.vboden.controllers;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -17,7 +18,7 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 
 	protected abstract EntityService<T, E> getService();
 
-	protected abstract ObservableList<T> getSelected();
+	protected abstract TableView<T> getTable();
 
 	protected abstract void resetEditing();
 
@@ -28,6 +29,10 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 	protected abstract boolean isNotFilledFields();
 
 	protected abstract void populateFields(T current);
+
+	protected ObservableList<T> getSelected() {
+		return getTable().getSelectionModel().getSelectedItems();
+	}
 
 	@FXML
 	void startEditing(MouseEvent event) {

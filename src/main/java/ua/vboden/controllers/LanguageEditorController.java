@@ -82,11 +82,6 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 	}
 
 	@Override
-	protected ObservableList<CodeString> getSelected() {
-		return languagesTable.getSelectionModel().getSelectedItems();
-	}
-
-	@Override
 	protected Language createNew() {
 		return new Language();
 	}
@@ -120,5 +115,10 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 		languageCode.setEditable(true);
 		saveAsNewButton.setDisable(false);
 		setCurrent(null);
+	}
+
+	@Override
+	protected TableView<CodeString> getTable() {
+		return languagesTable;
 	}
 }
