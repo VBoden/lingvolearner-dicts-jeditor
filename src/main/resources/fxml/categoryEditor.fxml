@@ -27,6 +27,7 @@
                   <Button fx:id="saveCategory" layoutX="15.0" layoutY="179.0" mnemonicParsing="false" onAction="#save" text="%save" AnchorPane.leftAnchor="15.0" />
                   <Button fx:id="saveAsNewCategory" layoutX="116.0" layoutY="180.0" mnemonicParsing="false" onAction="#saveNew" text="%saveAsNew" AnchorPane.rightAnchor="15.0" />
                   <Button fx:id="closeButton" layoutX="208.0" layoutY="384.0" mnemonicParsing="false" onAction="#close" text="%close" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                  <Button fx:id="cleanFields" layoutX="14.0" layoutY="417.0" mnemonicParsing="false" onAction="#cleanFields" text="%cleanFields" AnchorPane.leftAnchor="15.0" />
                </children>
             </AnchorPane>
         </items>

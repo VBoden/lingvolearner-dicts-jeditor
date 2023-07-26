@@ -82,6 +82,10 @@ public class SessionService {
 		return categories;
 	}
 
+	protected void setCategories(ObservableList<IdString> categories) {
+		this.categories = categories;
+	}
+
 	public ObservableList<IdString> getDictionaries() {
 		return dictionaries;
 	}
