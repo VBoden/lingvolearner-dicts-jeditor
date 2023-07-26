@@ -31,6 +31,11 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 	}
 
 	@FXML
+	void cleanFields(ActionEvent event) {
+		resetEditing();
+	}
+
+	@FXML
 	void save(ActionEvent event) {
 		save();
 	}

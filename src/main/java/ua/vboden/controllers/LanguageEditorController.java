@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -44,6 +45,9 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 
 	@FXML
 	private Label statusMessage;
+
+    @FXML
+    private Button saveAsNewButton;
 
 	@Autowired
 	private LanguageService languageService;
@@ -108,7 +112,8 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 		if (event.getClickCount() == 2) {
 			current = languagesTable.getSelectionModel().getSelectedItem();
 			languageCode.setText(current.getCode());
-//			languageCode.setEditable(false);
+			languageCode.setEditable(false);
+			saveAsNewButton.setDisable(true);
 			languageTitle.setText(current.getValue());
 		}
 	}
@@ -139,6 +144,7 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 		languageCode.setText("");
 		languageTitle.setText("");
 		languageCode.setEditable(true);
+		saveAsNewButton.setDisable(false);
 		current = null;
 	}
 }
