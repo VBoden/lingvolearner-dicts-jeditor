@@ -3,9 +3,15 @@ package ua.vboden.controllers;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import ua.vboden.dto.CodeString;
 import ua.vboden.services.EntityService;
 
 public abstract class AbstractEditorController<T, E> extends AbstractController {
+
+	private T current;
 
 	protected abstract void initView();
 
@@ -19,9 +25,25 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 
 	protected abstract E createNew();
 
-	protected abstract T getCurrent();
-
 	protected abstract boolean isNotFilledFields();
+
+	protected abstract void populateFields(T current);
+
+	@FXML
+	void startEditing(MouseEvent event) {
+		if (event.getClickCount() == 2) {
+			current = getSelected().get(0);
+			populateFields(getCurrent());
+		}
+	}
+
+	protected T getCurrent() {
+		return current;
+	}
+
+	protected void setCurrent(T current) {
+		this.current = current;
+	}
 
 	@FXML
 	void removeSelected(ActionEvent event) {
@@ -33,6 +55,13 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 	@FXML
 	void cleanFields(ActionEvent event) {
 		resetEditing();
+	}
+
+	@FXML
+	void saveEnter(KeyEvent event) {
+		if (event.getCode().equals(KeyCode.ENTER)) {
+			save();
+		}
 	}
 
 	@FXML
@@ -60,6 +89,9 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 	}
 
 	protected void save(E entity) {
+		if (isNotFilledFields()) {
+			return;
+		}
 		populateEntity(entity);
 		getService().save(entity);
 		resetEditing();

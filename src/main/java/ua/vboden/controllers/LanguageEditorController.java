@@ -17,8 +17,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import ua.vboden.dto.CodeString;
 import ua.vboden.entities.Language;
@@ -46,13 +44,11 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 	@FXML
 	private Label statusMessage;
 
-    @FXML
-    private Button saveAsNewButton;
+	@FXML
+	private Button saveAsNewButton;
 
 	@Autowired
 	private LanguageService languageService;
-
-	private CodeString current;
 
 	@Override
 	String getFXML() {
@@ -66,7 +62,6 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-//		generalInit(resources);
 		languagesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		codeColumn.setCellValueFactory(new PropertyValueFactory<CodeString, String>("code"));
 		titleColumn.setCellValueFactory(new PropertyValueFactory<CodeString, String>("value"));
@@ -87,11 +82,6 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 	}
 
 	@Override
-	protected CodeString getCurrent() {
-		return current;
-	}
-
-	@Override
 	protected ObservableList<CodeString> getSelected() {
 		return languagesTable.getSelectionModel().getSelectedItems();
 	}
@@ -103,38 +93,22 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 
 	@Override
 	protected boolean isNotFilledFields() {
+		String newCode = languageCode.getText();
 		String newTitle = languageTitle.getText();
-		return StringUtils.isBlank(newTitle);
+		return StringUtils.isBlank(newTitle) || StringUtils.isBlank(newCode);
 	}
 
-	@FXML
-	void startEditing(MouseEvent event) {
-		if (event.getClickCount() == 2) {
-			current = languagesTable.getSelectionModel().getSelectedItem();
-			languageCode.setText(current.getCode());
-			languageCode.setEditable(false);
-			saveAsNewButton.setDisable(true);
-			languageTitle.setText(current.getValue());
-		}
-	}
-
-	@FXML
-	void saveEnter(KeyEvent event) {
-		if (event.getCode().equals(KeyCode.ENTER)) {
-			save();
-		}
+	protected void populateFields(CodeString current) {
+		languageCode.setText(current.getCode());
+		languageCode.setEditable(false);
+		saveAsNewButton.setDisable(true);
+		languageTitle.setText(current.getValue());
 	}
 
 	@Override
 	protected void populateEntity(Language entity) {
 		String newCode = languageCode.getText();
-		if (StringUtils.isBlank(newCode)) {
-			return;
-		}
 		String newTitle = languageTitle.getText();
-		if (StringUtils.isBlank(newTitle)) {
-			return;
-		}
 		entity.setCode(newCode);
 		entity.setName(newTitle);
 	}
@@ -145,6 +119,6 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 		languageTitle.setText("");
 		languageCode.setEditable(true);
 		saveAsNewButton.setDisable(false);
-		current = null;
+		setCurrent(null);
 	}
 }
