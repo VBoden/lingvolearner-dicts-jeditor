@@ -2,6 +2,8 @@ package ua.vboden.controllers;
 
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,15 +14,19 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ua.vboden.dto.CodeString;
+import ua.vboden.dto.IdString;
 import ua.vboden.dto.WordData;
 import ua.vboden.entities.Word;
+import ua.vboden.services.CategoryService;
 import ua.vboden.services.EntityService;
+import ua.vboden.services.LanguageService;
 import ua.vboden.services.WordService;
 
 @Component
@@ -48,6 +54,9 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 	private TextField wordNotes;
 
 	@FXML
+	private ListView<IdString> categoryList;
+
+	@FXML
 	private ComboBox<CodeString> language;
 
 	@FXML
@@ -55,6 +64,11 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 
 	@Autowired
 	private WordService wordService;
+	@Autowired
+	private LanguageService languageService;
+
+	@Autowired
+	private CategoryService categoryService;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -63,6 +77,9 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 		languageColumn.setCellValueFactory(new PropertyValueFactory<WordData, String>("language"));
 		categoriesColumn.setCellValueFactory(new PropertyValueFactory<WordData, String>("categories"));
 		notesColumn.setCellValueFactory(new PropertyValueFactory<WordData, String>("notes"));
+		languageService.loadLanguages();
+		categoryService.loadCategories();
+		categoryList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		initView();
 	}
 
@@ -71,6 +88,8 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 		wordService.loadData();
 		ObservableList<WordData> words = getSessionService().getWords();
 		wordsTable.setItems(words);
+		categoryList.setItems(getSessionService().getCategories());
+		language.setItems(getSessionService().getLanguages());
 		statusMessage.setText(MessageFormat.format(getResources().getString("word.status"), words.size()));
 	}
 
@@ -81,16 +100,20 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 
 	@Override
 	protected void resetEditing() {
+		wordsTable.getSelectionModel().clearSelection();
 		word.setText("");
 		wordNotes.setText("");
-		
+		language.getSelectionModel().clearSelection();
+		categoryList.getSelectionModel().clearSelection();
 	}
 
 	@Override
 	protected void populateEntity(Word entity) {
 		entity.setWord(word.getText());
-		entity.setNotes(word.getText());
-		
+		entity.setNotes(wordNotes.getText());
+		entity.setLanguage(languageService.getByCode(language.getSelectionModel().getSelectedItem().getCode()));
+		entity.setCategory(categoryService.findEntities(categoryList.getSelectionModel().getSelectedItems()));
+
 	}
 
 	@Override
@@ -107,7 +130,32 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 	protected void populateFields(WordData current) {
 		word.setText(current.getWord());
 		wordNotes.setText(current.getNotes());
-		
+		language.getSelectionModel().select(find(current.getLanguage(), language.getItems()));
+		categoryList.getSelectionModel().clearSelection();
+		categoryList.getSelectionModel().selectIndices(-1, findCategories(current.getCategories(), categoryList.getItems()));
+	}
+
+	private int[] findCategories(String categories, ObservableList<IdString> items) {
+		String[] categs = categories.split(";");
+		List<Integer> indices = new ArrayList<>();
+		for(String cat: categs) {
+			for (IdString item : items) {
+				if (item.getValue().equalsIgnoreCase(cat.trim())) {
+					indices.add(items.indexOf(item));
+					break;
+				}
+			}
+		}
+		return indices.stream().mapToInt(Integer::intValue).toArray();
+	}
+
+	private CodeString find(String langName, ObservableList<CodeString> languages) {
+		for (CodeString lang : languages) {
+			if (lang.getValue().equalsIgnoreCase(langName)) {
+				return lang;
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -124,6 +172,5 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 	protected TableView<WordData> getTable() {
 		return wordsTable;
 	}
-
 
 }

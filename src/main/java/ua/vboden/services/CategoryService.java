@@ -12,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import ua.vboden.dto.IdString;
 import ua.vboden.entities.Category;
+import ua.vboden.entities.DictionaryEntry;
 import ua.vboden.repositories.CategoryRepository;
 
 @Service
@@ -42,6 +43,13 @@ public class CategoryService implements EntityService<IdString, Category> {
 		categoryRepository.findAll().forEach(entry -> categoryModels.add(new IdString(entry.getId(), entry.getName())));
 		Collections.sort(categoryModels);
 		sessionService.setCategories(FXCollections.observableArrayList(categoryModels));
+	}
+
+	public List<Category> findEntities(List<IdString> selected) {
+		List<Category> result = new ArrayList<>();
+		categoryRepository.findAllById(selected.stream().map(IdString::getId).collect(Collectors.toList()))
+				.forEach(result::add);
+		return result;
 	}
 
 }

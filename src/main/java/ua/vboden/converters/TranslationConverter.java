@@ -31,10 +31,10 @@ public class TranslationConverter extends AbstractConverter<DictionaryEntry, Tra
 		row.setWord(source.getWord().getWord());
 		row.setTranslation(source.getTranslation().getWord());
 		row.setCategories(source.getWord().getCategory() == null ? null
-				: source.getWord().getCategory().stream().map(cat -> cat.getName()).reduce((a, b) -> a + ", " + b)
+				: source.getWord().getCategory().stream().map(cat -> cat.getName()).reduce((a, b) -> a + "; " + b)
 						.orElse(null));
 		row.setDictionaries(source.getDictionary() == null ? null
-				: source.getDictionary().stream().map(cat -> cat.getName()).reduce((a, b) -> a + ", " + b)
+				: source.getDictionary().stream().map(cat -> cat.getName()).reduce((a, b) -> a + "; " + b)
 						.orElse(null));
 		return row;
 	}

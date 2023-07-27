@@ -77,9 +77,6 @@ public class DictionaryEditorController extends AbstractController {
 	@Autowired
 	private LanguageService languageService;
 
-	@Autowired
-	private SessionService sessionService;
-
 	private DictionaryData current;
 
 	@Override
@@ -91,7 +88,7 @@ public class DictionaryEditorController extends AbstractController {
 		languageFromColumn.setCellValueFactory(new PropertyValueFactory<DictionaryData, String>("langFrom"));
 		languageToColumn.setCellValueFactory(new PropertyValueFactory<DictionaryData, String>("langTo"));
 		initDictionariesView();
-		ObservableList<CodeString> languages = sessionService.getLanguages();
+		ObservableList<CodeString> languages = getSessionService().getLanguages();
 		languageFrom.setItems(languages);
 		languageTo.setItems(languages);
 	}
@@ -117,9 +114,8 @@ public class DictionaryEditorController extends AbstractController {
 		if (event.getClickCount() == 2) {
 			current = dictionariesTable.getSelectionModel().getSelectedItem();
 			dictionaryName.setText(current.getTitle());
-			ObservableList<CodeString> languages = getSessionService().getLanguages();
-			languageFrom.getSelectionModel().select(find(current.getLangFrom(), languages));
-			languageTo.getSelectionModel().select(find(current.getLangTo(), languages));
+			languageFrom.getSelectionModel().select(find(current.getLangFrom(), languageFrom.getItems()));
+			languageTo.getSelectionModel().select(find(current.getLangTo(), languageTo.getItems()));
 		}
 	}
 

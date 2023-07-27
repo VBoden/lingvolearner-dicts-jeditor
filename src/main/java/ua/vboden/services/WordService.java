@@ -30,7 +30,7 @@ public class WordService implements EntityService<WordData, Word> {
 	public void loadData() {
 		List<WordData> models = new ArrayList<>();
 		wordRepository.findAll().forEach(entry -> models.add(wordConverter.convert(entry)));
-		Collections.sort(models);
+//		Collections.sort(models);
 		sessionService.setWords(FXCollections.observableArrayList(models));
 	}
 

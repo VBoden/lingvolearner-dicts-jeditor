@@ -16,7 +16,7 @@ public class WordConverter extends AbstractConverter<Word, WordData> {
 		target.setNotes(source.getNotes());
 		target.setLanguage(source.getLanguage().getName());
 		target.setCategories(source.getCategory() == null ? null
-				: source.getCategory().stream().map(cat -> cat.getName()).reduce((a, b) -> a + ", " + b).orElse(null));
+				: source.getCategory().stream().map(cat -> cat.getName()).reduce((a, b) -> a + "; " + b).orElse(null));
 		return target;
 	}
 
