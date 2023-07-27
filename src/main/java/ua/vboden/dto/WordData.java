@@ -1,11 +1,12 @@
 package ua.vboden.dto;
 
-public class WordData implements Comparable<WordData>  {
+public class WordData implements Comparable<WordData> {
 	private int id;
 	private String word;
 	private String notes;
 	private String language;
 	private String categories;
+	private int usages;
 
 	public int getId() {
 		return id;
@@ -45,6 +46,14 @@ public class WordData implements Comparable<WordData>  {
 
 	public void setCategories(String categories) {
 		this.categories = categories;
+	}
+
+	public int getUsages() {
+		return usages;
+	}
+
+	public void setUsages(int usages) {
+		this.usages = usages;
 	}
 
 	@Override

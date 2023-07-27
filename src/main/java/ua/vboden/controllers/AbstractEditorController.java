@@ -1,5 +1,6 @@
 package ua.vboden.controllers;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,7 +8,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import ua.vboden.dto.CodeString;
 import ua.vboden.services.EntityService;
 
 public abstract class AbstractEditorController<T, E> extends AbstractController {
@@ -53,8 +53,18 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 	@FXML
 	void removeSelected(ActionEvent event) {
 		ObservableList<T> selected = getSelected();
-		getService().deleteSelected(selected);
+		ObservableList<T> forDelete = FXCollections.observableArrayList();
+		for(T sel:selected) {
+			if(allowedDeleting(sel)) {
+				forDelete.add(sel);
+			}
+		}
+		getService().deleteSelected(forDelete);
 		initView();
+	}
+
+	protected boolean allowedDeleting(T sel) {
+		return true;
 	}
 
 	@FXML

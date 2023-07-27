@@ -32,6 +32,7 @@ import ua.vboden.dto.WordData;
 import ua.vboden.entities.Word;
 import ua.vboden.services.CategoryService;
 import ua.vboden.services.EntityService;
+import ua.vboden.services.EntryService;
 import ua.vboden.services.LanguageService;
 import ua.vboden.services.WordService;
 
@@ -49,6 +50,9 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 
 	@FXML
 	private TableColumn<WordData, String> categoriesColumn;
+
+    @FXML
+    private TableColumn<WordData, Integer> usagesColumn;
 
 	@FXML
 	private TableColumn<WordData, String> notesColumn;
@@ -68,11 +72,11 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 	@FXML
 	private Label statusMessage;
 
-    @FXML
-    private TextField searchField;
+	@FXML
+	private TextField searchField;
 
-    @FXML
-    private ToggleButton findButton;
+	@FXML
+	private ToggleButton findButton;
 
 	@Autowired
 	private WordService wordService;
@@ -89,6 +93,7 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 		wordColumn.setCellValueFactory(new PropertyValueFactory<WordData, String>("word"));
 		languageColumn.setCellValueFactory(new PropertyValueFactory<WordData, String>("language"));
 		categoriesColumn.setCellValueFactory(new PropertyValueFactory<WordData, String>("categories"));
+		usagesColumn.setCellValueFactory(new PropertyValueFactory<WordData, Integer>("usages"));
 		notesColumn.setCellValueFactory(new PropertyValueFactory<WordData, String>("notes"));
 		languageService.loadLanguages();
 		categoryService.loadCategories();
@@ -146,13 +151,14 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 		wordNotes.setText(current.getNotes());
 		language.getSelectionModel().select(find(current.getLanguage(), language.getItems()));
 		categoryList.getSelectionModel().clearSelection();
-		categoryList.getSelectionModel().selectIndices(-1, findCategories(current.getCategories(), categoryList.getItems()));
+		categoryList.getSelectionModel().selectIndices(-1,
+				findCategories(current.getCategories(), categoryList.getItems()));
 	}
 
 	private int[] findCategories(String categories, ObservableList<IdString> items) {
 		String[] categs = categories.split(";");
 		List<Integer> indices = new ArrayList<>();
-		for(String cat: categs) {
+		for (String cat : categs) {
 			for (IdString item : items) {
 				if (item.getValue().equalsIgnoreCase(cat.trim())) {
 					indices.add(items.indexOf(item));
@@ -195,15 +201,15 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 		}
 	}
 
-    @FXML
-    void findWord(ActionEvent event) {
-    	findWords();
-    }
-    
-    private void findWords() {
+	@FXML
+	void findWord(ActionEvent event) {
+		findWords();
+	}
+
+	private void findWords() {
 		if (findButton.isSelected()) {
 			String word = searchField.getText();
-			if(StringUtils.isNoneBlank(word)) {
+			if (StringUtils.isNoneBlank(word)) {
 				ObservableList<WordData> words = FXCollections.observableArrayList(wordService.getAllByWord(word));
 				wordsTable.setItems(words);
 				statusMessage.setText(MessageFormat.format(getResources().getString("word.status"), words.size()));
@@ -214,5 +220,10 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 			wordsTable.setItems(words);
 			statusMessage.setText(MessageFormat.format(getResources().getString("word.status"), words.size()));
 		}
+	}
+
+	@Override
+	protected boolean allowedDeleting(WordData sel) {
+		return sel.getUsages() == 0;
 	}
 }
