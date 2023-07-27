@@ -97,6 +97,9 @@ public class MainWindowController extends AbstractController {
 	private TableColumn<TranslationRow, String> categoryColumn;
 
 	@FXML
+	private TableColumn<TranslationRow, String> transCategoryColumn;
+
+	@FXML
 	private TableColumn<TranslationRow, String> dictionaryColumn;
 
 	@Autowired
@@ -137,6 +140,7 @@ public class MainWindowController extends AbstractController {
 		wordColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, String>("word"));
 		translationColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, String>("translation"));
 		categoryColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, String>("categories"));
+		transCategoryColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, String>("transCategories"));
 		dictionaryColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, String>("dictionaries"));
 		loadTranslations();
 		catOrDictSelector
@@ -307,9 +311,16 @@ public class MainWindowController extends AbstractController {
 	}
 
 	@FXML
-	public void changeRowSelection(ActionEvent event) {
-		Object source = event.getSource();
-		System.out.println("The check box dfssdwas clicked!");
+	void removeSelected(ActionEvent event) {
+//		ObservableList<T> selected = getSelected();
+//		ObservableList<T> forDelete = FXCollections.observableArrayList();
+//		for(T sel:selected) {
+//			if(allowedDeleting(sel)) {
+//				forDelete.add(sel);
+//			}
+//		}
+//		getService().deleteSelected(forDelete);
+//		initView();
 	}
 
 }

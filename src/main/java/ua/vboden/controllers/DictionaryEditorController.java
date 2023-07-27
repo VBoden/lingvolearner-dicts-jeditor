@@ -81,7 +81,7 @@ public class DictionaryEditorController extends AbstractController {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		generalInit(resources);
+//		generalInit(resources);
 		languageService.loadLanguages();
 		dictionariesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		titleColumn.setCellValueFactory(new PropertyValueFactory<DictionaryData, String>("title"));

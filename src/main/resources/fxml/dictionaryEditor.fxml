@@ -42,6 +42,7 @@
                   <ComboBox fx:id="languageFrom" layoutX="11.0" layoutY="204.0" prefHeight="24.0" prefWidth="239.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                   <Label layoutX="29.0" layoutY="243.0" text="%dictionary.language.to" AnchorPane.leftAnchor="24.0" />
                   <ComboBox fx:id="languageTo" layoutX="16.0" layoutY="267.0" prefHeight="24.0" prefWidth="239.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                  <Button fx:id="cleanFields" layoutX="14.0" layoutY="417.0" mnemonicParsing="false" onAction="#cleanFields" text="%cleanFields" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
                </children>
             </AnchorPane>
         </items>

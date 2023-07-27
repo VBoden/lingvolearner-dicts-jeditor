@@ -74,11 +74,7 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
           <items>
-            <MenuItem fx:id="menuManageDictionaryEntries" mnemonicParsing="false" onAction="#manageDictionaryEntries" text="%menu.manage.dictionaryEntries" />
-            <MenuItem fx:id="menuManageDictionaries" mnemonicParsing="false" onAction="#manageDictionaries" text="%menu.manage.dictionaries" />
-            <MenuItem fx:id="menuManageCategories" mnemonicParsing="false" onAction="#manageCategories" text="%menu.manage.categories" />
-            <MenuItem fx:id="menuManageWords" mnemonicParsing="false" onAction="#manageWords" text="%menu.manage.words" />
-            <MenuItem fx:id="menuManageLanguages" mnemonicParsing="false" onAction="#manageLanguages" text="%menu.manage.languages" />
+            <MenuItem fx:id="menuManageDictionaryEntries" mnemonicParsing="false" onAction="#manageDictionaryEntries" text="%menu.edit.dictionaryEntries" />
             <MenuItem mnemonicParsing="false" text="Unselect All" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Undo" />
@@ -90,6 +86,14 @@
             <MenuItem mnemonicParsing="false" text="Delete" />
           </items>
         </Menu>
+            <Menu mnemonicParsing="false" text="%menu.manage">
+              <items>
+            <MenuItem fx:id="menuManageDictionaries" mnemonicParsing="false" onAction="#manageDictionaries" text="%menu.manage.dictionaries" />
+            <MenuItem fx:id="menuManageCategories" mnemonicParsing="false" onAction="#manageCategories" text="%menu.manage.categories" />
+            <MenuItem fx:id="menuManageWords" mnemonicParsing="false" onAction="#manageWords" text="%menu.manage.words" />
+            <MenuItem fx:id="menuManageLanguages" mnemonicParsing="false" onAction="#manageLanguages" text="%menu.manage.languages" />
+              </items>
+            </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>
             <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
@@ -120,9 +124,10 @@
                     <columns>
                       <TableColumn fx:id="numberColumn" editable="false" maxWidth="100.0" minWidth="50.0" prefWidth="-1.0" text="%translations.table.number" />
                       <TableColumn fx:id="wordColumn" editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="200.0" text="%translations.table.word" />
+                        <TableColumn fx:id="categoryColumn" editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="100.0" text="%translations.table.categories" />
                         <TableColumn fx:id="translationColumn" editable="false" maxWidth="300.0" minWidth="150.0" prefWidth="200.0" text="%translations.table.translation" />
-                        <TableColumn fx:id="categoryColumn" editable="false" maxWidth="300.0" minWidth="150.0" prefWidth="200.0" text="%translations.table.categories" />
-                        <TableColumn fx:id="dictionaryColumn" editable="false" maxWidth="300.0" minWidth="150.0" prefWidth="200.0" text="%translations.table.dictionaries" />
+                        <TableColumn fx:id="transCategoryColumn" editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="100.0" text="%translations.table.categories" />
+                        <TableColumn fx:id="dictionaryColumn" editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="100.0" text="%translations.table.dictionaries" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -136,8 +141,7 @@
             </AnchorPane>
           <AnchorPane prefHeight="557.0" prefWidth="250.0" SplitPane.resizableWithParent="false">
                <children>
-                  <Label layoutX="14.0" layoutY="32.0" text="Label" />
-                  <TextField editable="false" layoutX="11.0" layoutY="48.0" />
+                  <Button fx:id="removeDictionary" layoutX="14.0" layoutY="29.0" mnemonicParsing="false" onAction="#removeSelected" text="%removeSelected" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="20.0" />
                </children>
             </AnchorPane>
         </items>

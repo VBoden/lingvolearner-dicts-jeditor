@@ -2,53 +2,54 @@ package ua.vboden.controllers;
 
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import ua.vboden.dto.CodeString;
-import ua.vboden.dto.DictionaryData;
+import ua.vboden.dto.IdString;
 import ua.vboden.dto.TranslationRow;
-import ua.vboden.entities.Dictionary;
+import ua.vboden.entities.DictionaryEntry;
 import ua.vboden.repositories.DictionaryRepository;
+import ua.vboden.services.EntityService;
 import ua.vboden.services.LanguageService;
-import ua.vboden.services.SessionService;
 
 @Component
-public class DictionaryEntryEditorController extends AbstractController {
+public class DictionaryEntryEditorController extends AbstractEditorController<TranslationRow, DictionaryEntry> {
 
 	@FXML
-	private TableView<DictionaryData> dictionariesTable;
+	private TableView<TranslationRow> entriesTable;
 
 	@FXML
-	private TableColumn<DictionaryData, String> titleColumn;
+	private TableColumn<TranslationRow, String> wordColumn;
 
 	@FXML
-	private TableColumn<DictionaryData, String> languageFromColumn;
+	private TableColumn<TranslationRow, String> translationColumn;
 
 	@FXML
-	private TableColumn<DictionaryData, String> languageToColumn;
+	private TableColumn<TranslationRow, String> languageColumn;
 
 	@FXML
-	private TextField dictionaryName;
+	private TextField wordField;
+
+	@FXML
+	private TextField translationField;
+
+	@FXML
+	private TextField transcriptionField;
+
+	@FXML
+	private TextField notesField;
 
 	@FXML
 	private ComboBox<CodeString> languageFrom;
@@ -57,16 +58,10 @@ public class DictionaryEntryEditorController extends AbstractController {
 	private ComboBox<CodeString> languageTo;
 
 	@FXML
-	private Button closeButton;
+	private ListView<IdString> categoriesList;
 
 	@FXML
-	private Button removeDictionary;
-
-	@FXML
-	private Button saveAsNewDictionary;
-
-	@FXML
-	private Button saveDictionary;
+	private ListView<IdString> dictionariesList;
 
 	@FXML
 	private Label statusMessage;
@@ -77,128 +72,73 @@ public class DictionaryEntryEditorController extends AbstractController {
 	@Autowired
 	private LanguageService languageService;
 
-	@Autowired
-	private SessionService sessionService;
-
-	private DictionaryData current;
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		generalInit(resources);
+		categoriesList.setItems(getSessionService().getCategories());
+		categoriesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		dictionariesList.setItems(getSessionService().getDictionaries());
+		dictionariesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		languageService.loadLanguages();
-		dictionariesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		titleColumn.setCellValueFactory(new PropertyValueFactory<DictionaryData, String>("title"));
-		languageFromColumn.setCellValueFactory(new PropertyValueFactory<DictionaryData, String>("langFrom"));
-		languageToColumn.setCellValueFactory(new PropertyValueFactory<DictionaryData, String>("langTo"));
-		initDictionariesView();
-		ObservableList<CodeString> languages = sessionService.getLanguages();
+		ObservableList<CodeString> languages = getSessionService().getLanguages();
 		languageFrom.setItems(languages);
 		languageTo.setItems(languages);
+		statusMessage.setText("");
 	}
 
-	private void initDictionariesView() {
-		ObservableList<DictionaryData> dictionaries = getSessionService().getDictionaryData();
-		dictionariesTable.setItems(dictionaries);
-		statusMessage.setText(MessageFormat.format(getResources().getString("dictionary.status"), dictionaries.size()));
+	@Override
+	protected void initView() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected EntityService<TranslationRow, DictionaryEntry> getService() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected TableView<TranslationRow> getTable() {
+		return entriesTable;
+	}
+
+	@Override
+	protected void resetEditing() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected void populateEntity(DictionaryEntry entity) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	protected DictionaryEntry createNew() {
+		return new DictionaryEntry();
+	}
+
+	@Override
+	protected boolean isNotFilledFields() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void populateFields(TranslationRow current) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	String getFXML() {
-		return "/fxml/dictionaryEditor.fxml";
+		return "/fxml/dictionaryEntryEditor.fxml";
 	}
 
 	@Override
 	String getTitle() {
-		return getResources().getString("menu.manage.dictionaries");
+		return "menu.edit.dictionaryEntries";
 	}
 
-	@FXML
-	void startEditing(MouseEvent event) {
-		if (event.getClickCount() == 2) {
-			current = dictionariesTable.getSelectionModel().getSelectedItem();
-			dictionaryName.setText(current.getTitle());
-			ObservableList<CodeString> languages = getSessionService().getLanguages();
-			languageFrom.getSelectionModel().select(find(current.getLangFrom(), languages));
-			languageTo.getSelectionModel().select(find(current.getLangTo(), languages));
-		}
-	}
-
-	private CodeString find(String langName, ObservableList<CodeString> languages) {
-		for (CodeString lang : languages) {
-			if (lang.getValue().equalsIgnoreCase(langName)) {
-				return lang;
-			}
-		}
-		return null;
-	}
-
-	@FXML
-	void removeSelected(ActionEvent event) {
-		ObservableList<DictionaryData> selected = dictionariesTable.getSelectionModel().getSelectedItems();
-		dictionaryRepository.deleteAllById(selected.stream().map(DictionaryData::getId).collect(Collectors.toList()));
-		updateView();
-	}
-
-	@FXML
-	void save(ActionEvent event) {
-		save();
-	}
-
-	private void save() {
-		String newTitle = dictionaryName.getText();
-		if (StringUtils.isBlank(newTitle)) {
-			return;
-		}
-		Dictionary entity = null;
-		if (current != null) {
-			Optional<Dictionary> entityOpt = dictionaryRepository.findById(current.getId());
-			if (entityOpt.isPresent()) {
-				entity = entityOpt.get();
-			}
-		}
-		if (entity == null) {
-			entity = new Dictionary();
-		}
-		save(entity);
-	}
-
-	@FXML
-	void saveEnter(KeyEvent event) {
-		if (event.getCode().equals(KeyCode.ENTER)) {
-			save();
-		}
-	}
-
-	@FXML
-	void saveNew(ActionEvent event) {
-		save(new Dictionary());
-	}
-
-	void save(Dictionary entity) {
-		String newTitle = dictionaryName.getText();
-		if (StringUtils.isBlank(newTitle)) {
-			return;
-		}
-		entity.setName(newTitle);
-		entity.setLanguageFrom(languageService.getByCode(languageFrom.getSelectionModel().getSelectedItem().getCode()));
-		entity.setLanguageTo(languageService.getByCode(languageTo.getSelectionModel().getSelectedItem().getCode()));
-		dictionaryRepository.save(entity);
-		resetEditing();
-		updateView();
-	}
-
-	private void updateView() {
-		getSessionService().loadDictionaries();
-		initDictionariesView();
-	}
-
-	private void resetEditing() {
-		dictionaryName.setText("");
-		current = null;
-	}
-
-	@FXML
-	void close(ActionEvent event) {
-		getStage().close();
-	}
 }

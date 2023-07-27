@@ -27,12 +27,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import ua.vboden.dto.CodeString;
 import ua.vboden.dto.IdString;
-import ua.vboden.dto.TranslationRow;
 import ua.vboden.dto.WordData;
 import ua.vboden.entities.Word;
 import ua.vboden.services.CategoryService;
 import ua.vboden.services.EntityService;
-import ua.vboden.services.EntryService;
 import ua.vboden.services.LanguageService;
 import ua.vboden.services.WordService;
 
@@ -51,8 +49,8 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 	@FXML
 	private TableColumn<WordData, String> categoriesColumn;
 
-    @FXML
-    private TableColumn<WordData, Integer> usagesColumn;
+	@FXML
+	private TableColumn<WordData, Integer> usagesColumn;
 
 	@FXML
 	private TableColumn<WordData, String> notesColumn;
@@ -151,12 +149,13 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 		wordNotes.setText(current.getNotes());
 		language.getSelectionModel().select(find(current.getLanguage(), language.getItems()));
 		categoryList.getSelectionModel().clearSelection();
-		categoryList.getSelectionModel().selectIndices(-1,
-				findCategories(current.getCategories(), categoryList.getItems()));
+		String categories = current.getCategories();
+		if (categories != null && !categories.isEmpty())
+			categoryList.getSelectionModel().selectIndices(-1, findCategories(categories, categoryList.getItems()));
 	}
 
 	private int[] findCategories(String categories, ObservableList<IdString> items) {
-		String[] categs = categories.split(";");
+		String[] categs = categories.split("\n");
 		List<Integer> indices = new ArrayList<>();
 		for (String cat : categs) {
 			for (IdString item : items) {

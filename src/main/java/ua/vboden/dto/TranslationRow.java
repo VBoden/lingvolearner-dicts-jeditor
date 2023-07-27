@@ -7,6 +7,7 @@ public class TranslationRow {
 	private String word;
 	private String translation;
 	private String categories;
+	private String transCategories;
 	private String dictionaries;
 
 	public TranslationRow() {
@@ -58,6 +59,14 @@ public class TranslationRow {
 
 	public void setCategories(String categories) {
 		this.categories = categories;
+	}
+
+	public String getTransCategories() {
+		return transCategories;
+	}
+
+	public void setTransCategories(String transCategories) {
+		this.transCategories = transCategories;
 	}
 
 	public String getDictionaries() {
