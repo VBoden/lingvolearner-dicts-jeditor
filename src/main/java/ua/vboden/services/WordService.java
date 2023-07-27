@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import ua.vboden.converters.WordConverter;
+import ua.vboden.dto.TranslationRow;
 import ua.vboden.dto.WordData;
 import ua.vboden.entities.Word;
 import ua.vboden.repositories.WordRepository;
@@ -47,6 +48,10 @@ public class WordService implements EntityService<WordData, Word> {
 	@Override
 	public void save(Word entity) {
 		wordRepository.save(entity);
+	}
+
+	public List<WordData> getAllByWord(String word) {
+		return wordConverter.convertAll(wordRepository.findByWordContaining(word));
 	}
 
 }

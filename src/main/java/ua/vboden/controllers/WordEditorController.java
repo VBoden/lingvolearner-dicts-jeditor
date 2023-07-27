@@ -10,7 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -19,9 +21,13 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import ua.vboden.dto.CodeString;
 import ua.vboden.dto.IdString;
+import ua.vboden.dto.TranslationRow;
 import ua.vboden.dto.WordData;
 import ua.vboden.entities.Word;
 import ua.vboden.services.CategoryService;
@@ -62,8 +68,15 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 	@FXML
 	private Label statusMessage;
 
+    @FXML
+    private TextField searchField;
+
+    @FXML
+    private ToggleButton findButton;
+
 	@Autowired
 	private WordService wordService;
+
 	@Autowired
 	private LanguageService languageService;
 
@@ -85,12 +98,13 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 
 	@Override
 	protected void initView() {
-		wordService.loadData();
-		ObservableList<WordData> words = getSessionService().getWords();
-		wordsTable.setItems(words);
+//		wordService.loadData();
+//		ObservableList<WordData> words = getSessionService().getWords();
+//		wordsTable.setItems(words);
+		findWords();
 		categoryList.setItems(getSessionService().getCategories());
 		language.setItems(getSessionService().getLanguages());
-		statusMessage.setText(MessageFormat.format(getResources().getString("word.status"), words.size()));
+//		statusMessage.setText(MessageFormat.format(getResources().getString("word.status"), words.size()));
 	}
 
 	@Override
@@ -173,4 +187,32 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 		return wordsTable;
 	}
 
+	@FXML
+	void findWordsEnter(KeyEvent event) {
+		if (event.getCode().equals(KeyCode.ENTER)) {
+			findButton.setSelected(true);
+			findWords();
+		}
+	}
+
+    @FXML
+    void findWord(ActionEvent event) {
+    	findWords();
+    }
+    
+    private void findWords() {
+		if (findButton.isSelected()) {
+			String word = searchField.getText();
+			if(StringUtils.isNoneBlank(word)) {
+				ObservableList<WordData> words = FXCollections.observableArrayList(wordService.getAllByWord(word));
+				wordsTable.setItems(words);
+				statusMessage.setText(MessageFormat.format(getResources().getString("word.status"), words.size()));
+			}
+		} else {
+			wordService.loadData();
+			ObservableList<WordData> words = getSessionService().getWords();
+			wordsTable.setItems(words);
+			statusMessage.setText(MessageFormat.format(getResources().getString("word.status"), words.size()));
+		}
+	}
 }
