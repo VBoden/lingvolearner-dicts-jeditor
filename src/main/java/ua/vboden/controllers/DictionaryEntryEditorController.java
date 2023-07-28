@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import ua.vboden.dto.CodeString;
 import ua.vboden.dto.IdString;
 import ua.vboden.dto.TranslationRow;
@@ -229,11 +231,17 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 			CheckBox useWordCheck) {
 		String word = wordEntity.getWord();
 		textField.setText(word);
-		ObservableList<WordData> wordSuggestions = FXCollections.observableArrayList(wordService.getAllByWord(word));
-		suggestionTable.setItems(wordSuggestions);
-		useWordCheck.setDisable(wordSuggestions.size()==0);
+		ObservableList<WordData> wordSuggestions = fillSuggestions(suggestionTable, useWordCheck, word);
 		suggestionTable.getSelectionModel().select(find(wordEntity.getId(), wordSuggestions));
 		return word;
+	}
+
+	protected ObservableList<WordData> fillSuggestions(TableView<WordData> suggestionTable, CheckBox useWordCheck,
+			String word) {
+		ObservableList<WordData> wordSuggestions = FXCollections.observableArrayList(wordService.getAllByWord(word));
+		suggestionTable.setItems(wordSuggestions);
+		useWordCheck.setDisable(wordSuggestions.size() == 0);
+		return wordSuggestions;
 	}
 
 	private int find(int id, ObservableList<WordData> items) {
@@ -281,15 +289,36 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		setCurrent(selected);
 		super.showStage(null);
 	}
- 
-	@FXML
-    void useTranslationChecked(ActionEvent event) {
-		transSuggestionTable.setDisable(!useTranslationCheck.isSelected());
-    }
 
-    @FXML
-    void useWordChecked(ActionEvent event) {
-    	wordsSuggestionTable.setDisable(!useWordCheck.isSelected());
-    }
+	@FXML
+	void useTranslationChecked(ActionEvent event) {
+		transSuggestionTable.setDisable(!useTranslationCheck.isSelected());
+	}
+
+	@FXML
+	void useWordChecked(ActionEvent event) {
+		wordsSuggestionTable.setDisable(!useWordCheck.isSelected());
+	}
+
+	@FXML
+	void wordEntering(KeyEvent event) {
+		executeSuggestionSearch(wordField, wordsSuggestionTable, useWordCheck);
+		String word = wordField.getText();
+		if (StringUtils.isNotBlank(word) && word.length() > 2) {
+			entriesTable.setItems(FXCollections.observableArrayList(entryService.getAllByWord(word)));
+		}
+	}
+
+	@FXML
+	void translationEntering(KeyEvent event) {
+		executeSuggestionSearch(translationField, transSuggestionTable, useTranslationCheck);
+	}
+
+	private void executeSuggestionSearch(TextField textField, TableView<WordData> suggestionTable, CheckBox useCheck) {
+		String word = textField.getText();
+		if (StringUtils.isNotBlank(word) && word.length() > 2) {
+			fillSuggestions(suggestionTable, useCheck, word);
+		}
+	}
 
 }
