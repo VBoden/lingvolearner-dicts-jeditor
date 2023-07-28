@@ -127,7 +127,9 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		translationColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, String>("translation"));
 		categoriesList.setItems(getSessionService().getCategories());
 		categoriesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		dictionariesList.setItems(getSessionService().getDictionaries());
+		dictionariesList.setItems(getSessionService().getDictionaries().sorted((a, b) -> {
+			return b.getId() - a.getId();
+		}));
 		dictionariesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		languageService.loadLanguages();
 		ObservableList<CodeString> languages = getSessionService().getLanguages();
@@ -173,7 +175,7 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		languageFrom.getSelectionModel().clearSelection();
 		languageTo.getSelectionModel().clearSelection();
 		categoriesList.getSelectionModel().clearSelection();
-		dictionariesList.getSelectionModel().clearSelection();
+		dictionariesList.getSelectionModel().select(0);
 		wordsSuggestionTable.getItems().clear();
 		transSuggestionTable.getItems().clear();
 		useWordCheck.setSelected(false);
@@ -225,6 +227,12 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 					find(dictionaries.stream().map(Dictionary::getId).collect(Collectors.toList()),
 							dictionariesList.getItems()));
 		entriesTable.setItems(FXCollections.observableArrayList(entryService.getAllByWord(word)));
+		useWordCheck.setDisable(false);
+		useTranslationCheck.setDisable(false);
+		useWordCheck.setSelected(true);
+		useTranslationCheck.setSelected(true);
+		wordsSuggestionTable.setDisable(false);
+		transSuggestionTable.setDisable(false);
 	}
 
 	protected String fillWordFields(Word wordEntity, TextField textField, TableView<WordData> suggestionTable,
