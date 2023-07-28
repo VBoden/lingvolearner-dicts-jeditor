@@ -1,7 +1,6 @@
 package ua.vboden.services;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import ua.vboden.converters.WordConverter;
-import ua.vboden.dto.TranslationRow;
 import ua.vboden.dto.WordData;
 import ua.vboden.entities.Word;
 import ua.vboden.repositories.WordRepository;

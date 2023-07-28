@@ -17,7 +17,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import ua.vboden.dto.CodeString;
 import ua.vboden.entities.Language;
 import ua.vboden.services.EntityService;
@@ -114,7 +113,6 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 		languageTitle.setText("");
 		languageCode.setEditable(true);
 		saveAsNewButton.setDisable(false);
-		setCurrent(null);
 	}
 
 	@Override

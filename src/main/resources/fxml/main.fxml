@@ -120,7 +120,7 @@
             </AnchorPane>
           <AnchorPane>
                <children>
-                  <TableView fx:id="mainTable" editable="true" layoutX="-150.0" layoutY="-83.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+                  <TableView fx:id="mainTable" editable="true" layoutX="-150.0" layoutY="-83.0" onMouseClicked="#startEditing" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
                     <columns>
                       <TableColumn fx:id="numberColumn" editable="false" maxWidth="100.0" minWidth="50.0" prefWidth="-1.0" text="%translations.table.number" />
                       <TableColumn fx:id="wordColumn" editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="200.0" text="%translations.table.word" />

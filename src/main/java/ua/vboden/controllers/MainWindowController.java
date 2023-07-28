@@ -311,6 +311,14 @@ public class MainWindowController extends AbstractController {
 	}
 
 	@FXML
+	void startEditing(MouseEvent event) throws IOException {
+		if (event.getClickCount() == 2) {
+			TranslationRow selected = mainTable.getSelectionModel().getSelectedItem();
+			dictionaryEntryEditorController.showStage(null, selected);
+		}
+	}
+
+	@FXML
 	void removeSelected(ActionEvent event) {
 //		ObservableList<T> selected = getSelected();
 //		ObservableList<T> forDelete = FXCollections.observableArrayList();

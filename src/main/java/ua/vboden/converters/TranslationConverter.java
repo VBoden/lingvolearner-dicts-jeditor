@@ -3,6 +3,7 @@ package ua.vboden.converters;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import ua.vboden.dto.TranslationRow;
@@ -34,13 +35,18 @@ public class TranslationConverter extends AbstractConverter<DictionaryEntry, Tra
 				: source.getWord().getCategory().stream().map(cat -> cat.getName()).reduce((a, b) -> a + "\n" + b)
 				.orElse(null));
 		}
-		row.setTranslation(source.getTranslation().getWord());
+		String translation = source.getTranslation().getWord();
+		if(StringUtils.isNoneBlank(source.getTranslation().getNotes())) {
+			translation+="\n("+source.getTranslation().getNotes()+")";
+		}
+		row.setTranslation(translation);
 		row.setTransCategories(source.getTranslation().getCategory() == null ? null
 				: source.getTranslation().getCategory().stream().map(cat -> cat.getName()).reduce((a, b) -> a + "\n" + b)
 				.orElse(null));
 		row.setDictionaries(source.getDictionary() == null ? null
 				: source.getDictionary().stream().map(cat -> cat.getName()).reduce((a, b) -> a + "\n" + b)
 						.orElse(null));
+		row.setTranscription(source.getTranscription());
 		return row;
 	}
 

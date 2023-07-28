@@ -76,7 +76,6 @@ public class CategoryEditorController extends AbstractEditorController<IdString,
 	@Override
 	protected void resetEditing() {
 		categoryName.setText("");
-		setCurrent(null);
 	}
 
 	@Override

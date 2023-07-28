@@ -69,7 +69,7 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 
 	@FXML
 	void cleanFields(ActionEvent event) {
-		resetEditing();
+		resetEditionGlobal();
 	}
 
 	@FXML
@@ -109,8 +109,13 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 		}
 		populateEntity(entity);
 		getService().save(entity);
-		resetEditing();
+		resetEditionGlobal();
 		initView();
+	}
+
+	protected void resetEditionGlobal() {
+		resetEditing();
+		setCurrent(null);
 	}
 
 	@FXML
