@@ -1,9 +1,6 @@
 package ua.vboden.controllers;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.List;
@@ -30,7 +27,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -159,6 +155,7 @@ public class MainWindowController extends AbstractController {
 
 	private void loadTranslations() {
 		ObservableList<TranslationRow> translations = getSessionService().getTranslations();
+		translations.sort(TranslationRow.lastFirstComparator());
 		updateTranslations(translations);
 //		mainTable.getSelectionModel().select(translations.size() - 1);
 //		mainTable.scrollTo(translations.size());

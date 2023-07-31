@@ -1,5 +1,7 @@
 package ua.vboden.dto;
 
+import java.util.Comparator;
+
 public class TranslationRow {
 
 	private int recordId;
@@ -86,4 +88,7 @@ public class TranslationRow {
 		this.dictionaries = dictionaries;
 	}
 
+	public static Comparator<? super TranslationRow> lastFirstComparator() {
+		return (a, b) -> b.getNumber() - a.getNumber();
+	}
 }

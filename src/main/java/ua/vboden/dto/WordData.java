@@ -66,7 +66,8 @@ public class WordData implements Comparable<WordData> {
 	@Override
 	public String toString() {
 		String notesPart = StringUtils.isNotBlank(notes) ? " (" + notes + ")" : "";
-		return word + notesPart + " - " + language + " - " + categories.replaceAll("\n", ";");
+		return word + notesPart + " - " + language
+				+ (categories != null ? " - " + categories.replaceAll("\n", ";") : "");
 	}
 
 }
