@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -31,11 +32,18 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import ua.vboden.components.ListChoiceDialog;
 import ua.vboden.dto.IdString;
 import ua.vboden.dto.TranslationRow;
+import ua.vboden.entities.Category;
+import ua.vboden.entities.Dictionary;
+import ua.vboden.entities.DictionaryEntry;
+import ua.vboden.entities.Word;
+import ua.vboden.services.CategoryService;
 import ua.vboden.services.DictionaryService;
 import ua.vboden.services.EntryService;
 import ua.vboden.services.LanguageService;
+import ua.vboden.services.WordService;
 
 @Component
 public class MainWindowController extends AbstractController {
@@ -121,6 +129,12 @@ public class MainWindowController extends AbstractController {
 	@Autowired
 	private DictionaryService dictionaryService;
 
+	@Autowired
+	private CategoryService categoryService;
+
+	@Autowired
+	private WordService wordService;
+
 	private boolean filtered;
 
 	@Override
@@ -160,6 +174,7 @@ public class MainWindowController extends AbstractController {
 	}
 
 	private void loadTranslations() {
+		getSessionService().loadData();// !!!!!!!!to be removed!
 		ObservableList<TranslationRow> translations = getSessionService().getTranslations();
 		translations.sort(TranslationRow.lastFirstComparator());
 		updateTranslations(translations);
@@ -332,6 +347,85 @@ public class MainWindowController extends AbstractController {
 //		}
 //		getService().deleteSelected(forDelete);
 //		initView();
+	}
+
+	@FXML
+	void addToCategory(ActionEvent event) {
+		ListChoiceDialog<IdString> dialog = new ListChoiceDialog<>(getSessionService().getCategories());
+		Optional<List<IdString>> result = dialog.showAndWait();
+		if (result.isPresent()) {
+			System.out.println(result.get().get(0).getValue());
+			ObservableList<TranslationRow> selectedEntries = mainTable.getSelectionModel().getSelectedItems();
+			for (TranslationRow trnaslation : selectedEntries) {
+				DictionaryEntry entryEntity = entryService.findEntity(trnaslation);
+				List<Category> categoryEntities = categoryService.findEntities(result.get());
+				Word wordEntity = entryEntity.getWord();
+				categoryEntities.removeAll(wordEntity.getCategory());
+				wordEntity.getCategory().addAll(categoryEntities);
+				wordService.save(wordEntity);
+				Word transEntity = entryEntity.getTranslation();
+				transEntity.getCategory().addAll(categoryEntities);
+				wordService.save(transEntity);
+			}
+			loadTranslations();
+		}
+	}
+
+	@FXML
+	void removeFromCategory(ActionEvent event) {
+
+		ListChoiceDialog<IdString> dialog = new ListChoiceDialog<>(getSessionService().getCategories());
+		Optional<List<IdString>> result = dialog.showAndWait();
+		if (result.isPresent()) {
+			System.out.println(result.get().get(0).getValue());
+			ObservableList<TranslationRow> selectedEntries = mainTable.getSelectionModel().getSelectedItems();
+			for (TranslationRow trnaslation : selectedEntries) {
+				DictionaryEntry entryEntity = entryService.findEntity(trnaslation);
+				List<Category> categoryEntities = categoryService.findEntities(result.get());
+				Word wordEntity = entryEntity.getWord();
+				wordEntity.getCategory().removeAll(categoryEntities);
+				wordService.save(wordEntity);
+				Word transEntity = entryEntity.getTranslation();
+				transEntity.getCategory().removeAll(categoryEntities);
+				wordService.save(transEntity);
+			}
+			loadTranslations();
+		}
+	}
+
+	@FXML
+	void addToDictionary(ActionEvent event) {
+		ListChoiceDialog<IdString> dialog = new ListChoiceDialog<>(getSessionService().getDictionaries());
+		Optional<List<IdString>> result = dialog.showAndWait();
+		if (result.isPresent()) {
+			System.out.println(result.get().get(0).getValue());
+			ObservableList<TranslationRow> selectedEntries = mainTable.getSelectionModel().getSelectedItems();
+			for (TranslationRow trnaslation : selectedEntries) {
+				DictionaryEntry entryEntity = entryService.findEntity(trnaslation);
+				List<Dictionary> dictionaryEntities = dictionaryService.findEntities(result.get());
+				dictionaryEntities.removeAll(entryEntity.getDictionary());
+				entryEntity.getDictionary().addAll(dictionaryEntities);
+				entryService.save(entryEntity);
+			}
+			loadTranslations();
+		}
+	}
+
+	@FXML
+	void removeFromDictionary(ActionEvent event) {
+		ListChoiceDialog<IdString> dialog = new ListChoiceDialog<>(getSessionService().getDictionaries());
+		Optional<List<IdString>> result = dialog.showAndWait();
+		if (result.isPresent()) {
+			System.out.println(result.get().get(0).getValue());
+			ObservableList<TranslationRow> selectedEntries = mainTable.getSelectionModel().getSelectedItems();
+			for (TranslationRow trnaslation : selectedEntries) {
+				DictionaryEntry entryEntity = entryService.findEntity(trnaslation);
+				List<Dictionary> dictionaryEntities = dictionaryService.findEntities(result.get());
+				entryEntity.getDictionary().removeAll(dictionaryEntities);
+				entryService.save(entryEntity);
+			}
+			loadTranslations();
+		}
 	}
 
 }

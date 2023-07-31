@@ -48,6 +48,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -56,34 +57,43 @@
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
-        <Menu mnemonicParsing="false" text="File">
+        <Menu mnemonicParsing="false" text="%menu.file">
           <items>
-            <MenuItem mnemonicParsing="false" text="New" />
-            <MenuItem mnemonicParsing="false" text="Open…" />
-            <Menu mnemonicParsing="false" text="Open Recent" />
+                  <MenuItem mnemonicParsing="false" text="%menu.file.export" />
+            <MenuItem mnemonicParsing="false" text="New" visible="false" />
+            <MenuItem mnemonicParsing="false" text="Open…" visible="false" />
+            <Menu mnemonicParsing="false" text="Open Recent" visible="false" />
+            <SeparatorMenuItem mnemonicParsing="false" visible="false" />
+            <MenuItem mnemonicParsing="false" text="Close" visible="false" />
+            <MenuItem mnemonicParsing="false" text="Save" visible="false" />
+            <MenuItem mnemonicParsing="false" text="Save As…" visible="false" />
+            <MenuItem mnemonicParsing="false" text="Revert" visible="false" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" text="Save" />
-            <MenuItem mnemonicParsing="false" text="Save As…" />
-            <MenuItem mnemonicParsing="false" text="Revert" />
+            <MenuItem mnemonicParsing="false" text="%menu.file.preferences" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="menuQuit" mnemonicParsing="false" onAction="#quit" text="Quit" />
+            <MenuItem fx:id="menuQuit" mnemonicParsing="false" onAction="#quit" text="%menu.file.exit">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="Q" control="ANY" meta="UP" shift="ANY" shortcut="UP" />
+                     </accelerator></MenuItem>
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
+        <Menu mnemonicParsing="false" text="%menu.edit">
           <items>
             <MenuItem fx:id="menuManageDictionaryEntries" mnemonicParsing="false" onAction="#manageDictionaryEntries" text="%menu.edit.dictionaryEntries" />
-            <MenuItem mnemonicParsing="false" text="Unselect All" />
+            <MenuItem mnemonicParsing="false" text="Unselect All" visible="false" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Undo" />
-            <MenuItem mnemonicParsing="false" text="Redo" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Cut" />
-            <MenuItem mnemonicParsing="false" text="Copy" />
-            <MenuItem mnemonicParsing="false" text="Paste" />
-            <MenuItem mnemonicParsing="false" text="Delete" />
+                  <MenuItem mnemonicParsing="false" onAction="#addToCategory" text="%menu.edit.addToCategory" />
+                  <MenuItem mnemonicParsing="false" onAction="#addToDictionary" text="%menu.edit.addToDictionary" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#removeFromCategory" text="%menu.edit.removeFromCategory" />
+                  <MenuItem mnemonicParsing="false" onAction="#removeFromDictionary" text="%menu.edit.removeFromDictionary" />
+            <MenuItem mnemonicParsing="false" text="Undo" visible="false" />
+            <MenuItem mnemonicParsing="false" text="Redo" visible="false" />
+            <SeparatorMenuItem mnemonicParsing="false" visible="false" />
+            <MenuItem mnemonicParsing="false" text="Cut" visible="false" />
+            <MenuItem mnemonicParsing="false" text="Copy" visible="false" />
+            <MenuItem mnemonicParsing="false" text="Paste" visible="false" />
+            <MenuItem mnemonicParsing="false" text="Delete" visible="false" />
           </items>
         </Menu>
             <Menu mnemonicParsing="false" text="%menu.manage">
@@ -94,7 +104,7 @@
             <MenuItem fx:id="menuManageLanguages" mnemonicParsing="false" onAction="#manageLanguages" text="%menu.manage.languages" />
               </items>
             </Menu>
-        <Menu mnemonicParsing="false" text="Help">
+        <Menu mnemonicParsing="false" text="%menu.help">
           <items>
             <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
           </items>
