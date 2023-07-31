@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -36,6 +37,7 @@ import ua.vboden.entities.Category;
 import ua.vboden.entities.Dictionary;
 import ua.vboden.entities.DictionaryEntry;
 import ua.vboden.entities.Word;
+import ua.vboden.fxservices.EntrySearchService;
 import ua.vboden.services.CategoryService;
 import ua.vboden.services.DictionaryService;
 import ua.vboden.services.EntityService;
@@ -280,8 +282,9 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 					.select(find(entity.getWord().getLanguage().getName(), languageFrom.getItems()));
 			List<Category> categories = entity.getWord().getCategory();
 			if (categories != null && !categories.isEmpty())
-				categoriesList.getSelectionModel().selectIndices(-1, find(
-						categories.stream().map(Category::getId).collect(Collectors.toList()), categoriesList.getItems()));
+				categoriesList.getSelectionModel().selectIndices(-1,
+						find(categories.stream().map(Category::getId).collect(Collectors.toList()),
+								categoriesList.getItems()));
 			entriesTable.setItems(FXCollections.observableArrayList(entryService.getAllByWord(word)));
 		}
 		fillWordFields(entity.getTranslation(), translationField, transSuggestionTable, useTranslationCheck);
@@ -418,18 +421,21 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 	@FXML
 	void wordEntering(KeyEvent event) {
 		executeSuggestionSearch(wordField, wordsSuggestionTable, useWordCheck);
-		String word = wordField.getText();
-		if (StringUtils.isNotBlank(word) && word.length() > 2) {
-			entriesTable.setItems(FXCollections.observableArrayList(entryService.getAllByWord(word)));
-		}
+		fillEntriesAfterSuggestions(wordField.getText(), entryService::getAllByWord);
 	}
 
 	@FXML
 	void translationEntering(KeyEvent event) {
 		executeSuggestionSearch(translationField, transSuggestionTable, useTranslationCheck);
-		String word = translationField.getText();
+		fillEntriesAfterSuggestions(translationField.getText(), entryService::getAllByTranslation);
+	}
+
+	private void fillEntriesAfterSuggestions(String word, Function<String, List<TranslationRow>> finder) {
 		if (StringUtils.isNotBlank(word) && word.length() > 2) {
-			entriesTable.setItems(FXCollections.observableArrayList(entryService.getAllByTranslation(word)));
+			EntrySearchService searchSevice = new EntrySearchService(finder, word);
+			searchSevice.start();
+			searchSevice.setOnSucceeded(
+					e -> entriesTable.setItems(FXCollections.observableArrayList(searchSevice.getValue())));
 		}
 	}
 
