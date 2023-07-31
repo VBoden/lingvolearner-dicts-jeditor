@@ -27,6 +27,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import ua.vboden.dto.CodeString;
 import ua.vboden.dto.IdString;
 import ua.vboden.dto.TranslationRow;
@@ -35,7 +36,6 @@ import ua.vboden.entities.Category;
 import ua.vboden.entities.Dictionary;
 import ua.vboden.entities.DictionaryEntry;
 import ua.vboden.entities.Word;
-import ua.vboden.repositories.DictionaryRepository;
 import ua.vboden.services.CategoryService;
 import ua.vboden.services.DictionaryService;
 import ua.vboden.services.EntityService;
@@ -210,6 +210,7 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		if (selectedDictionaries != null && selectedDictionaries.size() > 0) {
 			entity.setDictionary(dictionaryService.findEntities(selectedDictionaries));
 		}
+		entity.setTranscription(transcriptionField.getText());
 		wordService.save(wordEntity);
 		wordService.save(translationEntity);
 
@@ -253,15 +254,18 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 			return true;
 		if (!useTranslationCheck.isSelected() && languageTo.getSelectionModel().getSelectedIndex() == -1)
 			return true;
-		String word = useWordCheck.isSelected() ? wordsSuggestionTable.getSelectionModel().getSelectedItem().getWord()
-				: wordField.getText();
-		String translation = useTranslationCheck.isSelected()
-				? transSuggestionTable.getSelectionModel().getSelectedItem().getWord()
-				: translationField.getText();
-		for (TranslationRow entry : entriesTable.getItems()) {
-			if (word.equalsIgnoreCase(entry.getWord())
-					&& translation.equalsIgnoreCase(entry.getTranslation().split("\n")[0])) {
-				return true;
+		if (getCurrent() == null) {
+			String word = useWordCheck.isSelected()
+					? wordsSuggestionTable.getSelectionModel().getSelectedItem().getWord()
+					: wordField.getText();
+			String translation = useTranslationCheck.isSelected()
+					? transSuggestionTable.getSelectionModel().getSelectedItem().getWord()
+					: translationField.getText();
+			for (TranslationRow entry : entriesTable.getItems()) {
+				if (word.equalsIgnoreCase(entry.getWord())
+						&& translation.equalsIgnoreCase(entry.getTranslation().split("\n")[0])) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -270,26 +274,28 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 	@Override
 	protected void populateFields(TranslationRow current) {
 		DictionaryEntry entity = getService().findEntity(current);
-		String word = fillWordFields(entity.getWord(), wordField, wordsSuggestionTable, useWordCheck);
+		if (entity.getWord() != null) {
+			String word = fillWordFields(entity.getWord(), wordField, wordsSuggestionTable, useWordCheck);
+			languageFrom.getSelectionModel()
+					.select(find(entity.getWord().getLanguage().getName(), languageFrom.getItems()));
+			List<Category> categories = entity.getWord().getCategory();
+			if (categories != null && !categories.isEmpty())
+				categoriesList.getSelectionModel().selectIndices(-1, find(
+						categories.stream().map(Category::getId).collect(Collectors.toList()), categoriesList.getItems()));
+			entriesTable.setItems(FXCollections.observableArrayList(entryService.getAllByWord(word)));
+		}
 		fillWordFields(entity.getTranslation(), translationField, transSuggestionTable, useTranslationCheck);
 
 		transcriptionField.setText(current.getTranscription());
 		notesField.setText(entity.getTranslation().getNotes());
-		languageFrom.getSelectionModel()
-				.select(find(entity.getWord().getLanguage().getName(), languageFrom.getItems()));
 		languageTo.getSelectionModel()
 				.select(find(entity.getTranslation().getLanguage().getName(), languageTo.getItems()));
 		categoriesList.getSelectionModel().clearSelection();
-		List<Category> categories = entity.getWord().getCategory();
-		if (categories != null && !categories.isEmpty())
-			categoriesList.getSelectionModel().selectIndices(-1, find(
-					categories.stream().map(Category::getId).collect(Collectors.toList()), categoriesList.getItems()));
 		List<Dictionary> dictionaries = entity.getDictionary();
 		if (dictionaries != null && !dictionaries.isEmpty())
 			dictionariesList.getSelectionModel().selectIndices(-1,
 					find(dictionaries.stream().map(Dictionary::getId).collect(Collectors.toList()),
 							dictionariesList.getItems()));
-		entriesTable.setItems(FXCollections.observableArrayList(entryService.getAllByWord(word)));
 		useWordCheck.setDisable(false);
 		useTranslationCheck.setDisable(false);
 		useWordCheck.setSelected(true);
@@ -367,12 +373,46 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 
 	@FXML
 	void useTranslationChecked(ActionEvent event) {
-		transSuggestionTable.setDisable(!useTranslationCheck.isSelected());
+		categoriesList.getSelectionModel().clearSelection();
+		boolean isSelected = useTranslationCheck.isSelected();
+		transSuggestionTable.setDisable(!isSelected);
+		if (isSelected) {
+			fillTransBySelection();
+		} else {
+			notesField.setText("");
+			languageTo.getSelectionModel().clearSelection();
+		}
+	}
+
+	private void fillTransBySelection() {
+		Word wordEntity = wordService.findEntity(transSuggestionTable.getSelectionModel().getSelectedItem());
+		notesField.setText(wordEntity.getNotes());
+		languageTo.getSelectionModel().select(find(wordEntity.getLanguage().getName(), languageTo.getItems()));
+		List<Category> categories = wordEntity.getCategory();
+		if (categories != null && !categories.isEmpty())
+			categoriesList.getSelectionModel().selectIndices(-1, find(
+					categories.stream().map(Category::getId).collect(Collectors.toList()), categoriesList.getItems()));
 	}
 
 	@FXML
 	void useWordChecked(ActionEvent event) {
-		wordsSuggestionTable.setDisable(!useWordCheck.isSelected());
+		categoriesList.getSelectionModel().clearSelection();
+		boolean isSelected = useWordCheck.isSelected();
+		wordsSuggestionTable.setDisable(!isSelected);
+		if (isSelected) {
+			fillWordBySelection();
+		} else {
+			languageFrom.getSelectionModel().clearSelection();
+		}
+	}
+
+	private void fillWordBySelection() {
+		Word wordEntity = wordService.findEntity(wordsSuggestionTable.getSelectionModel().getSelectedItem());
+		languageFrom.getSelectionModel().select(find(wordEntity.getLanguage().getName(), languageFrom.getItems()));
+		List<Category> categories = wordEntity.getCategory();
+		if (categories != null && !categories.isEmpty())
+			categoriesList.getSelectionModel().selectIndices(-1, find(
+					categories.stream().map(Category::getId).collect(Collectors.toList()), categoriesList.getItems()));
 	}
 
 	@FXML
@@ -400,4 +440,13 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		}
 	}
 
+	@FXML
+	void wordsSuggestionClicked(MouseEvent event) {
+		fillWordBySelection();
+	}
+
+	@FXML
+	void transSuggestionClicked(MouseEvent event) {
+		fillTransBySelection();
+	}
 }

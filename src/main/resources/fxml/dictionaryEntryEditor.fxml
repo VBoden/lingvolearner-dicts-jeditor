@@ -43,7 +43,7 @@
                               <TextField fx:id="wordField" layoutX="22.0" layoutY="52.0" onKeyReleased="#wordEntering" prefHeight="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                               <CheckBox fx:id="useWordCheck" layoutX="30.0" layoutY="92.0" mnemonicParsing="false" onAction="#useWordChecked" text="%dictionaryEntry.selectExisting" />
                               <Label layoutX="24.0" layoutY="344.0" text="%dictionaryEntry.categories" AnchorPane.leftAnchor="30.0" />
-                              <TableView fx:id="wordsSuggestionTable" layoutX="15.0" layoutY="118.0" prefHeight="97.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
+                              <TableView fx:id="wordsSuggestionTable" layoutX="15.0" layoutY="118.0" onMouseClicked="#wordsSuggestionClicked" prefHeight="97.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
                                  <columns>
                                     <TableColumn fx:id="wordWordColumn" prefWidth="75.0" text="%word.title" />
                                     <TableColumn fx:id="wordLangColumn" prefWidth="75.0" text="%word.language" />
@@ -66,7 +66,7 @@
                               <ComboBox fx:id="languageTo" layoutX="327.0" layoutY="248.0" prefHeight="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                               <CheckBox fx:id="useTranslationCheck" layoutX="350.0" layoutY="92.0" mnemonicParsing="false" onAction="#useTranslationChecked" text="%dictionaryEntry.selectExisting" AnchorPane.leftAnchor="30.0" />
                               <Label layoutX="31.0" layoutY="344.0" text="%dictionaryEntry.dictionaries" AnchorPane.leftAnchor="30.0" />
-                              <TableView fx:id="transSuggestionTable" layoutX="344.0" layoutY="118.0" prefHeight="97.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
+                              <TableView fx:id="transSuggestionTable" layoutX="344.0" layoutY="118.0" onMouseClicked="#transSuggestionClicked" prefHeight="97.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
                                  <columns>
                                     <TableColumn fx:id="transWordColumn" prefWidth="75.0" text="%word.title" />
                                     <TableColumn fx:id="transLangColumn" prefWidth="75.0" text="%word.language" />
