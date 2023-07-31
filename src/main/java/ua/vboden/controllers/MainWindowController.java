@@ -174,7 +174,6 @@ public class MainWindowController extends AbstractController {
 	}
 
 	private void loadTranslations() {
-		getSessionService().loadData();// !!!!!!!!to be removed!
 		ObservableList<TranslationRow> translations = getSessionService().getTranslations();
 		translations.sort(TranslationRow.lastFirstComparator());
 		updateTranslations(translations);
@@ -354,21 +353,24 @@ public class MainWindowController extends AbstractController {
 		ListChoiceDialog<IdString> dialog = new ListChoiceDialog<>(getSessionService().getCategories());
 		Optional<List<IdString>> result = dialog.showAndWait();
 		if (result.isPresent()) {
-			System.out.println(result.get().get(0).getValue());
 			ObservableList<TranslationRow> selectedEntries = mainTable.getSelectionModel().getSelectedItems();
 			for (TranslationRow trnaslation : selectedEntries) {
 				DictionaryEntry entryEntity = entryService.findEntity(trnaslation);
 				List<Category> categoryEntities = categoryService.findEntities(result.get());
 				Word wordEntity = entryEntity.getWord();
-				categoryEntities.removeAll(wordEntity.getCategory());
-				wordEntity.getCategory().addAll(categoryEntities);
+				wordEntity.getCategory().addAll(findNewOnly(categoryEntities, wordEntity.getCategory()));
 				wordService.save(wordEntity);
 				Word transEntity = entryEntity.getTranslation();
-				transEntity.getCategory().addAll(categoryEntities);
+				transEntity.getCategory().addAll(findNewOnly(categoryEntities, transEntity.getCategory()));
 				wordService.save(transEntity);
 			}
+			getSessionService().loadData();
 			loadTranslations();
 		}
+	}
+
+	private <T> List<T> findNewOnly(List<T> collection1, List<T> collection2) {
+		return collection1.stream().filter(el -> !collection2.contains(el)).collect(Collectors.toList());
 	}
 
 	@FXML
@@ -377,7 +379,6 @@ public class MainWindowController extends AbstractController {
 		ListChoiceDialog<IdString> dialog = new ListChoiceDialog<>(getSessionService().getCategories());
 		Optional<List<IdString>> result = dialog.showAndWait();
 		if (result.isPresent()) {
-			System.out.println(result.get().get(0).getValue());
 			ObservableList<TranslationRow> selectedEntries = mainTable.getSelectionModel().getSelectedItems();
 			for (TranslationRow trnaslation : selectedEntries) {
 				DictionaryEntry entryEntity = entryService.findEntity(trnaslation);
@@ -389,6 +390,7 @@ public class MainWindowController extends AbstractController {
 				transEntity.getCategory().removeAll(categoryEntities);
 				wordService.save(transEntity);
 			}
+			getSessionService().loadData();
 			loadTranslations();
 		}
 	}
@@ -398,15 +400,14 @@ public class MainWindowController extends AbstractController {
 		ListChoiceDialog<IdString> dialog = new ListChoiceDialog<>(getSessionService().getDictionaries());
 		Optional<List<IdString>> result = dialog.showAndWait();
 		if (result.isPresent()) {
-			System.out.println(result.get().get(0).getValue());
 			ObservableList<TranslationRow> selectedEntries = mainTable.getSelectionModel().getSelectedItems();
 			for (TranslationRow trnaslation : selectedEntries) {
 				DictionaryEntry entryEntity = entryService.findEntity(trnaslation);
 				List<Dictionary> dictionaryEntities = dictionaryService.findEntities(result.get());
-				dictionaryEntities.removeAll(entryEntity.getDictionary());
-				entryEntity.getDictionary().addAll(dictionaryEntities);
+				entryEntity.getDictionary().addAll(findNewOnly(dictionaryEntities, entryEntity.getDictionary()));
 				entryService.save(entryEntity);
 			}
+			getSessionService().loadData();
 			loadTranslations();
 		}
 	}
@@ -416,7 +417,6 @@ public class MainWindowController extends AbstractController {
 		ListChoiceDialog<IdString> dialog = new ListChoiceDialog<>(getSessionService().getDictionaries());
 		Optional<List<IdString>> result = dialog.showAndWait();
 		if (result.isPresent()) {
-			System.out.println(result.get().get(0).getValue());
 			ObservableList<TranslationRow> selectedEntries = mainTable.getSelectionModel().getSelectedItems();
 			for (TranslationRow trnaslation : selectedEntries) {
 				DictionaryEntry entryEntity = entryService.findEntity(trnaslation);
@@ -424,6 +424,7 @@ public class MainWindowController extends AbstractController {
 				entryEntity.getDictionary().removeAll(dictionaryEntities);
 				entryService.save(entryEntity);
 			}
+			getSessionService().loadData();
 			loadTranslations();
 		}
 	}
