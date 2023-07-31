@@ -1,5 +1,7 @@
 package ua.vboden.dto;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class WordData implements Comparable<WordData> {
 	private int id;
 	private String word;
@@ -59,6 +61,12 @@ public class WordData implements Comparable<WordData> {
 	@Override
 	public int compareTo(WordData another) {
 		return word.compareTo(another.word);
+	}
+
+	@Override
+	public String toString() {
+		String notesPart = StringUtils.isNotBlank(notes) ? " (" + notes + ")" : "";
+		return word + notesPart + " - " + language + " - " + categories.replaceAll("\n", ";");
 	}
 
 }

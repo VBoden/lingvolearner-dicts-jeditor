@@ -1,10 +1,18 @@
 package ua.vboden.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -54,13 +62,20 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 	void removeSelected(ActionEvent event) {
 		ObservableList<T> selected = getSelected();
 		ObservableList<T> forDelete = FXCollections.observableArrayList();
+		List<String> deleteNames = new ArrayList<>();
 		for(T sel:selected) {
 			if(allowedDeleting(sel)) {
 				forDelete.add(sel);
+				deleteNames.add(sel.toString());
 			}
 		}
-		getService().deleteSelected(forDelete);
-		initView();
+
+		Alert alert = new Alert(AlertType.CONFIRMATION, "Delete  ?\n"+StringUtils.join(deleteNames,"\n"), ButtonType.YES, ButtonType.NO);
+		alert.showAndWait();
+		if (alert.getResult() == ButtonType.YES) {
+		    getService().deleteSelected(forDelete);
+		    initView();
+		}
 	}
 
 	protected boolean allowedDeleting(T sel) {
