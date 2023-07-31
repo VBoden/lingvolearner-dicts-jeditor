@@ -33,7 +33,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import ua.vboden.dto.IdString;
 import ua.vboden.dto.TranslationRow;
+import ua.vboden.services.DictionaryService;
 import ua.vboden.services.EntryService;
+import ua.vboden.services.LanguageService;
 
 @Component
 public class MainWindowController extends AbstractController {
@@ -116,6 +118,9 @@ public class MainWindowController extends AbstractController {
 	@Autowired
 	private EntryService entryService;
 
+	@Autowired
+	private DictionaryService dictionaryService;
+
 	private boolean filtered;
 
 	@Override
@@ -131,6 +136,7 @@ public class MainWindowController extends AbstractController {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		getSessionService().loadData();
+		dictionaryService.loadData();
 
 		numberColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, Integer>("number"));
 		wordColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, String>("word"));

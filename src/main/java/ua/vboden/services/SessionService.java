@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import ua.vboden.converters.DictionaryConverter;
 import ua.vboden.converters.TranslationConverter;
 import ua.vboden.dto.CodeString;
 import ua.vboden.dto.DictionaryData;
@@ -34,9 +33,6 @@ public class SessionService {
 	@Autowired
 	private TranslationConverter translationConverter;
 
-	@Autowired
-	private DictionaryConverter dictionaryConverter;
-
 	private ObservableList<TranslationRow> translations;
 
 	private ObservableList<CodeString> languages;
@@ -52,7 +48,6 @@ public class SessionService {
 	public void loadData() {
 		loadTranslations();
 		loadCategories();
-		loadDictionaries();
 	}
 
 	public void loadTranslations() {
@@ -65,16 +60,6 @@ public class SessionService {
 		categoryRepository.findAll().forEach(entry -> categoryModels.add(new IdString(entry.getId(), entry.getName())));
 		Collections.sort(categoryModels);
 		categories = FXCollections.observableArrayList(categoryModels);
-	}
-
-	public void loadDictionaries() {
-		dictionaries = FXCollections.observableArrayList();
-		dictionaryData = FXCollections.observableArrayList();
-		dictionaryRepository.findAll().forEach(entry -> {
-			dictionaries.add(new IdString(entry.getId(), entry.getName() + " (" + entry.getLanguageFrom().getName()
-					+ "-" + entry.getLanguageTo().getName() + ")"));
-			dictionaryData.add(dictionaryConverter.convert(entry));
-		});
 	}
 
 	public ObservableList<TranslationRow> getTranslations() {
@@ -99,6 +84,10 @@ public class SessionService {
 
 	public ObservableList<DictionaryData> getDictionaryData() {
 		return dictionaryData;
+	}
+
+	public void setDictionaryData(ObservableList<DictionaryData> dictionaryData) {
+		this.dictionaryData = dictionaryData;
 	}
 
 	public void loadTranslationsByCategories(List<Integer> selectedIds, boolean conditionAnd) {

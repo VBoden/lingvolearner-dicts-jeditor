@@ -38,4 +38,9 @@ public class DictionaryData {
 		this.langTo = langTo;
 	}
 
+	@Override
+	public String toString() {
+		return  title + " (" + langFrom + "-" + langTo + ")";
+	}
+
 }

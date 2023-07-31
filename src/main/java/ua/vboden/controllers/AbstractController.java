@@ -42,10 +42,6 @@ public abstract class AbstractController implements ApplicationContextAware, Ini
 		this.applicationContext = applicationContext;
 	}
 
-	public void generalInit(ResourceBundle resources) {
-//		this.resources = resources;
-	}
-
 	public void showStage(Stage stage) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(getFXML()));
 		resources = ResourceBundle.getBundle("bundles/localization");
