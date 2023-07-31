@@ -100,9 +100,9 @@ public class CategoryEditorController extends AbstractEditorController<IdString,
 	}
 
 	@Override
-	protected boolean isNotFilledFields() {
+	protected String checkFilledFields() {
 		String newTitle = categoryName.getText();
-		return StringUtils.isBlank(newTitle);
+		return StringUtils.isBlank(newTitle)? "Fill": null;
 	}
 
 	@Override

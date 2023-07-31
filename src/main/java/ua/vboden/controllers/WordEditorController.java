@@ -139,8 +139,8 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 	}
 
 	@Override
-	protected boolean isNotFilledFields() {
-		return StringUtils.isBlank(word.getText());
+	protected String checkFilledFields() {
+		return StringUtils.isBlank(word.getText()) ? "fill" : null;
 	}
 
 	@Override

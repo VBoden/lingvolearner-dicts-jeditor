@@ -86,10 +86,10 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 	}
 
 	@Override
-	protected boolean isNotFilledFields() {
+	protected String checkFilledFields() {
 		String newCode = languageCode.getText();
 		String newTitle = languageTitle.getText();
-		return StringUtils.isBlank(newTitle) || StringUtils.isBlank(newCode);
+		return StringUtils.isBlank(newTitle) || StringUtils.isBlank(newCode) ? "fill" : null;
 	}
 
 	protected void populateFields(CodeString current) {

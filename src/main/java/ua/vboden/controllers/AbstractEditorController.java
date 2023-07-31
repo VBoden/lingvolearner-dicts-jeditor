@@ -34,7 +34,7 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 
 	protected abstract E createNew();
 
-	protected abstract boolean isNotFilledFields();
+	protected abstract String checkFilledFields();
 
 	protected abstract void populateFields(T current);
 
@@ -63,18 +63,19 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 		ObservableList<T> selected = getSelected();
 		ObservableList<T> forDelete = FXCollections.observableArrayList();
 		List<String> deleteNames = new ArrayList<>();
-		for(T sel:selected) {
-			if(allowedDeleting(sel)) {
+		for (T sel : selected) {
+			if (allowedDeleting(sel)) {
 				forDelete.add(sel);
 				deleteNames.add(sel.toString());
 			}
 		}
 
-		Alert alert = new Alert(AlertType.CONFIRMATION, "Delete  ?\n"+StringUtils.join(deleteNames,"\n"), ButtonType.YES, ButtonType.NO);
+		Alert alert = new Alert(AlertType.CONFIRMATION, "Delete  ?\n" + StringUtils.join(deleteNames, "\n"),
+				ButtonType.YES, ButtonType.NO);
 		alert.showAndWait();
 		if (alert.getResult() == ButtonType.YES) {
-		    getService().deleteSelected(forDelete);
-		    initView();
+			getService().deleteSelected(forDelete);
+			initView();
 		}
 	}
 
@@ -105,7 +106,8 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 	}
 
 	protected void save() {
-		if (isNotFilledFields()) {
+		if (StringUtils.isNotBlank(checkFilledFields())) {
+			showInformationAlert(checkFilledFields());
 			return;
 		}
 		E entity = null;
@@ -119,7 +121,8 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 	}
 
 	protected void save(E entity) {
-		if (isNotFilledFields()) {
+		if (StringUtils.isNotBlank(checkFilledFields())) {
+			showInformationAlert(checkFilledFields());
 			return;
 		}
 		populateEntity(entity);
@@ -138,4 +141,8 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 		getStage().close();
 	}
 
+	protected void showInformationAlert(String message) {
+		Alert alert = new Alert(AlertType.INFORMATION, message, ButtonType.OK);
+		alert.showAndWait();
+	}
 }

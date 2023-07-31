@@ -18,6 +18,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -243,19 +246,20 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 	}
 
 	@Override
-	protected boolean isNotFilledFields() {
-		if (isBlank(wordField.getText()))
-			return true;
-		if (isBlank(translationField.getText()))
-			return true;
+	protected String checkFilledFields() {
+		if (!useWordCheck.isSelected() && isBlank(wordField.getText())) {
+			return "Fill word";
+		}
+		if (!useTranslationCheck.isSelected() && isBlank(translationField.getText()))
+			return "Fill word";
 		if (useWordCheck.isSelected() && wordsSuggestionTable.getSelectionModel().getSelectedIndex() == -1)
-			return true;
+			return "Fill word";
 		if (!useWordCheck.isSelected() && languageFrom.getSelectionModel().getSelectedIndex() == -1)
-			return true;
+			return "Fill word";
 		if (useTranslationCheck.isSelected() && transSuggestionTable.getSelectionModel().getSelectedIndex() == -1)
-			return true;
+			return "Fill word";
 		if (!useTranslationCheck.isSelected() && languageTo.getSelectionModel().getSelectedIndex() == -1)
-			return true;
+			return "Fill word";
 		if (getCurrent() == null) {
 			String word = useWordCheck.isSelected()
 					? wordsSuggestionTable.getSelectionModel().getSelectedItem().getWord()
@@ -266,11 +270,11 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 			for (TranslationRow entry : entriesTable.getItems()) {
 				if (word.equalsIgnoreCase(entry.getWord())
 						&& translation.equalsIgnoreCase(entry.getTranslation().split("\n")[0])) {
-					return true;
+					return "Already exists";
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 
 	@Override
