@@ -12,7 +12,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import ua.vboden.dto.IdString;
 import ua.vboden.entities.Category;
-import ua.vboden.entities.DictionaryEntry;
 import ua.vboden.repositories.CategoryRepository;
 
 @Service

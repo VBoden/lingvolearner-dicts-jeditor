@@ -124,8 +124,8 @@
                     <columns>
                       <TableColumn fx:id="numberColumn" editable="false" maxWidth="100.0" minWidth="50.0" prefWidth="-1.0" text="%translations.table.number" />
                       <TableColumn fx:id="wordColumn" editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="200.0" text="%translations.table.word" />
-                        <TableColumn fx:id="categoryColumn" editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="100.0" text="%translations.table.categories" />
                         <TableColumn fx:id="translationColumn" editable="false" maxWidth="300.0" minWidth="150.0" prefWidth="200.0" text="%translations.table.translation" />
+                        <TableColumn fx:id="categoryColumn" editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="100.0" text="%translations.table.categories" />
                         <TableColumn fx:id="transCategoryColumn" editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="100.0" text="%translations.table.categories" />
                         <TableColumn fx:id="dictionaryColumn" editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="100.0" text="%translations.table.dictionaries" />
                     </columns>

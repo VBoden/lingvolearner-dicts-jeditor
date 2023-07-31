@@ -93,6 +93,10 @@ public class SessionService {
 		return dictionaries;
 	}
 
+	public void setDictionaries(ObservableList<IdString> dictionaries) {
+		this.dictionaries = dictionaries;
+	}
+
 	public ObservableList<DictionaryData> getDictionaryData() {
 		return dictionaryData;
 	}
