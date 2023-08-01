@@ -11,9 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import ua.vboden.converters.TranslationConverter;
 import ua.vboden.dto.TranslationRow;
-import ua.vboden.dto.WordData;
 import ua.vboden.entities.DictionaryEntry;
-import ua.vboden.entities.Word;
 import ua.vboden.repositories.EntryRepository;
 
 @Service
@@ -25,10 +23,25 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 	@Autowired
 	private TranslationConverter translationConverter;
 
+	@Autowired
+	private SessionService sessionService;
+
+	public void loadTranslations() {
+		List<DictionaryEntry> allEntries = getAllEntries();
+		sessionService.setTranslations(FXCollections.observableArrayList(translationConverter.convertAll(allEntries)));
+		sessionService.setTranslationIds(allEntries.stream().map(entry -> entry.getId()).collect(Collectors.toList()));
+	}
+
 	public List<DictionaryEntry> getAllEntries() {
 		List<DictionaryEntry> result = new ArrayList<>();
 		entryRepository.findAll().forEach(result::add);
 		return result;
+	}
+
+	public void loadTranslationsByCategories(List<Integer> selectedIds, boolean conditionAnd) {
+		List<DictionaryEntry> allEntries = getAllByCategoryIds(selectedIds, conditionAnd);
+		sessionService.setTranslations(FXCollections.observableArrayList(translationConverter.convertAll(allEntries)));
+		sessionService.setTranslationIds(allEntries.stream().map(entry -> entry.getId()).collect(Collectors.toList()));
 	}
 
 	public List<DictionaryEntry> getAllByCategoryIds(List<Integer> selectedIds, boolean conditionAnd) {
@@ -48,6 +61,12 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 		} else {
 			return entryRepository.findByWordCategoryIdIn(selectedIds);
 		}
+	}
+
+	public void loadTranslationsByDictionaries(List<Integer> selectedIds, boolean conditionAnd) {
+		List<DictionaryEntry> allEntries = getAllByDictionaryIds(selectedIds, conditionAnd);
+		sessionService.setTranslations(FXCollections.observableArrayList(translationConverter.convertAll(allEntries)));
+		sessionService.setTranslationIds(allEntries.stream().map(entry -> entry.getId()).collect(Collectors.toList()));
 	}
 
 	public List<DictionaryEntry> getAllByDictionaryIds(List<Integer> selectedIds, boolean conditionAnd) {
@@ -71,6 +90,18 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 
 	public List<TranslationRow> getAllByWord(String word) {
 		return translationConverter.convertAll(entryRepository.findByWordWordContaining(word));
+	}
+
+	public void loadTranslations(List<Integer> ids) {
+		sessionService
+				.setTranslations(FXCollections.observableArrayList(translationConverter.convertAll(getAllById(ids))));
+		sessionService.setTranslationIds(ids);
+	}
+
+	public List<DictionaryEntry> getAllById(List<Integer> ids) {
+		List<DictionaryEntry> result = new ArrayList<>();
+		entryRepository.findAllById(ids).forEach(result::add);
+		return result;
 	}
 
 	public List<TranslationRow> getAllByTranslation(String word) {

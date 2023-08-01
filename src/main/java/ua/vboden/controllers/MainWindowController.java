@@ -149,7 +149,8 @@ public class MainWindowController extends AbstractController {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		getSessionService().loadData();
+		entryService.loadTranslations();
+		categoryService.loadCategories();
 		dictionaryService.loadData();
 
 		numberColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, Integer>("number"));
@@ -158,7 +159,7 @@ public class MainWindowController extends AbstractController {
 		categoryColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, String>("categories"));
 		transCategoryColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, String>("transCategories"));
 		dictionaryColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, String>("dictionaries"));
-		loadTranslations();
+		updateTranslationsView();
 		catOrDictSelector
 				.setItems(FXCollections.observableArrayList(getResources().getString("filters.selection.categories"),
 						getResources().getString("filters.selection.dictionaries")));
@@ -173,7 +174,7 @@ public class MainWindowController extends AbstractController {
 
 	}
 
-	private void loadTranslations() {
+	private void updateTranslationsView() {
 		ObservableList<TranslationRow> translations = getSessionService().getTranslations();
 		translations.sort(TranslationRow.lastFirstComparator());
 		updateTranslations(translations);
@@ -227,18 +228,18 @@ public class MainWindowController extends AbstractController {
 		findButton.setSelected(false);
 		String selected = catOrDictSelector.getSelectionModel().getSelectedItem();
 		if (getResources().getString("filters.selection.categories").equals(selected)) {
-			getSessionService().loadTranslationsByCategories(selectedIds, condition);
+			entryService.loadTranslationsByCategories(selectedIds, condition);
 		} else {
-			getSessionService().loadTranslationsByDictionaries(selectedIds, condition);
+			entryService.loadTranslationsByDictionaries(selectedIds, condition);
 		}
-		loadTranslations();
+		updateTranslationsView();
 		filtered = true;
 	}
 
 	@FXML
 	void resetFilters(ActionEvent event) {
-		getSessionService().loadTranslations();
-		loadTranslations();
+		entryService.loadTranslations();
+		updateTranslationsView();
 		filtered = false;
 		findButton.setSelected(false);
 	}
@@ -364,8 +365,8 @@ public class MainWindowController extends AbstractController {
 				transEntity.getCategory().addAll(findNewOnly(categoryEntities, transEntity.getCategory()));
 				wordService.save(transEntity);
 			}
-			getSessionService().loadData();
-			loadTranslations();
+			entryService.loadTranslations(getSessionService().getTranslationIds());
+			updateTranslationsView();
 		}
 	}
 
@@ -390,8 +391,8 @@ public class MainWindowController extends AbstractController {
 				transEntity.getCategory().removeAll(categoryEntities);
 				wordService.save(transEntity);
 			}
-			getSessionService().loadData();
-			loadTranslations();
+			entryService.loadTranslations(getSessionService().getTranslationIds());
+			updateTranslationsView();
 		}
 	}
 
@@ -407,8 +408,8 @@ public class MainWindowController extends AbstractController {
 				entryEntity.getDictionary().addAll(findNewOnly(dictionaryEntities, entryEntity.getDictionary()));
 				entryService.save(entryEntity);
 			}
-			getSessionService().loadData();
-			loadTranslations();
+			entryService.loadTranslations(getSessionService().getTranslationIds());
+			updateTranslationsView();
 		}
 	}
 
@@ -424,8 +425,8 @@ public class MainWindowController extends AbstractController {
 				entryEntity.getDictionary().removeAll(dictionaryEntities);
 				entryService.save(entryEntity);
 			}
-			getSessionService().loadData();
-			loadTranslations();
+			entryService.loadTranslations(getSessionService().getTranslationIds());
+			updateTranslationsView();
 		}
 	}
 
