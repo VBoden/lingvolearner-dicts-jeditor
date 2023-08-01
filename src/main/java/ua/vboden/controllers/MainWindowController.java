@@ -3,6 +3,7 @@ package ua.vboden.controllers;
 import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -11,6 +12,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +21,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -30,6 +34,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -338,19 +343,6 @@ public class MainWindowController extends AbstractController {
 	}
 
 	@FXML
-	void removeSelected(ActionEvent event) {
-//		ObservableList<T> selected = getSelected();
-//		ObservableList<T> forDelete = FXCollections.observableArrayList();
-//		for(T sel:selected) {
-//			if(allowedDeleting(sel)) {
-//				forDelete.add(sel);
-//			}
-//		}
-//		getService().deleteSelected(forDelete);
-//		initView();
-	}
-
-	@FXML
 	void addToCategory(ActionEvent event) {
 		checkSelectedAndExecute(getSessionService()::getCategories, this::doAddToCategory);
 	}
@@ -427,6 +419,40 @@ public class MainWindowController extends AbstractController {
 		List<Dictionary> dictionaryEntities = dictionaryService.findEntities(selectedDictionaries);
 		entryEntity.getDictionary().removeAll(dictionaryEntities);
 		entryService.save(entryEntity);
+	}
+
+	@FXML
+	void removeSelected(ActionEvent event) {
+		ObservableList<TranslationRow> selectedEntries = mainTable.getSelectionModel().getSelectedItems();
+		if (selectedEntries.size() == 0) {
+			showInformationAlert("No items selected!");
+		} else {
+			List<String> deleteNames = new ArrayList<>();
+			selectedEntries.stream().forEach(entry -> {
+				deleteNames.add(entry.toString());
+
+			});
+			Alert alert = new Alert(AlertType.CONFIRMATION, "Delete  ?\n" + StringUtils.join(deleteNames, "\n"),
+					ButtonType.YES, ButtonType.NO);
+			alert.showAndWait();
+			if (alert.getResult() == ButtonType.YES) {
+				List<Integer> usedWords = new ArrayList<>();
+				entryService.getAllBySelected(selectedEntries).stream().forEach(entity -> {
+					usedWords.add(entity.getWord().getId());
+					usedWords.add(entity.getTranslation().getId());
+				});
+				entryService.deleteSelected(selectedEntries);
+
+				for (Word word : wordService.getAllById(usedWords)) {
+					if (entryService.getWordUsages(word) == 0) {
+						wordService.delete(word);
+					}
+				}
+
+				entryService.loadTranslations(getSessionService().getTranslationIds());
+				updateTranslationsView();
+			}
+		}
 	}
 
 }

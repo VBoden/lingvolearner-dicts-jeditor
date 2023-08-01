@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import ua.vboden.converters.TranslationConverter;
 import ua.vboden.dto.TranslationRow;
 import ua.vboden.entities.DictionaryEntry;
+import ua.vboden.entities.Word;
 import ua.vboden.repositories.EntryRepository;
 
 @Service
@@ -113,6 +114,13 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 		entryRepository.deleteAllById(selected.stream().map(TranslationRow::getRecordId).collect(Collectors.toList()));
 	}
 
+	public List<DictionaryEntry> getAllBySelected(ObservableList<? extends TranslationRow> selected) {
+		List<DictionaryEntry> result = new ArrayList<>();
+		entryRepository.findAllById(selected.stream().map(TranslationRow::getRecordId).collect(Collectors.toList()))
+				.forEach(result::add);
+		return result;
+	}
+
 	@Override
 	public DictionaryEntry findEntity(TranslationRow current) {
 		return entryRepository.findById(current.getRecordId()).get();
@@ -123,4 +131,17 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 		entryRepository.save(entity);
 	}
 
+	public int getWordUsages(Word source) {
+		int inWord = getAllByWord(source).size();
+		int inTranslations = getAllByTranslation(source).size();
+		return inWord + inTranslations;
+	}
+
+	private List<DictionaryEntry> getAllByWord(Word source) {
+		return entryRepository.findByWord(source);
+	}
+
+	private List<DictionaryEntry> getAllByTranslation(Word source) {
+		return entryRepository.findByTranslation(source);
+	}
 }

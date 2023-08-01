@@ -22,13 +22,7 @@ public class WordConverter extends AbstractConverter<Word, WordData> {
 		target.setLanguage(source.getLanguage().getName());
 		target.setCategories(source.getCategory() == null ? null
 				: source.getCategory().stream().map(cat -> cat.getName()).reduce((a, b) -> a + "\n" + b).orElse(null));
-		target.setUsages(getUsages(source.getWord()));
+		target.setUsages(entryService.getWordUsages(source));
 		return target;
-	}
-
-	private int getUsages(String word) {
-		int inWord = entryService.getAllByWord(word).size();
-		int inTranslations = entryService.getAllByTranslation(word).size();
-		return inWord + inTranslations;
 	}
 }

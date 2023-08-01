@@ -91,4 +91,11 @@ public class TranslationRow {
 	public static Comparator<? super TranslationRow> lastFirstComparator() {
 		return (a, b) -> b.getNumber() - a.getNumber();
 	}
+
+	@Override
+	public String toString() {
+		return word.split("\n")[0] + " - " + translation
+				+ (categories != null ? " (" + categories.replaceAll("\n", "; ") + ")" : "");
+	}
+
 }

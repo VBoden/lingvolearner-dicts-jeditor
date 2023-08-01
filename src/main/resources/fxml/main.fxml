@@ -87,13 +87,14 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#removeFromCategory" text="%menu.edit.removeFromCategory" />
                   <MenuItem mnemonicParsing="false" onAction="#removeFromDictionary" text="%menu.edit.removeFromDictionary" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" onAction="#removeSelected" text="%menu.edit.delete" />
             <MenuItem mnemonicParsing="false" text="Undo" visible="false" />
             <MenuItem mnemonicParsing="false" text="Redo" visible="false" />
             <SeparatorMenuItem mnemonicParsing="false" visible="false" />
             <MenuItem mnemonicParsing="false" text="Cut" visible="false" />
             <MenuItem mnemonicParsing="false" text="Copy" visible="false" />
             <MenuItem mnemonicParsing="false" text="Paste" visible="false" />
-            <MenuItem mnemonicParsing="false" text="Delete" visible="false" />
           </items>
         </Menu>
             <Menu mnemonicParsing="false" text="%menu.manage">
