@@ -285,10 +285,15 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 			languageFrom.getSelectionModel()
 					.select(find(entity.getWord().getLanguage().getName(), languageFrom.getItems()));
 			List<Category> categories = entity.getWord().getCategory();
-			if (categories != null && !categories.isEmpty())
-				categoriesList.getSelectionModel().selectIndices(-1,
-						find(categories.stream().map(Category::getId).collect(Collectors.toList()),
-								categoriesList.getItems()));
+			categoriesList.getSelectionModel().clearSelection();
+			if (categories != null && !categories.isEmpty()) {
+				int[] indexes = find(categories.stream().map(Category::getId).collect(Collectors.toList()),
+						categoriesList.getItems());
+				if (indexes.length > 0) {
+					categoriesList.getSelectionModel().selectIndices(-1, indexes);
+					categoriesList.scrollTo(indexes[0] + 1);
+				}
+			}
 			entriesTable.setItems(FXCollections.observableArrayList(entryService.getAllByWord(word)));
 		}
 		fillWordFields(entity.getTranslation(), translationField, transSuggestionTable, useTranslationCheck);
@@ -297,12 +302,16 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		notesField.setText(entity.getTranslation().getNotes());
 		languageTo.getSelectionModel()
 				.select(find(entity.getTranslation().getLanguage().getName(), languageTo.getItems()));
-		categoriesList.getSelectionModel().clearSelection();
+		dictionariesList.getSelectionModel().clearSelection();
 		List<Dictionary> dictionaries = entity.getDictionary();
-		if (dictionaries != null && !dictionaries.isEmpty())
-			dictionariesList.getSelectionModel().selectIndices(-1,
-					find(dictionaries.stream().map(Dictionary::getId).collect(Collectors.toList()),
-							dictionariesList.getItems()));
+		if (dictionaries != null && !dictionaries.isEmpty()) {
+			int[] indexes = find(dictionaries.stream().map(Dictionary::getId).collect(Collectors.toList()),
+					dictionariesList.getItems());
+			if (indexes.length > 0) {
+				dictionariesList.getSelectionModel().selectIndices(-1, indexes);
+				dictionariesList.scrollTo(indexes[0] + 1);
+			}
+		}
 		useWordCheck.setDisable(false);
 		useTranslationCheck.setDisable(false);
 		useWordCheck.setSelected(true);
