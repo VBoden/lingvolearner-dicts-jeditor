@@ -116,7 +116,7 @@
           <Button mnemonicParsing="false" text="Button" />
         </items>
       </ToolBar>
-      <SplitPane dividerPositions="0.29768467475192945, 0.7552370452039692" VBox.vgrow="ALWAYS">
+      <SplitPane dividerPositions="0.29768467475192945" VBox.vgrow="ALWAYS">
         <items>
             <AnchorPane prefHeight="557.0" prefWidth="250.0" SplitPane.resizableWithParent="false">
                <children>
@@ -147,11 +147,6 @@
                   <CheckBox fx:id="inTranslationsCheck" layoutX="245.0" layoutY="9.0" mnemonicParsing="false" text="%search.in.translations" />
                   <Label layoutX="14.0" layoutY="10.0" text="%search.text" />
                   <ToggleButton fx:id="findButton" layoutX="359.0" layoutY="6.0" mnemonicParsing="false" onAction="#findWords" text="%search.find" AnchorPane.leftAnchor="359.0" />
-               </children>
-            </AnchorPane>
-          <AnchorPane prefHeight="557.0" prefWidth="250.0" SplitPane.resizableWithParent="false">
-               <children>
-                  <Button fx:id="removeDictionary" layoutX="14.0" layoutY="29.0" mnemonicParsing="false" onAction="#removeSelected" text="%removeSelected" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="20.0" />
                </children>
             </AnchorPane>
         </items>
