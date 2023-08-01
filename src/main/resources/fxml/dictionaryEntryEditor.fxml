@@ -54,8 +54,8 @@
                                  </columnResizePolicy>
                               </TableView>
                               <ListView fx:id="categoriesList" layoutX="15.0" layoutY="368.0" prefHeight="85.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="368.0" />
-                              <Label layoutX="24.0" layoutY="287.0" text="%dictionaryEntry.notes" AnchorPane.leftAnchor="30.0" />
-                              <TextField fx:id="notesField" layoutX="15.0" layoutY="310.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                              <Label layoutY="287.0" text="%dictionaryEntry.transcription" AnchorPane.leftAnchor="30.0" />
+                              <TextField fx:id="transcriptionField" layoutY="310.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane HBox.hgrow="ALWAYS">
@@ -77,8 +77,8 @@
                                  </columnResizePolicy>
                               </TableView>
                               <ListView fx:id="dictionariesList" layoutX="15.0" layoutY="367.0" prefHeight="85.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="368.0" />
-                              <Label layoutX="345.0" layoutY="287.0" text="%dictionaryEntry.transcription" AnchorPane.leftAnchor="30.0" />
-                              <TextField fx:id="transcriptionField" layoutX="328.0" layoutY="310.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                              <Label layoutY="287.0" text="%dictionaryEntry.notes" AnchorPane.leftAnchor="30.0" />
+                              <TextField fx:id="notesField" layoutY="310.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                            </children>
                         </AnchorPane>
                      </children>
