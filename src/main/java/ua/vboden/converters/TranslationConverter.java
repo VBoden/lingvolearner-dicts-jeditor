@@ -29,20 +29,24 @@ public class TranslationConverter extends AbstractConverter<DictionaryEntry, Tra
 	public TranslationRow convert(DictionaryEntry source) {
 		TranslationRow row = new TranslationRow();
 		row.setRecordId(source.getId());
-		if(source.getWord()!=null) {
-		row.setWord(source.getWord().getWord());
-		row.setCategories(source.getWord().getCategory() == null ? null
-				: source.getWord().getCategory().stream().map(cat -> cat.getName()).reduce((a, b) -> a + "\n" + b)
-				.orElse(null));
+		if (source.getWord() != null) {
+			String word = source.getWord().getWord();
+			if (StringUtils.isNoneBlank(source.getTranscription())) {
+				word += "\n[" + source.getTranscription() + "]";
+			}
+			row.setWord(word);
+			row.setCategories(source.getWord().getCategory() == null ? null
+					: source.getWord().getCategory().stream().map(cat -> cat.getName()).reduce((a, b) -> a + "\n" + b)
+							.orElse(null));
 		}
 		String translation = source.getTranslation().getWord();
-		if(StringUtils.isNoneBlank(source.getTranslation().getNotes())) {
-			translation+="\n("+source.getTranslation().getNotes()+")";
+		if (StringUtils.isNoneBlank(source.getTranslation().getNotes())) {
+			translation += "\n(" + source.getTranslation().getNotes() + ")";
 		}
 		row.setTranslation(translation);
 		row.setTransCategories(source.getTranslation().getCategory() == null ? null
-				: source.getTranslation().getCategory().stream().map(cat -> cat.getName()).reduce((a, b) -> a + "\n" + b)
-				.orElse(null));
+				: source.getTranslation().getCategory().stream().map(cat -> cat.getName())
+						.reduce((a, b) -> a + "\n" + b).orElse(null));
 		row.setDictionaries(source.getDictionary() == null ? null
 				: source.getDictionary().stream().map(cat -> cat.getName()).reduce((a, b) -> a + "\n" + b)
 						.orElse(null));
