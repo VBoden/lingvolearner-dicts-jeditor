@@ -53,6 +53,10 @@ public class DictionaryService implements EntityService<DictionaryData, Dictiona
 		sessionService.setDictionaryData(FXCollections.observableArrayList(dictionaryData));
 	}
 
+	public Dictionary findEntity(int id) {
+		return dictionaryRepository.findById(id).get();
+	}
+
 	public List<Dictionary> findEntities(List<IdString> selected) {
 		List<Dictionary> result = new ArrayList<>();
 		dictionaryRepository.findAllById(selected.stream().map(IdString::getId).collect(Collectors.toList()))

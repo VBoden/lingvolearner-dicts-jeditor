@@ -92,6 +92,10 @@ public class TranslationRow {
 		return (a, b) -> b.getNumber() - a.getNumber();
 	}
 
+	public static Comparator<? super TranslationRow> lastAtEndComparator() {
+		return (a, b) -> a.getNumber() - b.getNumber();
+	}
+
 	@Override
 	public String toString() {
 		return word.split("\n")[0] + " - " + translation

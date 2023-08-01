@@ -3,7 +3,9 @@ package ua.vboden.controllers;
 import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -33,6 +35,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -49,6 +52,7 @@ import ua.vboden.entities.Word;
 import ua.vboden.services.CategoryService;
 import ua.vboden.services.DictionaryService;
 import ua.vboden.services.EntryService;
+import ua.vboden.services.IOService;
 import ua.vboden.services.WordService;
 
 @Component
@@ -141,7 +145,12 @@ public class MainWindowController extends AbstractController {
 	@Autowired
 	private WordService wordService;
 
+	@Autowired
+	private IOService ioService;
+
 	private boolean filtered;
+
+	private String selectedCatOrDictName;
 
 	@Override
 	String getFXML() {
@@ -235,8 +244,10 @@ public class MainWindowController extends AbstractController {
 		String selected = catOrDictSelector.getSelectionModel().getSelectedItem();
 		if (getResources().getString("filters.selection.categories").equals(selected)) {
 			entryService.loadTranslationsByCategories(selectedIds, condition);
+			selectedCatOrDictName = categoryService.findEntity(selectedIds.get(0)).getName();
 		} else {
 			entryService.loadTranslationsByDictionaries(selectedIds, condition);
+			selectedCatOrDictName = dictionaryService.findEntity(selectedIds.get(0)).getName();
 		}
 		updateTranslationsView();
 		filtered = true;
@@ -248,6 +259,7 @@ public class MainWindowController extends AbstractController {
 		updateTranslationsView();
 		filtered = false;
 		findButton.setSelected(false);
+		selectedCatOrDictName = null;
 	}
 
 	@FXML
@@ -371,8 +383,8 @@ public class MainWindowController extends AbstractController {
 			ListChoiceDialog<IdString> dialog = new ListChoiceDialog<>(itemsGetter.get());
 			Optional<List<IdString>> result = dialog.showAndWait();
 			if (result.isPresent()) {
-				for (TranslationRow trnaslation : selectedEntries) {
-					translationAction.accept(trnaslation, result.get());
+				for (TranslationRow translation : selectedEntries) {
+					translationAction.accept(translation, result.get());
 				}
 				entryService.loadTranslations(getSessionService().getTranslationIds());
 				updateTranslationsView();
@@ -453,6 +465,45 @@ public class MainWindowController extends AbstractController {
 				updateTranslationsView();
 			}
 		}
+	}
+
+	@FXML
+	void exportEntries(ActionEvent event) {
+		ObservableList<TranslationRow> selectedEntries = mainTable.getSelectionModel().getSelectedItems();
+		if (selectedEntries.size() == 0) {
+			Alert alert = new Alert(AlertType.CONFIRMATION, "Not selected items, all displayed will be exported.",
+					ButtonType.YES, ButtonType.NO);
+			alert.showAndWait();
+			if (alert.getResult() == ButtonType.YES) {
+				selectedEntries = mainTable.getItems();
+			} else {
+				return;
+			}
+		}
+		DictionaryEntry firstEntity = entryService.findEntity(selectedEntries.get(0));
+		String name = firstEntity.getWord().getLanguage().getCode() + "-"
+				+ firstEntity.getTranslation().getLanguage().getCode() + '_';
+		if (selectedCatOrDictName != null) {
+			name += selectedCatOrDictName;
+		}
+		name += "_" + (new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()));
+		TextInputDialog dialog = new TextInputDialog(name);
+		dialog.setTitle("Export to file");
+		dialog.setHeaderText("Please enter file name. Will be saved with extension .vcb");
+		dialog.setContentText("File name:");
+
+		// Traditional way to get the response value.
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()) {
+			name = result.get() + ".vcb";
+			System.out.println("Your name: " + result.get());
+			ioService.exportToFile(selectedEntries, name);
+		}
+	}
+
+	@FXML
+	void openSettings(ActionEvent event) {
+
 	}
 
 }
