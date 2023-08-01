@@ -140,9 +140,4 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 	void close(ActionEvent event) {
 		getStage().close();
 	}
-
-	protected void showInformationAlert(String message) {
-		Alert alert = new Alert(AlertType.INFORMATION, message, ButtonType.OK);
-		alert.showAndWait();
-	}
 }
