@@ -5,6 +5,7 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -204,14 +205,14 @@ public class MainWindowController extends AbstractController {
 	}
 
 	private void loadCategories() {
-		ObservableList<IdString> categories = getSessionService().getCategories();
+		ObservableList<IdString> categories = getSessionService().getCategoriesWithEmpty();
 		catDictsList.setItems(categories);
 		catDictsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		statusMessage2.setText(MessageFormat.format(getResources().getString("category.status"), categories.size()));
 	}
 
 	private void loadDictionaries() {
-		ObservableList<IdString> dictionaries = getSessionService().getDictionaries();
+		ObservableList<IdString> dictionaries = getSessionService().getDictionariesWithEmpty();
 		catDictsList.setItems(dictionaries);
 		statusMessage3
 				.setText(MessageFormat.format(getResources().getString("dictionary.status"), dictionaries.size()));
@@ -244,10 +245,12 @@ public class MainWindowController extends AbstractController {
 		String selected = catOrDictSelector.getSelectionModel().getSelectedItem();
 		if (getResources().getString("filters.selection.categories").equals(selected)) {
 			entryService.loadTranslationsByCategories(selectedIds, condition);
-			selectedCatOrDictName = categoryService.findEntity(selectedIds.get(0)).getName();
+			if (selectedIds.get(0) != null)
+				selectedCatOrDictName = categoryService.findEntity(selectedIds.get(0)).getName();
 		} else {
 			entryService.loadTranslationsByDictionaries(selectedIds, condition);
-			selectedCatOrDictName = dictionaryService.findEntity(selectedIds.get(0)).getName();
+			if (selectedIds.get(0) != null)
+				selectedCatOrDictName = dictionaryService.findEntity(selectedIds.get(0)).getName();
 		}
 		updateTranslationsView();
 		filtered = true;
@@ -266,7 +269,7 @@ public class MainWindowController extends AbstractController {
 	void onCatDictMouseClick(MouseEvent event) {
 		if (event.getClickCount() == 2) {
 			IdString selectedItem = catDictsList.getSelectionModel().getSelectedItem();
-			doFiltering(List.of(selectedItem.getId()), false);
+			doFiltering(Collections.singletonList(selectedItem.getId()), false);
 		}
 	}
 
@@ -496,7 +499,6 @@ public class MainWindowController extends AbstractController {
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent()) {
 			name = result.get() + ".vcb";
-			System.out.println("Your name: " + result.get());
 			ioService.exportToFile(selectedEntries, name);
 		}
 	}

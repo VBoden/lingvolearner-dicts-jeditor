@@ -1,16 +1,16 @@
 package ua.vboden.dto;
 
 public class IdString implements Comparable<IdString> {
-	private int id;
+	private Integer id;
 	private String value;
 
-	public IdString(int id, String value) {
+	public IdString(Integer id, String value) {
 		super();
 		this.id = id;
 		this.value = value;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 

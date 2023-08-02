@@ -46,7 +46,9 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 	}
 
 	public List<DictionaryEntry> getAllByCategoryIds(List<Integer> selectedIds, boolean conditionAnd) {
-		if (conditionAnd) {
+		if (selectedIds == null || selectedIds.size() == 1 && selectedIds.get(0) == null) {
+			return entryRepository.findByWordCategoryIsEmpty();
+		} else if (conditionAnd) {
 			boolean firstId = true;
 			List<DictionaryEntry> result = new ArrayList<>();
 			for (Integer id : selectedIds) {
@@ -71,7 +73,9 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 	}
 
 	public List<DictionaryEntry> getAllByDictionaryIds(List<Integer> selectedIds, boolean conditionAnd) {
-		if (conditionAnd) {
+		if (selectedIds == null || selectedIds.size() == 1 && selectedIds.get(0) == null) {
+			return entryRepository.findByDictionaryIsEmpty();
+		} if (conditionAnd) {
 			boolean firstId = true;
 			List<DictionaryEntry> result = new ArrayList<>();
 			for (Integer id : selectedIds) {

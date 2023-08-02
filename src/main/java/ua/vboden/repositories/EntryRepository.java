@@ -13,9 +13,13 @@ public interface EntryRepository extends CrudRepository<DictionaryEntry, Integer
 
 	List<DictionaryEntry> findByWordCategoryIdIn(List<Integer> catogoryIds);
 
+	List<DictionaryEntry> findByWordCategoryIsEmpty();
+
 	List<DictionaryEntry> findByDictionaryId(Integer dictionaryId);
 
 	List<DictionaryEntry> findByDictionaryIdIn(List<Integer> dictionaryIds);
+
+	List<DictionaryEntry> findByDictionaryIsEmpty();
 
 	List<DictionaryEntry> findByWordWordContaining(String word);
 
