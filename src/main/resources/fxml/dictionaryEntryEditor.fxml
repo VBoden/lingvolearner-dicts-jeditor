@@ -37,12 +37,9 @@
                      <children>
                         <AnchorPane HBox.hgrow="ALWAYS">
                            <children>
-                              <Label layoutX="23.0" layoutY="223.0" text="%dictionary.language.from" AnchorPane.leftAnchor="30.0" />
-                              <ComboBox fx:id="languageFrom" layoutX="15.0" layoutY="248.0" prefHeight="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                               <Label layoutX="24.0" layoutY="25.0" text="%dictionaryEntry.word" />
                               <TextField fx:id="wordField" layoutX="22.0" layoutY="52.0" onKeyReleased="#wordEntering" prefHeight="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                               <CheckBox fx:id="useWordCheck" layoutX="30.0" layoutY="92.0" mnemonicParsing="false" onAction="#useWordChecked" text="%dictionaryEntry.selectExisting" />
-                              <Label layoutX="24.0" layoutY="344.0" text="%dictionaryEntry.categories" AnchorPane.leftAnchor="30.0" />
                               <TableView fx:id="wordsSuggestionTable" layoutX="15.0" layoutY="118.0" onMouseClicked="#wordsSuggestionClicked" prefHeight="97.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
                                  <columns>
                                     <TableColumn fx:id="wordWordColumn" prefWidth="75.0" text="%word.title" />
@@ -53,19 +50,19 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                               </TableView>
-                              <ListView fx:id="categoriesList" layoutX="15.0" layoutY="368.0" prefHeight="85.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="368.0" />
+                              <Label layoutX="23.0" layoutY="223.0" text="%dictionary.language.from" AnchorPane.leftAnchor="30.0" />
+                              <ComboBox fx:id="languageFrom" layoutX="15.0" layoutY="248.0" prefHeight="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                               <Label layoutY="287.0" text="%dictionaryEntry.transcription" AnchorPane.leftAnchor="30.0" />
                               <TextField fx:id="transcriptionField" layoutY="310.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                              <Label layoutX="24.0" layoutY="344.0" text="%dictionaryEntry.categories" AnchorPane.leftAnchor="30.0" />
+                              <ListView fx:id="categoriesList" layoutX="15.0" layoutY="368.0" prefHeight="85.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="368.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane HBox.hgrow="ALWAYS">
                            <children>
                               <Label layoutX="350.0" layoutY="25.0" text="%dictionaryEntry.translation" AnchorPane.leftAnchor="30.0" />
                               <TextField fx:id="translationField" layoutX="335.0" layoutY="52.0" onKeyReleased="#translationEntering" prefHeight="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
-                              <Label layoutX="345.0" layoutY="223.0" text="%dictionary.language.to" AnchorPane.leftAnchor="30.0" />
-                              <ComboBox fx:id="languageTo" layoutX="327.0" layoutY="248.0" prefHeight="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                               <CheckBox fx:id="useTranslationCheck" layoutX="350.0" layoutY="92.0" mnemonicParsing="false" onAction="#useTranslationChecked" text="%dictionaryEntry.selectExisting" AnchorPane.leftAnchor="30.0" />
-                              <Label layoutX="31.0" layoutY="344.0" text="%dictionaryEntry.dictionaries" AnchorPane.leftAnchor="30.0" />
                               <TableView fx:id="transSuggestionTable" layoutX="344.0" layoutY="118.0" onMouseClicked="#transSuggestionClicked" prefHeight="97.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
                                  <columns>
                                     <TableColumn fx:id="transWordColumn" prefWidth="75.0" text="%word.title" />
@@ -76,19 +73,22 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                               </TableView>
-                              <ListView fx:id="dictionariesList" layoutX="15.0" layoutY="367.0" prefHeight="85.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="368.0" />
+                              <Label layoutX="345.0" layoutY="223.0" text="%dictionary.language.to" AnchorPane.leftAnchor="30.0" />
+                              <ComboBox fx:id="languageTo" layoutX="327.0" layoutY="248.0" prefHeight="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                               <Label layoutY="287.0" text="%dictionaryEntry.notes" AnchorPane.leftAnchor="30.0" />
                               <TextField fx:id="notesField" layoutY="310.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                              <Label layoutX="31.0" layoutY="344.0" text="%dictionaryEntry.dictionaries" AnchorPane.leftAnchor="30.0" />
+                              <ListView fx:id="dictionariesList" layoutX="15.0" layoutY="367.0" prefHeight="85.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="368.0" />
                            </children>
                         </AnchorPane>
                      </children>
                   </HBox>
                   <AnchorPane prefHeight="114.0" prefWidth="110.0" VBox.vgrow="NEVER">
                      <children>
+                        <Button fx:id="saveDictionary" layoutX="677.0" layoutY="7.0" mnemonicParsing="false" onAction="#save" text="%save" AnchorPane.bottomAnchor="61.0" AnchorPane.rightAnchor="202.0" />
+                        <Button fx:id="saveAsNewDictionary" layoutX="514.0" layoutY="13.0" mnemonicParsing="false" onAction="#saveNew" text="%dictionary.saveAsNew" AnchorPane.bottomAnchor="61.0" AnchorPane.rightAnchor="32.0" />
                         <Button fx:id="cleanFields" layoutX="313.0" layoutY="393.0" mnemonicParsing="false" onAction="#cleanFields" text="%cleanFields" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
                         <Button fx:id="closeButton" layoutX="1192.0" layoutY="39.0" mnemonicParsing="false" onAction="#close" text="%close" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
-                        <Button fx:id="saveAsNewDictionary" layoutX="514.0" layoutY="13.0" mnemonicParsing="false" onAction="#saveNew" text="%dictionary.saveAsNew" AnchorPane.bottomAnchor="61.0" AnchorPane.rightAnchor="32.0" />
-                        <Button fx:id="saveDictionary" layoutX="677.0" layoutY="7.0" mnemonicParsing="false" onAction="#save" text="%save" AnchorPane.bottomAnchor="61.0" AnchorPane.rightAnchor="202.0" />
                      </children>
                   </AnchorPane>
                </children>

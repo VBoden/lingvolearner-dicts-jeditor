@@ -37,7 +37,13 @@ public class SessionService {
 	}
 
 	public void setTranslations(ObservableList<TranslationRow> translations) {
-		this.translations = translations;
+		translations.sort(TranslationRow.lastFirstComparator());
+		if (this.translations == null) {
+			this.translations = translations;
+		} else {
+			this.translations.clear();
+			this.translations.addAll(translations);
+		}
 	}
 
 	public List<Integer> getTranslationIds() {

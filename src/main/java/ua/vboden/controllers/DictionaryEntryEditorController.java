@@ -18,9 +18,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -370,6 +367,14 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 			}
 		}
 		return null;
+	}
+
+	@Override
+	protected void save(DictionaryEntry entity) {
+		super.save(entity);
+//		getSessionService().getTranslations().add(0, entryService.getRowById(entity.getId()));
+		getSessionService().getTranslationIds().add(0, entity.getId());
+		entryService.loadTranslations(getSessionService().getTranslationIds());
 	}
 
 	@Override

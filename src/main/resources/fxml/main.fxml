@@ -120,9 +120,9 @@
         <items>
             <Button contentDisplay="GRAPHIC_ONLY" maxHeight="15.0" maxWidth="15.0" mnemonicParsing="false" onAction="#manageDictionaryEntries" prefHeight="15.0" prefWidth="15.0">
                <graphic>
-                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../img/catRemove.png" />
+                        <Image url="@../img/new.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -133,7 +133,7 @@
             <Separator orientation="VERTICAL" prefHeight="15.0" />
           <Button contentDisplay="GRAPHIC_ONLY" maxHeight="15.0" maxWidth="15.0" mnemonicParsing="false" onAction="#addToCategory" prefHeight="15.0" prefWidth="15.0">
                <graphic>
-                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../img/catAdd.png" />
                      </image>
@@ -144,7 +144,7 @@
                </tooltip></Button>
             <Button contentDisplay="GRAPHIC_ONLY" maxHeight="15.0" maxWidth="15.0" mnemonicParsing="false" onAction="#removeFromCategory" prefHeight="15.0" prefWidth="15.0">
                <graphic>
-                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../img/catRemove.png" />
                      </image>
@@ -157,9 +157,9 @@
             <Separator orientation="VERTICAL" prefHeight="15.0" />
             <Button contentDisplay="GRAPHIC_ONLY" maxHeight="15.0" maxWidth="15.0" mnemonicParsing="false" onAction="#addToDictionary" prefHeight="15.0" prefWidth="15.0">
                <graphic>
-                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../img/dictAdd.png" />
+                        <Image url="@../img/list-add.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -169,9 +169,9 @@
             </Button>
             <Button contentDisplay="GRAPHIC_ONLY" maxHeight="15.0" maxWidth="15.0" mnemonicParsing="false" onAction="#removeFromDictionary" prefHeight="15.0" prefWidth="15.0">
                <graphic>
-                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../img/catRemove.png" />
+                        <Image url="@../img/list-remove.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -182,9 +182,9 @@
             <Separator orientation="VERTICAL" prefHeight="15.0" />
             <Button contentDisplay="GRAPHIC_ONLY" maxHeight="15.0" maxWidth="15.0" mnemonicParsing="false" onAction="#removeSelected" prefHeight="15.0" prefWidth="15.0">
                <graphic>
-                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../img/delete.png" />
+                        <Image url="@../img/delete2.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -208,6 +208,10 @@
             </AnchorPane>
           <AnchorPane>
                <children>
+                  <TextField fx:id="findWordField" layoutX="67.0" layoutY="6.0" onKeyPressed="#findWordsEnter" prefHeight="24.0" prefWidth="171.0" />
+                  <CheckBox fx:id="inTranslationsCheck" layoutX="245.0" layoutY="9.0" mnemonicParsing="false" text="%search.in.translations" />
+                  <Label layoutX="14.0" layoutY="10.0" text="%search.text" />
+                  <ToggleButton fx:id="findButton" layoutX="359.0" layoutY="6.0" mnemonicParsing="false" onAction="#findWords" text="%search.find" AnchorPane.leftAnchor="359.0" />
                   <TableView fx:id="mainTable" editable="true" layoutX="-150.0" layoutY="-83.0" onMouseClicked="#startEditing" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
                     <columns>
                       <TableColumn fx:id="numberColumn" editable="false" maxWidth="100.0" minWidth="50.0" prefWidth="-1.0" text="%translations.table.number" />
@@ -221,10 +225,6 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-                  <TextField fx:id="findWordField" layoutX="67.0" layoutY="6.0" onKeyPressed="#findWordsEnter" prefHeight="24.0" prefWidth="171.0" />
-                  <CheckBox fx:id="inTranslationsCheck" layoutX="245.0" layoutY="9.0" mnemonicParsing="false" text="%search.in.translations" />
-                  <Label layoutX="14.0" layoutY="10.0" text="%search.text" />
-                  <ToggleButton fx:id="findButton" layoutX="359.0" layoutY="6.0" mnemonicParsing="false" onAction="#findWords" text="%search.find" AnchorPane.leftAnchor="359.0" />
                </children>
             </AnchorPane>
         </items>

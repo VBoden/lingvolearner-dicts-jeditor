@@ -30,15 +30,15 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="406.0" prefWidth="472.0">
                <children>
+                  <Button fx:id="removeButton" layoutX="15.0" layoutY="26.0" mnemonicParsing="false" onAction="#removeSelected" text="%removeSelected" AnchorPane.leftAnchor="15.0" />
                   <Label layoutX="24.0" layoutY="115.0" text="%language.code" AnchorPane.leftAnchor="24.0" />
                   <TextField fx:id="languageCode" layoutX="15.0" layoutY="139.0" prefHeight="24.0" prefWidth="248.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
-                  <Button fx:id="removeButton" layoutX="15.0" layoutY="26.0" mnemonicParsing="false" onAction="#removeSelected" text="%removeSelected" AnchorPane.leftAnchor="15.0" />
-                  <Button fx:id="saveButton" layoutX="15.0" layoutY="260.0" mnemonicParsing="false" onAction="#save" text="%save" AnchorPane.leftAnchor="15.0" />
-                  <Button fx:id="saveAsNewButton" layoutX="106.0" layoutY="260.0" mnemonicParsing="false" onAction="#saveNew" text="%saveAsNew" AnchorPane.rightAnchor="16.0" />
-                  <Button fx:id="closeButton" layoutX="208.0" layoutY="384.0" mnemonicParsing="false" onAction="#close" text="%close" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                   <Label layoutX="24.0" layoutY="180.0" text="%language.title" AnchorPane.leftAnchor="24.0" />
                   <TextField fx:id="languageTitle" layoutX="15.0" layoutY="204.0" onKeyPressed="#saveEnter" prefHeight="24.0" prefWidth="239.0" />
+                  <Button fx:id="saveButton" layoutX="15.0" layoutY="260.0" mnemonicParsing="false" onAction="#save" text="%save" AnchorPane.leftAnchor="15.0" />
+                  <Button fx:id="saveAsNewButton" layoutX="106.0" layoutY="260.0" mnemonicParsing="false" onAction="#saveNew" text="%saveAsNew" AnchorPane.rightAnchor="16.0" />
                   <Button fx:id="cleanFields" layoutX="14.0" layoutY="417.0" mnemonicParsing="false" onAction="#cleanFields" text="%cleanFields" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
+                  <Button fx:id="closeButton" layoutX="208.0" layoutY="384.0" mnemonicParsing="false" onAction="#close" text="%close" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                </children>
             </AnchorPane>
         </items>

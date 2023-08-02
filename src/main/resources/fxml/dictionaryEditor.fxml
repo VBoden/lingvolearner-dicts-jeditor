@@ -32,17 +32,17 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="406.0" prefWidth="472.0">
                <children>
+                  <Button fx:id="removeDictionary" layoutX="15.0" layoutY="26.0" mnemonicParsing="false" onAction="#removeSelected" text="%removeSelected" AnchorPane.leftAnchor="15.0" />
                   <Label layoutX="24.0" layoutY="115.0" text="%dictionary.name" AnchorPane.leftAnchor="24.0" />
                   <TextField fx:id="dictionaryName" layoutX="15.0" layoutY="139.0" onKeyPressed="#saveEnter" prefHeight="24.0" prefWidth="248.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
-                  <Button fx:id="removeDictionary" layoutX="15.0" layoutY="26.0" mnemonicParsing="false" onAction="#removeSelected" text="%removeSelected" AnchorPane.leftAnchor="15.0" />
-                  <Button fx:id="saveDictionary" layoutX="15.0" layoutY="321.0" mnemonicParsing="false" onAction="#save" text="%save" AnchorPane.leftAnchor="15.0" />
-                  <Button fx:id="saveAsNewDictionary" layoutX="107.0" layoutY="321.0" mnemonicParsing="false" onAction="#saveNew" text="%dictionary.saveAsNew" AnchorPane.rightAnchor="15.0" />
-                  <Button fx:id="closeButton" layoutX="208.0" layoutY="384.0" mnemonicParsing="false" onAction="#close" text="%close" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                   <Label layoutX="24.0" layoutY="180.0" text="%dictionary.language.from" AnchorPane.leftAnchor="24.0" />
                   <ComboBox fx:id="languageFrom" layoutX="11.0" layoutY="204.0" prefHeight="24.0" prefWidth="239.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                   <Label layoutX="29.0" layoutY="243.0" text="%dictionary.language.to" AnchorPane.leftAnchor="24.0" />
                   <ComboBox fx:id="languageTo" layoutX="16.0" layoutY="267.0" prefHeight="24.0" prefWidth="239.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                  <Button fx:id="saveDictionary" layoutX="15.0" layoutY="321.0" mnemonicParsing="false" onAction="#save" text="%save" AnchorPane.leftAnchor="15.0" />
+                  <Button fx:id="saveAsNewDictionary" layoutX="107.0" layoutY="321.0" mnemonicParsing="false" onAction="#saveNew" text="%dictionary.saveAsNew" AnchorPane.rightAnchor="15.0" />
                   <Button fx:id="cleanFields" layoutX="14.0" layoutY="417.0" mnemonicParsing="false" onAction="#cleanFields" text="%cleanFields" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
+                  <Button fx:id="closeButton" layoutX="208.0" layoutY="384.0" mnemonicParsing="false" onAction="#close" text="%close" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                </children>
             </AnchorPane>
         </items>

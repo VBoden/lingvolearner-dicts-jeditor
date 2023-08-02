@@ -192,7 +192,6 @@ public class MainWindowController extends AbstractController {
 
 	private void updateTranslationsView() {
 		ObservableList<TranslationRow> translations = getSessionService().getTranslations();
-		translations.sort(TranslationRow.lastFirstComparator());
 		updateTranslations(translations);
 //		mainTable.getSelectionModel().select(translations.size() - 1);
 //		mainTable.scrollTo(translations.size());

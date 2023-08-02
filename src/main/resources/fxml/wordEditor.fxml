@@ -20,6 +20,8 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="422.0" prefWidth="276.0">
                <children>
+                  <TextField fx:id="searchField" layoutX="14.0" layoutY="14.0" onKeyPressed="#findWordsEnter" />
+                  <ToggleButton fx:id="findButton" layoutX="201.0" layoutY="14.0" mnemonicParsing="false" onAction="#findWord" text="ToggleButton" />
                   <TableView fx:id="wordsTable" layoutY="46.0" onMouseClicked="#startEditing" prefHeight="410.0" prefWidth="363.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="46.0">
                     <columns>
                       <TableColumn fx:id="wordColumn" prefWidth="75.0" text="%word.title" />
@@ -32,25 +34,23 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-                  <TextField fx:id="searchField" layoutX="14.0" layoutY="14.0" onKeyPressed="#findWordsEnter" />
-                  <ToggleButton fx:id="findButton" layoutX="201.0" layoutY="14.0" mnemonicParsing="false" onAction="#findWord" text="ToggleButton" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="406.0" prefWidth="472.0">
                <children>
+                  <Button fx:id="removeButton" layoutX="15.0" layoutY="26.0" mnemonicParsing="false" onAction="#removeSelected" text="%removeSelected" AnchorPane.leftAnchor="15.0" />
                   <Label layoutX="24.0" layoutY="65.0" text="%word.title" AnchorPane.leftAnchor="24.0" />
                   <TextField fx:id="word" layoutX="15.0" layoutY="84.0" onKeyPressed="#saveEnter" prefHeight="24.0" prefWidth="248.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
-                  <Button fx:id="removeButton" layoutX="15.0" layoutY="26.0" mnemonicParsing="false" onAction="#removeSelected" text="%removeSelected" AnchorPane.leftAnchor="15.0" />
-                  <Button fx:id="saveButton" layoutX="15.0" layoutY="370.0" mnemonicParsing="false" onAction="#save" text="%save" AnchorPane.leftAnchor="15.0" />
-                  <Button fx:id="saveAsNewButton" layoutX="106.0" layoutY="370.0" mnemonicParsing="false" onAction="#saveNew" text="%word.saveAsNew" AnchorPane.rightAnchor="16.0" />
-                  <Button fx:id="closeButton" layoutX="208.0" layoutY="384.0" mnemonicParsing="false" onAction="#close" text="%close" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
-                  <Label layoutX="24.0" layoutY="315.0" text="%word.notes" AnchorPane.leftAnchor="24.0" />
-                  <TextField fx:id="wordNotes" layoutX="15.0" layoutY="334.0" prefHeight="24.0" prefWidth="239.0" />
-                  <Button fx:id="cleanFields" layoutX="14.0" layoutY="417.0" mnemonicParsing="false" onAction="#cleanFields" text="%cleanFields" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
                   <Label layoutX="24.0" layoutY="115.0" text="%word.language" AnchorPane.leftAnchor="24.0" />
                   <ComboBox fx:id="language" layoutX="15.0" layoutY="134.0" prefWidth="150.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
-                  <ListView fx:id="categoryList" layoutX="15.0" layoutY="186.0" prefHeight="118.0" prefWidth="239.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                   <Label layoutX="24.0" layoutY="167.0" text="%word.categories" AnchorPane.leftAnchor="24.0" />
+                  <ListView fx:id="categoryList" layoutX="15.0" layoutY="186.0" prefHeight="118.0" prefWidth="239.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                  <Label layoutX="24.0" layoutY="315.0" text="%word.notes" AnchorPane.leftAnchor="24.0" />
+                  <TextField fx:id="wordNotes" layoutX="15.0" layoutY="334.0" prefHeight="24.0" prefWidth="239.0" />
+                  <Button fx:id="saveButton" layoutX="15.0" layoutY="370.0" mnemonicParsing="false" onAction="#save" text="%save" AnchorPane.leftAnchor="15.0" />
+                  <Button fx:id="saveAsNewButton" layoutX="106.0" layoutY="370.0" mnemonicParsing="false" onAction="#saveNew" text="%word.saveAsNew" AnchorPane.rightAnchor="16.0" />
+                  <Button fx:id="cleanFields" layoutX="14.0" layoutY="417.0" mnemonicParsing="false" onAction="#cleanFields" text="%cleanFields" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
+                  <Button fx:id="closeButton" layoutX="208.0" layoutY="384.0" mnemonicParsing="false" onAction="#close" text="%close" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
                </children>
             </AnchorPane>
         </items>

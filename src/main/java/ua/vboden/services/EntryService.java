@@ -75,7 +75,8 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 	public List<DictionaryEntry> getAllByDictionaryIds(List<Integer> selectedIds, boolean conditionAnd) {
 		if (selectedIds == null || selectedIds.size() == 1 && selectedIds.get(0) == null) {
 			return entryRepository.findByDictionaryIsEmpty();
-		} if (conditionAnd) {
+		}
+		if (conditionAnd) {
 			boolean firstId = true;
 			List<DictionaryEntry> result = new ArrayList<>();
 			for (Integer id : selectedIds) {
@@ -107,6 +108,14 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 		List<DictionaryEntry> result = new ArrayList<>();
 		entryRepository.findAllById(ids).forEach(result::add);
 		return result;
+	}
+
+	public TranslationRow getRowById(Integer id) {
+		return translationConverter.convert(getById(id));
+	}
+
+	private DictionaryEntry getById(Integer id) {
+		return entryRepository.findById(id).get();
 	}
 
 	public List<TranslationRow> getAllByTranslation(String word) {
