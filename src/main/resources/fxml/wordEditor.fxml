@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Pagination?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -22,7 +23,7 @@
                <children>
                   <TextField fx:id="searchField" layoutX="14.0" layoutY="14.0" onKeyPressed="#findWordsEnter" />
                   <ToggleButton fx:id="findButton" layoutX="201.0" layoutY="14.0" mnemonicParsing="false" onAction="#findWord" text="ToggleButton" />
-                  <TableView fx:id="wordsTable" layoutY="46.0" onMouseClicked="#startEditing" prefHeight="410.0" prefWidth="363.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="46.0">
+                  <TableView fx:id="wordsTable" layoutY="46.0" onMouseClicked="#startEditing" prefHeight="364.0" prefWidth="363.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="46.0">
                     <columns>
                       <TableColumn fx:id="wordColumn" prefWidth="75.0" text="%word.title" />
                       <TableColumn fx:id="languageColumn" prefWidth="75.0" text="%word.language" />
@@ -34,6 +35,7 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
+                  <Pagination fx:id="paginationComp" layoutY="400.0" prefHeight="56.0" prefWidth="363.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="406.0" prefWidth="472.0">
