@@ -14,11 +14,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Pagination;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -27,7 +25,6 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
 import ua.vboden.dto.CodeString;
 import ua.vboden.dto.IdString;
 import ua.vboden.dto.WordData;
@@ -39,8 +36,6 @@ import ua.vboden.services.WordService;
 
 @Component
 public class WordEditorController extends AbstractEditorController<WordData, Word> {
-
-	private static final int PER_PAGE = 100;
 
 	@FXML
 	private TableView<WordData> wordsTable;
@@ -81,9 +76,6 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 	@FXML
 	private ToggleButton findButton;
 
-    @FXML
-    private Pagination paginationComp;
-
 	@Autowired
 	private WordService wordService;
 
@@ -92,9 +84,6 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 
 	@Autowired
 	private CategoryService categoryService;
-	
-	ObservableList<WordData> words;
-	ObservableList<WordData> observableArrayList = FXCollections.observableArrayList();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -107,17 +96,7 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 		languageService.loadLanguages();
 		categoryService.loadCategories();
 		categoryList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-		wordsTable.setItems(observableArrayList);
 		initView();
-		paginationComp.setPageFactory(this::createPage);
-		paginationComp.setPageCount(words.size()/PER_PAGE);
-	}
-	
-	private Node createPage(int index) {
-		List<WordData> subList = words.subList(index*PER_PAGE, (index+1)*PER_PAGE);
-		observableArrayList.clear();
-		observableArrayList.addAll(subList);
-		return new BorderPane();
 	}
 
 	@Override
@@ -230,14 +209,14 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 		if (findButton.isSelected()) {
 			String word = searchField.getText();
 			if (StringUtils.isNoneBlank(word)) {
-				words = FXCollections.observableArrayList(wordService.getAllByWord(word));
-//				wordsTable.setItems(words);
+				ObservableList<WordData> words = FXCollections.observableArrayList(wordService.getAllByWord(word));
+				wordsTable.setItems(words);
 				statusMessage.setText(MessageFormat.format(getResources().getString("word.status"), words.size()));
 			}
 		} else {
 			wordService.loadData();
-			words = getSessionService().getWords();
-//			wordsTable.setItems(words);
+			ObservableList<WordData> words = getSessionService().getWords();
+			wordsTable.setItems(words);
 			statusMessage.setText(MessageFormat.format(getResources().getString("word.status"), words.size()));
 		}
 	}
