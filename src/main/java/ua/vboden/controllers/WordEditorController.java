@@ -31,6 +31,7 @@ import ua.vboden.dto.WordData;
 import ua.vboden.entities.Word;
 import ua.vboden.services.CategoryService;
 import ua.vboden.services.EntityService;
+import ua.vboden.services.EntryService;
 import ua.vboden.services.LanguageService;
 import ua.vboden.services.WordService;
 
@@ -84,6 +85,9 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 
 	@Autowired
 	private CategoryService categoryService;
+	
+	@Autowired
+	private EntryService entryService;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -223,6 +227,6 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 
 	@Override
 	protected boolean allowedDeleting(WordData sel) {
-		return sel.getUsages() == 0;
+		return entryService.getWordUsages(wordService.findEntity(sel)) == 0;
 	}
 }
