@@ -2,6 +2,10 @@ package ua.vboden.entities;
 
 import java.util.List;
 
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -19,12 +23,19 @@ public class Word {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+
 	private String word;
+
 	private String notes;
-	@OneToOne
+
+	@OneToOne(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.JOIN)
 	@JoinColumn(name = "language_id")
 	private Language language;
+
 	@ManyToMany(fetch = FetchType.EAGER)
+	@BatchSize(size = 50)
+	@Fetch(FetchMode.SUBSELECT)
 	private List<Category> category;
 
 	public int getId() {

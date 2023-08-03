@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import ua.vboden.dto.CodeString;
 import ua.vboden.entities.Language;
@@ -27,7 +26,7 @@ public class LanguageService implements EntityService<CodeString, Language> {
 		languageRepository.findAll()
 				.forEach(entry -> languageModels.add(new CodeString(entry.getCode(), entry.getName())));
 		Collections.sort(languageModels);
-		sessionService.setLanguages(FXCollections.observableArrayList(languageModels));
+		sessionService.setLanguages(languageModels);
 	}
 
 	public Language getByCode(String code) {

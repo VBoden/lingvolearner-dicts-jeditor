@@ -1,13 +1,14 @@
 package ua.vboden.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import ua.vboden.converters.TranslationConverter;
 import ua.vboden.dto.TranslationRow;
@@ -28,20 +29,26 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 	private SessionService sessionService;
 
 	public void loadTranslations() {
+		long start = System.nanoTime();
 		List<DictionaryEntry> allEntries = getAllEntries();
-		sessionService.setTranslations(FXCollections.observableArrayList(translationConverter.convertAll(allEntries)));
+		System.out.println("\n\n=================time=\n" + ((System.nanoTime() - start) / 1000));
+		System.out.println("\n\n=================time=\n");
+		sessionService.setTranslations(translationConverter.convertAll(allEntries));
 		sessionService.setTranslationIds(allEntries.stream().map(entry -> entry.getId()).collect(Collectors.toList()));
+		sessionService.setWordUsages(new HashMap<>());
+		for (DictionaryEntry entry : allEntries) {
+			sessionService.increaseUsages(entry.getWord().getId());
+			sessionService.increaseUsages(entry.getTranslation().getId());
+		}
 	}
 
 	public List<DictionaryEntry> getAllEntries() {
-		List<DictionaryEntry> result = new ArrayList<>();
-		entryRepository.findAll().forEach(result::add);
-		return result;
+		return (List<DictionaryEntry>) entryRepository.findAll();
 	}
 
 	public void loadTranslationsByCategories(List<Integer> selectedIds, boolean conditionAnd) {
 		List<DictionaryEntry> allEntries = getAllByCategoryIds(selectedIds, conditionAnd);
-		sessionService.setTranslations(FXCollections.observableArrayList(translationConverter.convertAll(allEntries)));
+		sessionService.setTranslations(translationConverter.convertAll(allEntries));
 		sessionService.setTranslationIds(allEntries.stream().map(entry -> entry.getId()).collect(Collectors.toList()));
 	}
 
@@ -68,7 +75,7 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 
 	public void loadTranslationsByDictionaries(List<Integer> selectedIds, boolean conditionAnd) {
 		List<DictionaryEntry> allEntries = getAllByDictionaryIds(selectedIds, conditionAnd);
-		sessionService.setTranslations(FXCollections.observableArrayList(translationConverter.convertAll(allEntries)));
+		sessionService.setTranslations(translationConverter.convertAll(allEntries));
 		sessionService.setTranslationIds(allEntries.stream().map(entry -> entry.getId()).collect(Collectors.toList()));
 	}
 
@@ -99,8 +106,7 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 	}
 
 	public void loadTranslations(List<Integer> ids) {
-		sessionService
-				.setTranslations(FXCollections.observableArrayList(translationConverter.convertAll(getAllById(ids))));
+		sessionService.setTranslations(translationConverter.convertAll(getAllById(ids)));
 		sessionService.setTranslationIds(ids);
 	}
 

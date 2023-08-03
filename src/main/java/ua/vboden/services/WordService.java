@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import ua.vboden.converters.WordConverter;
 import ua.vboden.dto.WordData;
@@ -30,7 +29,7 @@ public class WordService implements EntityService<WordData, Word> {
 		List<WordData> models = new ArrayList<>();
 		wordRepository.findAll().forEach(entry -> models.add(wordConverter.convert(entry)));
 //		Collections.sort(models);
-		sessionService.setWords(FXCollections.observableArrayList(models));
+		sessionService.setWords(models);
 	}
 
 	@Override

@@ -8,11 +8,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import ua.vboden.dto.IdString;
 import ua.vboden.entities.Category;
-import ua.vboden.entities.Dictionary;
 import ua.vboden.repositories.CategoryRepository;
 
 @Service
@@ -42,7 +40,7 @@ public class CategoryService implements EntityService<IdString, Category> {
 		List<IdString> categoryModels = new ArrayList<>();
 		categoryRepository.findAll().forEach(entry -> categoryModels.add(new IdString(entry.getId(), entry.getName())));
 		Collections.sort(categoryModels);
-		sessionService.setCategories(FXCollections.observableArrayList(categoryModels));
+		sessionService.setCategories(categoryModels);
 	}
 
 	public Category findEntity(int id) {

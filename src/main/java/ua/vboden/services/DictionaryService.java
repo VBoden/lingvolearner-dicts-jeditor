@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import ua.vboden.converters.DictionaryConverter;
 import ua.vboden.dto.DictionaryData;
@@ -49,8 +48,8 @@ public class DictionaryService implements EntityService<DictionaryData, Dictiona
 					+ "-" + entry.getLanguageTo().getName() + ")"));
 			dictionaryData.add(dictionaryConverter.convert(entry));
 		});
-		sessionService.setDictionaries(FXCollections.observableArrayList(dictionaries));
-		sessionService.setDictionaryData(FXCollections.observableArrayList(dictionaryData));
+		sessionService.setDictionaries(dictionaries);
+		sessionService.setDictionaryData(dictionaryData);
 	}
 
 	public Dictionary findEntity(int id) {
