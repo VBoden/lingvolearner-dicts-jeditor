@@ -29,6 +29,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import ua.vboden.converters.TranslationConverter;
 import ua.vboden.dto.CodeString;
 import ua.vboden.dto.IdString;
 import ua.vboden.dto.TranslationRow;
@@ -131,6 +132,9 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 
 	@Autowired
 	private DictionaryService dictionaryService;
+
+	@Autowired
+	private TranslationConverter translationConverter;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -371,10 +375,16 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 
 	@Override
 	protected void save(DictionaryEntry entity) {
+		boolean isNewEntity = entity.getId() == 0;
 		super.save(entity);
-//		getSessionService().getTranslations().add(0, entryService.getRowById(entity.getId()));
-		getSessionService().getTranslationIds().add(0, entity.getId());
-		entryService.loadTranslations(getSessionService().getTranslationIds());
+		TranslationRow converted = translationConverter.convert(entity);
+		converted.setNumber(getSessionService().getTranslations().size() + 1);
+		getSessionService().getTranslations().add(0, converted);
+		getSessionService().getTranslationIds().add(entity.getId());
+		if (isNewEntity) {
+			getSessionService().increaseUsages(entity.getWord().getId());
+			getSessionService().increaseUsages(entity.getTranslation().getId());
+		}
 	}
 
 	@Override

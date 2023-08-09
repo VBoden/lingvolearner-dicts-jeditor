@@ -44,6 +44,14 @@ public class SessionService {
 		}
 	}
 
+	public void decreaseUsages(int id) {
+		if (wordUsages.containsKey(id)) {
+			wordUsages.put(id, wordUsages.get(id) - 1);
+		} else {
+			wordUsages.put(id, 0);
+		}
+	}
+
 	public ObservableList<TranslationRow> getTranslations() {
 		return translations;
 	}

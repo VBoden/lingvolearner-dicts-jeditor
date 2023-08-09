@@ -208,10 +208,19 @@
             </AnchorPane>
           <AnchorPane>
                <children>
-                  <TextField fx:id="findWordField" layoutX="67.0" layoutY="6.0" onKeyPressed="#findWordsEnter" prefHeight="24.0" prefWidth="171.0" />
-                  <CheckBox fx:id="inTranslationsCheck" layoutX="245.0" layoutY="9.0" mnemonicParsing="false" text="%search.in.translations" />
-                  <Label layoutX="14.0" layoutY="10.0" text="%search.text" />
-                  <ToggleButton fx:id="findButton" layoutX="359.0" layoutY="6.0" mnemonicParsing="false" onAction="#findWords" text="%search.find" AnchorPane.leftAnchor="359.0" />
+                  <Button layoutX="14.0" layoutY="6.0" mnemonicParsing="false" onAction="#reloadTranslations">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/refresh.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <TextField fx:id="findWordField" layoutX="112.0" layoutY="6.0" onKeyPressed="#findWordsEnter" prefHeight="24.0" prefWidth="171.0" />
+                  <CheckBox fx:id="inTranslationsCheck" layoutX="290.0" layoutY="9.0" mnemonicParsing="false" text="%search.in.translations" />
+                  <Label layoutX="59.0" layoutY="10.0" text="%search.text" />
+                  <ToggleButton fx:id="findButton" layoutX="404.0" layoutY="6.0" mnemonicParsing="false" onAction="#findWords" text="%search.find" AnchorPane.leftAnchor="408.0" />
                   <TableView fx:id="mainTable" editable="true" layoutX="-150.0" layoutY="-83.0" onMouseClicked="#startEditing" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
                     <columns>
                       <TableColumn fx:id="numberColumn" editable="false" maxWidth="100.0" minWidth="50.0" prefWidth="-1.0" text="%translations.table.number" />

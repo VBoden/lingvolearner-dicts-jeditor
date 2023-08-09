@@ -1,5 +1,7 @@
 package ua.vboden.dto;
 
+import java.util.Comparator;
+
 import org.apache.commons.lang3.StringUtils;
 
 public class WordData implements Comparable<WordData> {
@@ -61,6 +63,10 @@ public class WordData implements Comparable<WordData> {
 	@Override
 	public int compareTo(WordData another) {
 		return word.compareTo(another.word);
+	}
+
+	public static Comparator<? super WordData> lastFirstComparator() {
+		return (a, b) -> b.getId() - a.getId();
 	}
 
 	@Override

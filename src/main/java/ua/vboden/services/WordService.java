@@ -1,6 +1,7 @@
 package ua.vboden.services;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,7 @@ public class WordService implements EntityService<WordData, Word> {
 	public void loadData() {
 		List<WordData> models = new ArrayList<>();
 		wordRepository.findAll().forEach(entry -> models.add(wordConverter.convert(entry)));
-//		Collections.sort(models);
+		Collections.sort(models, WordData.lastFirstComparator());
 		sessionService.setWords(models);
 	}
 

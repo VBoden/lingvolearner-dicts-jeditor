@@ -460,6 +460,8 @@ public class MainWindowController extends AbstractController {
 				for (Word word : wordService.getAllById(usedWords)) {
 					if (entryService.getWordUsages(word) == 0) {
 						wordService.delete(word);
+					} else {
+						getSessionService().decreaseUsages(word.getId());
 					}
 				}
 
@@ -505,6 +507,11 @@ public class MainWindowController extends AbstractController {
 	@FXML
 	void openSettings(ActionEvent event) {
 
+	}
+
+	@FXML
+	void reloadTranslations(ActionEvent event) {
+		entryService.loadTranslations(getSessionService().getTranslationIds());
 	}
 
 }
