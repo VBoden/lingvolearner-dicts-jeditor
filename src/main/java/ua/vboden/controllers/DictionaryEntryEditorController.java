@@ -50,6 +50,8 @@ import ua.vboden.services.WordService;
 @Component
 public class DictionaryEntryEditorController extends AbstractEditorController<TranslationRow, DictionaryEntry> {
 
+	private static final String DICTIONARY_LAST_SELECTED_ID = "dictionary.last.selected.id";
+
 	@FXML
 	private TableView<TranslationRow> entriesTable;
 
@@ -205,9 +207,17 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 
 	private void selectDefaultDictionary() {
 		dictionariesList.getSelectionModel().clearSelection();
-		int dictIndex = getSessionService().getPreferences().getInt("dictionary.last.selected.index", 0);
-		dictionariesList.getSelectionModel().select(dictIndex);
-		dictionariesList.scrollTo(dictIndex);
+		int dictId = getSessionService().getPreferences().getInt(DICTIONARY_LAST_SELECTED_ID,
+				dictionariesList.getItems().get(0).getId());
+		List<IdString> dictionaries = findCatOrDict(List.of(dictId), dictionariesList.getItems());
+		IdString dictionary;
+		if (dictionaries == null || dictionaries.isEmpty()) {
+			dictionary = dictionariesList.getItems().get(0);
+		} else {
+			dictionary = dictionaries.get(0);
+		}
+		dictionariesList.getSelectionModel().select(dictionary);
+		dictionariesList.scrollTo(dictionary);
 	}
 
 	@Override
@@ -223,8 +233,8 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		entity.setTranslation(translationEntity);
 		ObservableList<IdString> selectedDictionaries = dictionariesList.getSelectionModel().getSelectedItems();
 		if (selectedDictionaries != null && selectedDictionaries.size() > 0) {
-			getSessionService().getPreferences().putInt("dictionary.last.selected.index",
-					dictionariesList.getSelectionModel().getSelectedIndices().get(0));
+			getSessionService().getPreferences().putInt(DICTIONARY_LAST_SELECTED_ID,
+					selectedDictionaries.get(0).getId());
 			entity.setDictionary(dictionaryService.findEntities(selectedDictionaries));
 		}
 		entity.setTranscription(transcriptionField.getText());
@@ -302,11 +312,12 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		if (entity.getWord() != null) {
 			String word = fillWordFields(entity.getWord(), wordField, wordsSuggestionTable, useWordCheck);
 			languageFrom.getSelectionModel()
-					.select(find(entity.getWord().getLanguage().getName(), languageFrom.getItems()));
+					.select(findLanguage(entity.getWord().getLanguage().getName(), languageFrom.getItems()));
 			List<Category> categories = entity.getWord().getCategory();
 			categoriesList.getSelectionModel().clearSelection();
 			if (categories != null && !categories.isEmpty()) {
-				int[] indexes = find(categories.stream().map(Category::getId).collect(Collectors.toList()),
+				int[] indexes = findCatOrDictIndeces(
+						categories.stream().map(Category::getId).collect(Collectors.toList()),
 						categoriesList.getItems());
 				if (indexes.length > 0) {
 					categoriesList.getSelectionModel().selectIndices(-1, indexes);
@@ -320,11 +331,12 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		transcriptionField.setText(current.getTranscription());
 		notesField.setText(entity.getTranslation().getNotes());
 		languageTo.getSelectionModel()
-				.select(find(entity.getTranslation().getLanguage().getName(), languageTo.getItems()));
+				.select(findLanguage(entity.getTranslation().getLanguage().getName(), languageTo.getItems()));
 		dictionariesList.getSelectionModel().clearSelection();
 		List<Dictionary> dictionaries = entity.getDictionary();
 		if (dictionaries != null && !dictionaries.isEmpty()) {
-			int[] indexes = find(dictionaries.stream().map(Dictionary::getId).collect(Collectors.toList()),
+			int[] indexes = findCatOrDictIndeces(
+					dictionaries.stream().map(Dictionary::getId).collect(Collectors.toList()),
 					dictionariesList.getItems());
 			if (indexes.length > 0) {
 				dictionariesList.getSelectionModel().selectIndices(-1, indexes);
@@ -344,7 +356,7 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		String word = wordEntity.getWord();
 		textField.setText(word);
 		ObservableList<WordData> wordSuggestions = fillSuggestions(suggestionTable, useWordCheck, word);
-		suggestionTable.getSelectionModel().select(find(wordEntity.getId(), wordSuggestions));
+		suggestionTable.getSelectionModel().select(findWord(wordEntity.getId(), wordSuggestions));
 		return word;
 	}
 
@@ -360,7 +372,7 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		return wordSuggestions;
 	}
 
-	private int find(int id, ObservableList<WordData> items) {
+	private int findWord(int id, ObservableList<WordData> items) {
 		for (WordData item : items) {
 			if (item.getId() == id) {
 				return items.indexOf(item);
@@ -369,20 +381,16 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		return -1;
 	}
 
-	private int[] find(List<Integer> values, ObservableList<IdString> items) {
-		List<Integer> indices = new ArrayList<>();
-		for (int cat : values) {
-			for (IdString item : items) {
-				if (item.getId() == cat) {
-					indices.add(items.indexOf(item));
-					break;
-				}
-			}
-		}
-		return indices.stream().mapToInt(Integer::intValue).toArray();
+	private int[] findCatOrDictIndeces(List<Integer> values, ObservableList<IdString> items) {
+		return findCatOrDict(values, items).stream().map(item -> items.indexOf(item)).mapToInt(Integer::intValue)
+				.toArray();
 	}
 
-	private CodeString find(String langName, ObservableList<CodeString> languages) {
+	private List<IdString> findCatOrDict(List<Integer> values, ObservableList<IdString> items) {
+		return items.stream().filter(item -> values.contains(item.getId())).collect(Collectors.toList());
+	}
+
+	private CodeString findLanguage(String langName, ObservableList<CodeString> languages) {
 		for (CodeString lang : languages) {
 			if (lang.getValue().equalsIgnoreCase(langName)) {
 				return lang;
@@ -436,10 +444,10 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 	private void fillTransBySelection() {
 		Word wordEntity = wordService.findEntity(transSuggestionTable.getSelectionModel().getSelectedItem());
 		notesField.setText(wordEntity.getNotes());
-		languageTo.getSelectionModel().select(find(wordEntity.getLanguage().getName(), languageTo.getItems()));
+		languageTo.getSelectionModel().select(findLanguage(wordEntity.getLanguage().getName(), languageTo.getItems()));
 		List<Category> categories = wordEntity.getCategory();
 		if (categories != null && !categories.isEmpty())
-			categoriesList.getSelectionModel().selectIndices(-1, find(
+			categoriesList.getSelectionModel().selectIndices(-1, findCatOrDictIndeces(
 					categories.stream().map(Category::getId).collect(Collectors.toList()), categoriesList.getItems()));
 	}
 
@@ -457,10 +465,11 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 
 	private void fillWordBySelection() {
 		Word wordEntity = wordService.findEntity(wordsSuggestionTable.getSelectionModel().getSelectedItem());
-		languageFrom.getSelectionModel().select(find(wordEntity.getLanguage().getName(), languageFrom.getItems()));
+		languageFrom.getSelectionModel()
+				.select(findLanguage(wordEntity.getLanguage().getName(), languageFrom.getItems()));
 		List<Category> categories = wordEntity.getCategory();
 		if (categories != null && !categories.isEmpty())
-			categoriesList.getSelectionModel().selectIndices(-1, find(
+			categoriesList.getSelectionModel().selectIndices(-1, findCatOrDictIndeces(
 					categories.stream().map(Category::getId).collect(Collectors.toList()), categoriesList.getItems()));
 	}
 
