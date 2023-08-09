@@ -4,6 +4,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -248,19 +249,25 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 
 	@Override
 	protected String checkFilledFields() {
+		String result = "";
 		if (!useWordCheck.isSelected() && isBlank(wordField.getText())) {
-			return "Fill word";
+			result += "\n" + getResources().getString("dictionaryEntry.check.word");
 		}
 		if (!useTranslationCheck.isSelected() && isBlank(translationField.getText()))
-			return "Fill word";
+			result += "\n" + getResources().getString("dictionaryEntry.check.translation");
 		if (useWordCheck.isSelected() && wordsSuggestionTable.getSelectionModel().getSelectedIndex() == -1)
-			return "Fill word";
+			result += "\n" + getResources().getString("dictionaryEntry.check.word.select");
 		if (!useWordCheck.isSelected() && languageFrom.getSelectionModel().getSelectedIndex() == -1)
-			return "Fill word";
+			result += "\n" + getResources().getString("dictionaryEntry.check.languageFrom");
 		if (useTranslationCheck.isSelected() && transSuggestionTable.getSelectionModel().getSelectedIndex() == -1)
-			return "Fill word";
+			result += "\n" + getResources().getString("dictionaryEntry.check.translation.select");
 		if (!useTranslationCheck.isSelected() && languageTo.getSelectionModel().getSelectedIndex() == -1)
-			return "Fill word";
+			result += "\n" + getResources().getString("dictionaryEntry.check.languageTo");
+		if (!useWordCheck.isSelected() && languageFrom.getSelectionModel().getSelectedIndex() != -1
+				&& !useTranslationCheck.isSelected() && languageTo.getSelectionModel().getSelectedIndex() != -1
+				&& languageTo.getSelectionModel().getSelectedItem().getCode() == languageFrom.getSelectionModel()
+						.getSelectedItem().getCode())
+			result += "\n" + getResources().getString("dictionaryEntry.check.language");
 		if (getCurrent() == null) {
 			String word = useWordCheck.isSelected()
 					? wordsSuggestionTable.getSelectionModel().getSelectedItem().getWord()
@@ -271,11 +278,12 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 			for (TranslationRow entry : entriesTable.getItems()) {
 				if (word.equalsIgnoreCase(entry.getWord())
 						&& translation.equalsIgnoreCase(entry.getTranslation().split("\n")[0])) {
-					return "Already exists";
+					result += "\n" + MessageFormat.format(getResources().getString("dictionaryEntry.check.exists"),
+							entry.toString());
 				}
 			}
 		}
-		return null;
+		return result;
 	}
 
 	@Override
@@ -377,11 +385,11 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 	protected void save(DictionaryEntry entity) {
 		boolean isNewEntity = entity.getId() == 0;
 		super.save(entity);
-		TranslationRow converted = translationConverter.convert(entity);
-		converted.setNumber(getSessionService().getTranslations().size() + 1);
-		getSessionService().getTranslations().add(0, converted);
-		getSessionService().getTranslationIds().add(entity.getId());
 		if (isNewEntity) {
+			TranslationRow converted = translationConverter.convert(entity);
+			converted.setNumber(getSessionService().getTranslations().size() + 1);
+			getSessionService().getTranslations().add(0, converted);
+			getSessionService().getTranslationIds().add(entity.getId());
 			getSessionService().increaseUsages(entity.getWord().getId());
 			getSessionService().increaseUsages(entity.getTranslation().getId());
 		}
@@ -394,7 +402,7 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 
 	@Override
 	String getTitle() {
-		return "menu.edit.dictionaryEntries";
+		return getResources().getString("menu.edit.dictionaryEntries");
 	}
 
 	public void showStage(Object object, TranslationRow selected) throws IOException {
