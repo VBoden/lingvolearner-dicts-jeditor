@@ -135,6 +135,9 @@ public class MainWindowController extends AbstractController {
 	private LanguageEditorController languageEditorController;
 
 	@Autowired
+	private PrefsEditorController prefsEditorController;
+
+	@Autowired
 	private EntryService entryService;
 
 	@Autowired
@@ -505,8 +508,8 @@ public class MainWindowController extends AbstractController {
 	}
 
 	@FXML
-	void openSettings(ActionEvent event) {
-
+	void openSettings(ActionEvent event) throws IOException {
+		prefsEditorController.showStage(null);
 	}
 
 	@FXML

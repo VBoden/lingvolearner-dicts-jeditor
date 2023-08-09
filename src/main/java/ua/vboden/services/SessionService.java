@@ -1,5 +1,8 @@
 package ua.vboden.services;
 
+import static ua.vboden.PreferencesConstants.DEFAULT_LANGUAGE_FROM;
+import static ua.vboden.PreferencesConstants.DEFAULT_LANGUAGE_TO;
+
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import ua.vboden.PreferencesConstants;
 import ua.vboden.dto.CodeString;
 import ua.vboden.dto.DictionaryData;
 import ua.vboden.dto.IdString;
@@ -35,6 +39,10 @@ public class SessionService {
 	private ObservableList<DictionaryData> dictionaryData;
 
 	private Map<Integer, Integer> wordUsages;
+
+	private CodeString defaultLanguageFrom;
+
+	private CodeString defaultLanguageTo;
 
 	public void increaseUsages(int id) {
 		if (wordUsages.containsKey(id)) {
@@ -152,7 +160,36 @@ public class SessionService {
 		this.wordUsages = wordUsages;
 	}
 
+	public CodeString getDefaultLanguageFrom() {
+		return defaultLanguageFrom;
+	}
+
+	public void setDefaultLanguageFrom(CodeString defaultLanguageFrom) {
+		this.defaultLanguageFrom = defaultLanguageFrom;
+	}
+
+	public CodeString getDefaultLanguageTo() {
+		return defaultLanguageTo;
+	}
+
+	public void setDefaultLanguageTo(CodeString defaultLanguageTo) {
+		this.defaultLanguageTo = defaultLanguageTo;
+	}
+
 	public Preferences getPreferences() {
 		return Preferences.userRoot().node("lingvist.fxeditor");
+	}
+
+	public void loadPreferences() {
+		String langFromCode = getPreferences().get(DEFAULT_LANGUAGE_FROM, null);
+		if (langFromCode != null) {
+			defaultLanguageFrom = getLanguages().stream().filter(lang -> langFromCode.equals(lang.getCode())).findAny()
+					.orElse(null);
+		}
+		String langToCode = getPreferences().get(DEFAULT_LANGUAGE_TO, null);
+		if (langToCode != null) {
+			defaultLanguageTo = getLanguages().stream().filter(lang -> langToCode.equals(lang.getCode())).findAny()
+					.orElse(null);
+		}
 	}
 }
