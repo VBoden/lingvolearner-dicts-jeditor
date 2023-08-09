@@ -1,9 +1,9 @@
 package ua.vboden.services;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 import org.springframework.stereotype.Service;
 
@@ -152,4 +152,7 @@ public class SessionService {
 		this.wordUsages = wordUsages;
 	}
 
+	public Preferences getPreferences() {
+		return Preferences.userRoot().node("lingvist.fxeditor");
+	}
 }

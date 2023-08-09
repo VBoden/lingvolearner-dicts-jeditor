@@ -147,6 +147,7 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 			return b.getId() - a.getId();
 		}));
 		dictionariesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		selectDefaultDictionary();
 		languageService.loadLanguages();
 		ObservableList<CodeString> languages = getSessionService().getLanguages();
 		languageFrom.setItems(languages);
@@ -191,7 +192,7 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		languageFrom.getSelectionModel().clearSelection();
 		languageTo.getSelectionModel().clearSelection();
 		categoriesList.getSelectionModel().clearSelection();
-		dictionariesList.getSelectionModel().select(0);
+		selectDefaultDictionary();
 		wordsSuggestionTable.getItems().clear();
 		transSuggestionTable.getItems().clear();
 		useWordCheck.setSelected(false);
@@ -200,6 +201,13 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		useTranslationCheck.setDisable(true);
 		wordsSuggestionTable.setDisable(true);
 		transSuggestionTable.setDisable(true);
+	}
+
+	private void selectDefaultDictionary() {
+		dictionariesList.getSelectionModel().clearSelection();
+		int dictIndex = getSessionService().getPreferences().getInt("dictionary.last.selected.index", 0);
+		dictionariesList.getSelectionModel().select(dictIndex);
+		dictionariesList.scrollTo(dictIndex);
 	}
 
 	@Override
@@ -215,6 +223,8 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		entity.setTranslation(translationEntity);
 		ObservableList<IdString> selectedDictionaries = dictionariesList.getSelectionModel().getSelectedItems();
 		if (selectedDictionaries != null && selectedDictionaries.size() > 0) {
+			getSessionService().getPreferences().putInt("dictionary.last.selected.index",
+					dictionariesList.getSelectionModel().getSelectedIndices().get(0));
 			entity.setDictionary(dictionaryService.findEntities(selectedDictionaries));
 		}
 		entity.setTranscription(transcriptionField.getText());
