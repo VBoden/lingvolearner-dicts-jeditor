@@ -2,6 +2,8 @@ package ua.vboden.services;
 
 import static ua.vboden.PreferencesConstants.DEFAULT_LANGUAGE_FROM;
 import static ua.vboden.PreferencesConstants.DEFAULT_LANGUAGE_TO;
+import static ua.vboden.PreferencesConstants.FILL_DEFAULT_LANGUAGES;
+import static ua.vboden.PreferencesConstants.SHOW_DEFAULT_LANGUAGES;
 
 import java.util.List;
 import java.util.Map;
@@ -43,6 +45,10 @@ public class SessionService {
 	private CodeString defaultLanguageFrom;
 
 	private CodeString defaultLanguageTo;
+
+	private boolean displayDefaultLanguagesOnly;
+
+	private boolean fillDefaultLanguages;
 
 	public void increaseUsages(int id) {
 		if (wordUsages.containsKey(id)) {
@@ -176,6 +182,22 @@ public class SessionService {
 		this.defaultLanguageTo = defaultLanguageTo;
 	}
 
+	public boolean isDisplayDefaultLanguagesOnly() {
+		return displayDefaultLanguagesOnly;
+	}
+
+	public void setDisplayDefaultLanguagesOnly(boolean displayDefaultLanguagesOnly) {
+		this.displayDefaultLanguagesOnly = displayDefaultLanguagesOnly;
+	}
+
+	public boolean isFillDefaultLanguages() {
+		return fillDefaultLanguages;
+	}
+
+	public void setFillDefaultLanguages(boolean fillDefaultLanguages) {
+		this.fillDefaultLanguages = fillDefaultLanguages;
+	}
+
 	public Preferences getPreferences() {
 		return Preferences.userRoot().node("lingvist.fxeditor");
 	}
@@ -191,5 +213,7 @@ public class SessionService {
 			defaultLanguageTo = getLanguages().stream().filter(lang -> langToCode.equals(lang.getCode())).findAny()
 					.orElse(null);
 		}
+		setFillDefaultLanguages(getPreferences().getBoolean(FILL_DEFAULT_LANGUAGES, false));
+		setDisplayDefaultLanguagesOnly(getPreferences().getBoolean(SHOW_DEFAULT_LANGUAGES, false));
 	}
 }

@@ -2,6 +2,8 @@ package ua.vboden.controllers;
 
 import static ua.vboden.PreferencesConstants.DEFAULT_LANGUAGE_FROM;
 import static ua.vboden.PreferencesConstants.DEFAULT_LANGUAGE_TO;
+import static ua.vboden.PreferencesConstants.FILL_DEFAULT_LANGUAGES;
+import static ua.vboden.PreferencesConstants.SHOW_DEFAULT_LANGUAGES;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -48,8 +50,8 @@ public class PrefsEditorController extends AbstractController {
 		languageFrom.getSelectionModel().select(getSessionService().getDefaultLanguageFrom());
 		languageTo.setItems(languages);
 		languageTo.getSelectionModel().select(getSessionService().getDefaultLanguageTo());
-		sessionService.getPreferences();
-
+		displayDefaultsOnlyCheck.setSelected(sessionService.isDisplayDefaultLanguagesOnly());
+		useDefaultCheck.setSelected(sessionService.isFillDefaultLanguages());
 	}
 
 	@Override
@@ -79,6 +81,10 @@ public class PrefsEditorController extends AbstractController {
 			sessionService.getPreferences().put(DEFAULT_LANGUAGE_TO, selectedItemTo.getCode());
 			sessionService.setDefaultLanguageTo(selectedItemTo);
 		}
+		sessionService.getPreferences().putBoolean(FILL_DEFAULT_LANGUAGES, useDefaultCheck.isSelected());
+		sessionService.setFillDefaultLanguages(useDefaultCheck.isSelected());
+		sessionService.getPreferences().putBoolean(SHOW_DEFAULT_LANGUAGES, displayDefaultsOnlyCheck.isSelected());
+		sessionService.setDisplayDefaultLanguagesOnly(displayDefaultsOnlyCheck.isSelected());
 		getStage().close();
 	}
 
