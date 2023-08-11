@@ -5,7 +5,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
@@ -45,12 +44,11 @@ import ua.vboden.services.DictionaryService;
 import ua.vboden.services.EntityService;
 import ua.vboden.services.EntryService;
 import ua.vboden.services.LanguageService;
+import ua.vboden.services.PreferencesService;
 import ua.vboden.services.WordService;
 
 @Component
 public class DictionaryEntryEditorController extends AbstractEditorController<TranslationRow, DictionaryEntry> {
-
-	private static final String DICTIONARY_LAST_SELECTED_ID = "dictionary.last.selected.id";
 
 	@FXML
 	private TableView<TranslationRow> entriesTable;
@@ -122,6 +120,9 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 	private TableView<WordData> wordsSuggestionTable;
 
 	@Autowired
+	private PreferencesService preferencesService;
+
+	@Autowired
 	private LanguageService languageService;
 
 	@Autowired
@@ -154,6 +155,10 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		ObservableList<CodeString> languages = getSessionService().getLanguages();
 		languageFrom.setItems(languages);
 		languageTo.setItems(languages);
+		if (getSessionService().isFillDefaultLanguages()) {
+			languageFrom.getSelectionModel().select(getSessionService().getDefaultLanguageFrom());
+			languageTo.getSelectionModel().select(getSessionService().getDefaultLanguageTo());
+		}
 		statusMessage.setText("");
 		wordWordColumn.setCellValueFactory(new PropertyValueFactory<WordData, String>("word"));
 		wordLangColumn.setCellValueFactory(new PropertyValueFactory<WordData, String>("language"));
@@ -203,21 +208,17 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		useTranslationCheck.setDisable(true);
 		wordsSuggestionTable.setDisable(true);
 		transSuggestionTable.setDisable(true);
+		if (getSessionService().isFillDefaultLanguages()) {
+			languageFrom.getSelectionModel().select(getSessionService().getDefaultLanguageFrom());
+			languageTo.getSelectionModel().select(getSessionService().getDefaultLanguageTo());
+		}
 	}
 
 	private void selectDefaultDictionary() {
 		dictionariesList.getSelectionModel().clearSelection();
-		int dictId = getSessionService().getPreferences().getInt(DICTIONARY_LAST_SELECTED_ID,
-				dictionariesList.getItems().get(0).getId());
-		List<IdString> dictionaries = findCatOrDict(List.of(dictId), dictionariesList.getItems());
-		IdString dictionary;
-		if (dictionaries == null || dictionaries.isEmpty()) {
-			dictionary = dictionariesList.getItems().get(0);
-		} else {
-			dictionary = dictionaries.get(0);
-		}
-		dictionariesList.getSelectionModel().select(dictionary);
-		dictionariesList.scrollTo(dictionary);
+		IdString lastDictionary = getSessionService().getLastSelectedDictionary();
+		dictionariesList.getSelectionModel().select(lastDictionary);
+		dictionariesList.scrollTo(lastDictionary);
 	}
 
 	@Override
@@ -233,8 +234,7 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 		entity.setTranslation(translationEntity);
 		ObservableList<IdString> selectedDictionaries = dictionariesList.getSelectionModel().getSelectedItems();
 		if (selectedDictionaries != null && selectedDictionaries.size() > 0) {
-			getSessionService().getPreferences().putInt(DICTIONARY_LAST_SELECTED_ID,
-					selectedDictionaries.get(0).getId());
+			preferencesService.saveLastSelectedDictionary(selectedDictionaries.get(0));
 			entity.setDictionary(dictionaryService.findEntities(selectedDictionaries));
 		}
 		entity.setTranscription(transcriptionField.getText());

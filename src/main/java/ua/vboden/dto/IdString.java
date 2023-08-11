@@ -1,5 +1,7 @@
 package ua.vboden.dto;
 
+import java.util.Objects;
+
 public class IdString implements Comparable<IdString> {
 	private Integer id;
 	private String value;
@@ -34,6 +36,23 @@ public class IdString implements Comparable<IdString> {
 	@Override
 	public int compareTo(IdString another) {
 		return value.compareTo(another.value);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		IdString other = (IdString) obj;
+		return Objects.equals(id, other.id);
 	}
 
 }

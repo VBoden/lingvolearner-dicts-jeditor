@@ -1,10 +1,5 @@
 package ua.vboden.services;
 
-import static ua.vboden.PreferencesConstants.DEFAULT_LANGUAGE_FROM;
-import static ua.vboden.PreferencesConstants.DEFAULT_LANGUAGE_TO;
-import static ua.vboden.PreferencesConstants.FILL_DEFAULT_LANGUAGES;
-import static ua.vboden.PreferencesConstants.SHOW_DEFAULT_LANGUAGES;
-
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -14,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import ua.vboden.PreferencesConstants;
 import ua.vboden.dto.CodeString;
 import ua.vboden.dto.DictionaryData;
 import ua.vboden.dto.IdString;
@@ -49,6 +43,8 @@ public class SessionService {
 	private boolean displayDefaultLanguagesOnly;
 
 	private boolean fillDefaultLanguages;
+
+	private IdString lastSelectedDictionary;
 
 	public void increaseUsages(int id) {
 		if (wordUsages.containsKey(id)) {
@@ -198,22 +194,12 @@ public class SessionService {
 		this.fillDefaultLanguages = fillDefaultLanguages;
 	}
 
-	public Preferences getPreferences() {
-		return Preferences.userRoot().node("lingvist.fxeditor");
+	public IdString getLastSelectedDictionary() {
+		return lastSelectedDictionary;
 	}
 
-	public void loadPreferences() {
-		String langFromCode = getPreferences().get(DEFAULT_LANGUAGE_FROM, null);
-		if (langFromCode != null) {
-			defaultLanguageFrom = getLanguages().stream().filter(lang -> langFromCode.equals(lang.getCode())).findAny()
-					.orElse(null);
-		}
-		String langToCode = getPreferences().get(DEFAULT_LANGUAGE_TO, null);
-		if (langToCode != null) {
-			defaultLanguageTo = getLanguages().stream().filter(lang -> langToCode.equals(lang.getCode())).findAny()
-					.orElse(null);
-		}
-		setFillDefaultLanguages(getPreferences().getBoolean(FILL_DEFAULT_LANGUAGES, false));
-		setDisplayDefaultLanguagesOnly(getPreferences().getBoolean(SHOW_DEFAULT_LANGUAGES, false));
+	public void setLastSelectedDictionary(IdString lastSelectedDictionary) {
+		this.lastSelectedDictionary = lastSelectedDictionary;
 	}
+
 }

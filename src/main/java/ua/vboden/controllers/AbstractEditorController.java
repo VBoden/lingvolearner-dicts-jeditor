@@ -138,6 +138,7 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 
 	@FXML
 	void close(ActionEvent event) {
+		setCurrent(null);
 		getStage().close();
 	}
 }

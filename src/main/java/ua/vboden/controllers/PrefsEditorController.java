@@ -1,10 +1,5 @@
 package ua.vboden.controllers;
 
-import static ua.vboden.PreferencesConstants.DEFAULT_LANGUAGE_FROM;
-import static ua.vboden.PreferencesConstants.DEFAULT_LANGUAGE_TO;
-import static ua.vboden.PreferencesConstants.FILL_DEFAULT_LANGUAGES;
-import static ua.vboden.PreferencesConstants.SHOW_DEFAULT_LANGUAGES;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -18,6 +13,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import ua.vboden.dto.CodeString;
 import ua.vboden.services.LanguageService;
+import ua.vboden.services.PreferencesService;
 import ua.vboden.services.SessionService;
 
 @Component
@@ -39,12 +35,15 @@ public class PrefsEditorController extends AbstractController {
 	private SessionService sessionService;
 
 	@Autowired
-	private LanguageService languageService;
+	private PreferencesService preferencesService;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		languageService.loadLanguages();
-		getSessionService().loadPreferences();
+		preferencesService.loadPreferences();
+		initView();
+	}
+
+	private void initView() {
 		ObservableList<CodeString> languages = getSessionService().getLanguages();
 		languageFrom.setItems(languages);
 		languageFrom.getSelectionModel().select(getSessionService().getDefaultLanguageFrom());
@@ -71,20 +70,10 @@ public class PrefsEditorController extends AbstractController {
 
 	@FXML
 	void onSave(ActionEvent event) {
-		CodeString selectedItemFrom = languageFrom.getSelectionModel().getSelectedItem();
-		if (selectedItemFrom != null) {
-			sessionService.getPreferences().put(DEFAULT_LANGUAGE_FROM, selectedItemFrom.getCode());
-			sessionService.setDefaultLanguageFrom(selectedItemFrom);
-		}
-		CodeString selectedItemTo = languageTo.getSelectionModel().getSelectedItem();
-		if (selectedItemTo != null) {
-			sessionService.getPreferences().put(DEFAULT_LANGUAGE_TO, selectedItemTo.getCode());
-			sessionService.setDefaultLanguageTo(selectedItemTo);
-		}
-		sessionService.getPreferences().putBoolean(FILL_DEFAULT_LANGUAGES, useDefaultCheck.isSelected());
-		sessionService.setFillDefaultLanguages(useDefaultCheck.isSelected());
-		sessionService.getPreferences().putBoolean(SHOW_DEFAULT_LANGUAGES, displayDefaultsOnlyCheck.isSelected());
-		sessionService.setDisplayDefaultLanguagesOnly(displayDefaultsOnlyCheck.isSelected());
+		preferencesService.saveLangugeFrom(languageFrom.getSelectionModel().getSelectedItem());
+		preferencesService.saveLanguageTo(languageTo.getSelectionModel().getSelectedItem());
+		preferencesService.saveFillDefaultLanguage(useDefaultCheck.isSelected());
+		preferencesService.saveShowDefaultLanguagesOnly(displayDefaultsOnlyCheck.isSelected());
 		getStage().close();
 	}
 

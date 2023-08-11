@@ -2,6 +2,7 @@ package ua.vboden.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ public class DictionaryService implements EntityService<DictionaryData, Dictiona
 
 	@Autowired
 	private DictionaryRepository dictionaryRepository;
+
 	@Autowired
 	private SessionService sessionService;
 
@@ -61,6 +63,16 @@ public class DictionaryService implements EntityService<DictionaryData, Dictiona
 		dictionaryRepository.findAllById(selected.stream().map(IdString::getId).collect(Collectors.toList()))
 				.forEach(result::add);
 		return result;
+	}
+
+	public IdString findData(int id) {
+		Optional<Dictionary> result = dictionaryRepository.findById(id);
+		if (result.isPresent()) {
+			Dictionary entity = result.get();
+			return new IdString(entity.getId(), entity.getName() + " (" + entity.getLanguageFrom().getName() + "-"
+					+ entity.getLanguageTo().getName() + ")");
+		}
+		return null;
 	}
 
 }

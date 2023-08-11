@@ -25,6 +25,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
@@ -38,7 +39,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -168,9 +168,6 @@ public class MainWindowController extends AbstractController {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		entryService.loadTranslations();
-		categoryService.loadCategories();
-		dictionaryService.loadData();
 
 		numberColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, Integer>("number"));
 		wordColumn.setCellValueFactory(new PropertyValueFactory<TranslationRow, String>("word"));
