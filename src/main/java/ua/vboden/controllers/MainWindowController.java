@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -198,7 +199,15 @@ public class MainWindowController extends AbstractController {
 	}
 
 	private void updateTranslations(ObservableList<TranslationRow> translations) {
-		mainTable.setItems(translations);
+//		if (getSessionService().isDisplayDefaultLanguagesOnly()) {
+//			FilteredList<TranslationRow> filtered = new FilteredList<>(translations);
+//			filtered.setPredicate(
+//					row -> row.getWordLangCode().equals(getSessionService().getDefaultLanguageFrom().getCode()) && row
+//							.getTranslationLangCode().equals(getSessionService().getDefaultLanguageTo().getCode()));
+//			mainTable.setItems(filtered);
+//		} else {
+			mainTable.setItems(translations);
+//		}
 		statusMessage1
 				.setText(MessageFormat.format(getResources().getString("translations.status"), translations.size()));
 	}
