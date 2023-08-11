@@ -30,7 +30,7 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 
 	public void loadTranslations() {
 		long start = System.nanoTime();
-		List<DictionaryEntry> allEntries = getAllEntries();
+		List<DictionaryEntry> allEntries = filterByLanguages(getAllEntries());
 		System.out.println("\n\n=================time=\n" + ((System.nanoTime() - start) / 1000));
 		System.out.println("\n\n=================time=\n");
 		sessionService.setTranslations(translationConverter.convertAll(allEntries));
@@ -42,17 +42,17 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 		}
 	}
 
-	public List<DictionaryEntry> getAllEntries() {
+	private List<DictionaryEntry> getAllEntries() {
 		return (List<DictionaryEntry>) entryRepository.findAll();
 	}
 
 	public void loadTranslationsByCategories(List<Integer> selectedIds, boolean conditionAnd) {
-		List<DictionaryEntry> allEntries = getAllByCategoryIds(selectedIds, conditionAnd);
+		List<DictionaryEntry> allEntries = filterByLanguages(getAllByCategoryIds(selectedIds, conditionAnd));
 		sessionService.setTranslations(translationConverter.convertAll(allEntries));
 		sessionService.setTranslationIds(allEntries.stream().map(entry -> entry.getId()).collect(Collectors.toList()));
 	}
 
-	public List<DictionaryEntry> getAllByCategoryIds(List<Integer> selectedIds, boolean conditionAnd) {
+	private List<DictionaryEntry> getAllByCategoryIds(List<Integer> selectedIds, boolean conditionAnd) {
 		if (selectedIds == null || selectedIds.size() == 1 && selectedIds.get(0) == null) {
 			return entryRepository.findByWordCategoryIsEmpty();
 		} else if (conditionAnd) {
@@ -74,12 +74,12 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 	}
 
 	public void loadTranslationsByDictionaries(List<Integer> selectedIds, boolean conditionAnd) {
-		List<DictionaryEntry> allEntries = getAllByDictionaryIds(selectedIds, conditionAnd);
+		List<DictionaryEntry> allEntries = filterByLanguages(getAllByDictionaryIds(selectedIds, conditionAnd));
 		sessionService.setTranslations(translationConverter.convertAll(allEntries));
 		sessionService.setTranslationIds(allEntries.stream().map(entry -> entry.getId()).collect(Collectors.toList()));
 	}
 
-	public List<DictionaryEntry> getAllByDictionaryIds(List<Integer> selectedIds, boolean conditionAnd) {
+	private List<DictionaryEntry> getAllByDictionaryIds(List<Integer> selectedIds, boolean conditionAnd) {
 		if (selectedIds == null || selectedIds.size() == 1 && selectedIds.get(0) == null) {
 			return entryRepository.findByDictionaryIsEmpty();
 		}
@@ -102,7 +102,19 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 	}
 
 	public List<TranslationRow> getAllByWord(String word) {
-		return translationConverter.convertAll(entryRepository.findByWordWordContaining(word));
+		return translationConverter.convertAll(filterByLanguages(entryRepository.findByWordWordContaining(word)));
+	}
+
+	private List<DictionaryEntry> filterByLanguages(List<DictionaryEntry> result) {
+		if (sessionService.isDisplayDefaultLanguagesOnly()) {
+			return result.stream()
+					.filter(row -> row.getWord().getLanguage().getCode()
+							.equals(sessionService.getDefaultLanguageFrom().getCode())
+							&& row.getTranslation().getLanguage().getCode()
+									.equals(sessionService.getDefaultLanguageTo().getCode()))
+					.collect(Collectors.toList());
+		}
+		return result;
 	}
 
 	public void loadTranslations(List<Integer> ids) {
@@ -125,7 +137,7 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 	}
 
 	public List<TranslationRow> getAllByTranslation(String word) {
-		return translationConverter.convertAll(entryRepository.findByTranslationWordContaining(word));
+		return translationConverter.convertAll(filterByLanguages(entryRepository.findByTranslationWordContaining(word)));
 	}
 
 	@Override

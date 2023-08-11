@@ -28,11 +28,11 @@ public class AppContextInitializer {
 	private PreferencesService preferencesService;
 
 	public void initApp() {
-		entryService.loadTranslations();
 		categoryService.loadCategories();
 		dictionaryService.loadData();
 		languageService.loadLanguages();
 		preferencesService.loadPreferences();
+		entryService.loadTranslations();
 	}
 
 }
