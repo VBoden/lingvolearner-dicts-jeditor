@@ -118,11 +118,11 @@
     </MenuBar>
       <ToolBar prefHeight="40.0" prefWidth="200.0">
         <items>
-            <Button contentDisplay="GRAPHIC_ONLY" maxHeight="15.0" maxWidth="15.0" mnemonicParsing="false" onAction="#manageDictionaryEntries" prefHeight="15.0" prefWidth="15.0">
+            <Button contentDisplay="GRAPHIC_ONLY" maxHeight="24.0" maxWidth="24.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#manageDictionaryEntries" prefHeight="24.0" prefWidth="24.0">
                <graphic>
-                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../img/new.png" />
+                        <Image url="@../img/card-add.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -130,10 +130,22 @@
                   <Tooltip text="%menu.edit.dictionaryEntries" />
                </tooltip>
             </Button>
-            <Separator orientation="VERTICAL" prefHeight="15.0" />
-          <Button contentDisplay="GRAPHIC_ONLY" maxHeight="15.0" maxWidth="15.0" mnemonicParsing="false" onAction="#addToCategory" prefHeight="15.0" prefWidth="15.0">
+            <Button contentDisplay="GRAPHIC_ONLY" maxHeight="24.0" maxWidth="24.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#removeSelected" prefHeight="24.0" prefWidth="24.0">
                <graphic>
-                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../img/card-remove.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <tooltip>
+                  <Tooltip text="%menu.edit.delete" />
+               </tooltip>
+            </Button>
+            <Separator orientation="VERTICAL" prefHeight="15.0" />
+          <Button contentDisplay="GRAPHIC_ONLY" maxHeight="24.0" maxWidth="24.0" minHeight="24.0" minWidth="24.0" mnemonicParsing="false" onAction="#addToCategory" prefHeight="24.0" prefWidth="24.0">
+               <graphic>
+                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../img/catAdd.png" />
                      </image>
@@ -142,9 +154,9 @@
                <tooltip>
                   <Tooltip text="%menu.edit.addToCategory" />
                </tooltip></Button>
-            <Button contentDisplay="GRAPHIC_ONLY" maxHeight="15.0" maxWidth="15.0" mnemonicParsing="false" onAction="#removeFromCategory" prefHeight="15.0" prefWidth="15.0">
+            <Button contentDisplay="GRAPHIC_ONLY" maxHeight="24.0" maxWidth="24.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#removeFromCategory" prefHeight="24.0" prefWidth="24.0">
                <graphic>
-                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../img/catRemove.png" />
                      </image>
@@ -155,11 +167,11 @@
                </tooltip>
             </Button>
             <Separator orientation="VERTICAL" prefHeight="15.0" />
-            <Button contentDisplay="GRAPHIC_ONLY" maxHeight="15.0" maxWidth="15.0" mnemonicParsing="false" onAction="#addToDictionary" prefHeight="15.0" prefWidth="15.0">
+            <Button contentDisplay="GRAPHIC_ONLY" maxHeight="24.0" maxWidth="24.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addToDictionary" prefHeight="24.0" prefWidth="24.0">
                <graphic>
-                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../img/list-add.png" />
+                        <Image url="@../img/dict-add.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -167,11 +179,11 @@
                   <Tooltip text="%menu.edit.addToDictionary" />
                </tooltip>
             </Button>
-            <Button contentDisplay="GRAPHIC_ONLY" maxHeight="15.0" maxWidth="15.0" mnemonicParsing="false" onAction="#removeFromDictionary" prefHeight="15.0" prefWidth="15.0">
+            <Button contentDisplay="GRAPHIC_ONLY" maxHeight="24.0" maxWidth="24.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#removeFromDictionary" prefHeight="24.0" prefWidth="24.0">
                <graphic>
-                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../img/list-remove.png" />
+                        <Image url="@../img/dict-remove.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -180,18 +192,6 @@
                </tooltip>
             </Button>
             <Separator orientation="VERTICAL" prefHeight="15.0" />
-            <Button contentDisplay="GRAPHIC_ONLY" maxHeight="15.0" maxWidth="15.0" mnemonicParsing="false" onAction="#removeSelected" prefHeight="15.0" prefWidth="15.0">
-               <graphic>
-                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../img/delete2.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <tooltip>
-                  <Tooltip text="%menu.edit.delete" />
-               </tooltip>
-            </Button>
         </items>
       </ToolBar>
       <SplitPane dividerPositions="0.29768467475192945" VBox.vgrow="ALWAYS">
