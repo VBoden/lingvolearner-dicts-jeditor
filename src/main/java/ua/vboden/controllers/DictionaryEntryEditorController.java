@@ -486,7 +486,7 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 	}
 
 	private void fillEntriesAfterSuggestions(String word, Function<String, List<TranslationRow>> finder) {
-		if (StringUtils.isNotBlank(word) && word.length() > 2) {
+		if (StringUtils.isNotBlank(word) && word.length() > 0) {
 			EntrySearchService searchSevice = new EntrySearchService(finder, word);
 			searchSevice.start();
 			searchSevice.setOnSucceeded(
@@ -496,7 +496,7 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 
 	private void executeSuggestionSearch(TextField textField, TableView<WordData> suggestionTable, CheckBox useCheck) {
 		String word = textField.getText();
-		if (StringUtils.isNotBlank(word) && word.length() > 2) {
+		if (StringUtils.isNotBlank(word) && word.length() > 0) {
 			fillSuggestions(suggestionTable, useCheck, word);
 		}
 	}
