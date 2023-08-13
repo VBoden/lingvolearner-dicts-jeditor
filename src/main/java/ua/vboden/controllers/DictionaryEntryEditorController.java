@@ -8,6 +8,8 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -49,6 +51,8 @@ import ua.vboden.services.WordService;
 
 @Component
 public class DictionaryEntryEditorController extends AbstractEditorController<TranslationRow, DictionaryEntry> {
+
+	private static Pattern CYRILLIC_LETTERS_PATTERN = Pattern.compile("([А-яІіЇї]+)");
 
 	@FXML
 	private TableView<TranslationRow> entriesTable;
@@ -301,6 +305,20 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 					result += "\n" + MessageFormat.format(getResources().getString("dictionaryEntry.check.exists"),
 							entry.toString());
 				}
+			}
+		}
+		result = checkCyrillic(result, wordField, languageFrom, "dictionaryEntry.word");
+		result = checkCyrillic(result, translationField, languageTo, "dictionaryEntry.translation");
+		return result;
+	}
+
+	private String checkCyrillic(String result, TextField textField, ComboBox<CodeString> language, String fieldName) {
+		if (StringUtils.isNotBlank(textField.getText()) && language.getSelectionModel().getSelectedIndex() != -1
+				&& !"uk".equals(language.getSelectionModel().getSelectedItem().getCode())) {
+			Matcher cyrillicMatcher = CYRILLIC_LETTERS_PATTERN.matcher(textField.getText());
+			while (cyrillicMatcher.find()) {
+				result += "\n" + MessageFormat.format(getResources().getString("dictionaryEntry.check.cyrillic"),
+						getResources().getString(fieldName), cyrillicMatcher.group(), cyrillicMatcher.start() + 1);
 			}
 		}
 		return result;
