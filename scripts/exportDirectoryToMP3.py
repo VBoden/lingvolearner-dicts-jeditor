@@ -5,10 +5,11 @@ import os
 from os import listdir, rename
 from os.path import isfile, join, exists
 
-out_paths = "out/words_mp3"
+# out_paths = "out/words_mp3"
+out_paths = "/Disk_A/Words_mp3"
 
 
-def write_word_to_file(f, word, language):
+def get_word_file_name(word, language):
     word_file_name = word.strip().replace('/', '_').replace('\\', '_')
     if word_file_name.endswith('.'):
         word_file_name = word_file_name[:-1]
@@ -22,15 +23,20 @@ def write_word_to_file(f, word, language):
     if first_letter in letters_mappings:
         first_letter = letters_mappings[first_letter]
     folder_name = join(out_paths, language, first_letter)
+    resultFileName = join(folder_name, word_file_name + ".mp3")
+    return folder_name, resultFileName
+
+
+def write_word_to_file(f, word, language, slow_param=False):
+    folder_name, resultFileName = get_word_file_name(word, language)
     if not exists(folder_name):
         print("Folder " + folder_name + " not exists. Creating...")
         os.makedirs(folder_name)
-    resultFileName = join(folder_name, word_file_name + ".mp3")
     print("resultFileName=" + resultFileName)
     if not exists(resultFileName):
         print("File " + resultFileName + " not exists. Creating...")
         with open(resultFileName, 'wb') as f:
-            gTTS(word, lang=language, slow=True).write_to_fp(f)
+            gTTS(word, lang=language, slow=slow_param).write_to_fp(f)
 
 
 def convertToMP3(fileName):
@@ -44,11 +50,19 @@ def convertToMP3(fileName):
             else:
                 convert_line(diction, line)
     
-#     resyltFileName = fileName.replace(".vcb", ".mp3")
-#     with open(resyltFileName, 'wb') as f:
     for key in diction:
-        write_word_to_file(f, key, 'es')
-        write_word_to_file(f, diction[key] + ".", 'uk')
+        write_word_to_file(f, key, 'es', True)
+        write_word_to_file(f, diction[key] + ".", 'uk', False)
+    resyltFileName = fileName.replace(".vcb", ".mp3")
+    with open(resyltFileName, 'wb') as f:
+        for key in diction:
+            fold, resultFileName1 = get_word_file_name(key, 'es')
+            fold, resultFileName2 = get_word_file_name(diction[key] + ".", 'uk')
+            with open(resultFileName1, 'rb') as f2:
+                f.write(f2.read())
+            with open(resultFileName2, 'rb') as f3:
+                f.write(f3.read())
+        
 #             gTTS(diction[key]+".", lang='uk', slow=False).write_to_fp(f)
 
 
@@ -73,6 +87,7 @@ from_path = sys.argv[1]
 onlyfiles = [f for f in listdir(from_path) if isfile(join(from_path, f))]
 print(onlyfiles)
 for fileName in onlyfiles:
-    print("fileName=" + join(from_path, fileName))
-    convertToMP3(join(from_path, fileName))
+    if os.path.basename(fileName).endswith('.vcb'):
+        print("fileName=" + join(from_path, fileName))
+        convertToMP3(join(from_path, fileName))
 
