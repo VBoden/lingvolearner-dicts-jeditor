@@ -4,13 +4,16 @@ import json
 import os
 from os import listdir, rename
 from os.path import isfile, join, exists
+import re
 
 # out_paths = "out/words_mp3"
 out_paths = "/Disk_A/Words_mp3"
 
+use_splited = False
+
 
 def get_word_file_name(word, language):
-    word_file_name = word.strip().replace('/', '_').replace('\\', '_')
+    word_file_name = word.lower().strip().replace('/', '_').replace('\\', '_')
     if word_file_name.endswith('.'):
         word_file_name = word_file_name[:-1]
     first_letter = word_file_name[:1]
@@ -32,11 +35,32 @@ def write_word_to_file(f, word, language, slow_param=False):
     if not exists(folder_name):
         print("Folder " + folder_name + " not exists. Creating...")
         os.makedirs(folder_name)
-    print("resultFileName=" + resultFileName)
+ #   print("resultFileName=" + resultFileName)
     if not exists(resultFileName):
         print("File " + resultFileName + " not exists. Creating...")
         with open(resultFileName, 'wb') as f:
             gTTS(word, lang=language, slow=slow_param).write_to_fp(f)
+
+
+def split_words(word):
+    if use_splited:    
+        new_word = re.sub(r"[<>\[\]{}/\\()?!.,:;]+", " ", word)
+        new_word = new_word.replace('  ', ' ')
+        return new_word.split()
+    else:
+        return [word]
+
+
+def append_to_file(f, values, value_value, lang):
+    fold, resultFileName2 = get_word_file_name(value_value + ".", lang)
+    with open(resultFileName2, 'rb') as f3:
+        start = 256 if value_value != values[0] else 0
+        if use_splited and value_value != values[-1]:
+            f.write(f3.read()[start:-512])
+        elif use_splited and value_value == values[-1]:
+            f.write(f3.read()[start:])
+        else:
+            f.write(f3.read())
 
 
 def convertToMP3(fileName):
@@ -51,17 +75,26 @@ def convertToMP3(fileName):
                 convert_line(diction, line)
     
     for key in diction:
-        write_word_to_file(f, key, 'es', True)
-        write_word_to_file(f, diction[key] + ".", 'uk', False)
+        keys = split_words(key)
+        values = split_words(diction[key])
+        for key_value in keys:
+            write_word_to_file(f, key_value, 'es', True)
+        for value_value in values:
+            write_word_to_file(f, value_value, 'uk', False)
     resyltFileName = fileName.replace(".vcb", ".mp3")
     with open(resyltFileName, 'wb') as f:
         for key in diction:
-            fold, resultFileName1 = get_word_file_name(key, 'es')
-            fold, resultFileName2 = get_word_file_name(diction[key] + ".", 'uk')
-            with open(resultFileName1, 'rb') as f2:
-                f.write(f2.read())
-            with open(resultFileName2, 'rb') as f3:
-                f.write(f3.read())
+            keys = split_words(key)
+            values = split_words(diction[key])
+            for key_value in keys:
+#                 fold, resultFileName1 = get_word_file_name(key, 'es')
+                append_to_file(f, keys, key_value, 'es')
+#                 fold, resultFileName1 = get_word_file_name(key_value, 'es')
+#                 with open(resultFileName1, 'rb') as f2:
+#                     f.write(f2.read())
+            for value_value in values:
+#                 fold, resultFileName2 = get_word_file_name(diction[key] + ".", 'uk')
+                append_to_file(f, values, value_value, 'uk')
         
 #             gTTS(diction[key]+".", lang='uk', slow=False).write_to_fp(f)
 
