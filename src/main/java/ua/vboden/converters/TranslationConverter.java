@@ -35,6 +35,8 @@ public class TranslationConverter extends AbstractConverter<DictionaryEntry, Tra
 				word += "\n[" + source.getTranscription() + "]";
 			}
 			row.setWord(word);
+			row.setWordId(source.getWord().getId());
+//			row.setWordLangCode(source.getWord().getLanguage().getCode());
 			row.setCategories(source.getWord().getCategory() == null ? null
 					: source.getWord().getCategory().stream().map(cat -> cat.getName()).reduce((a, b) -> a + "\n" + b)
 							.orElse(null));
@@ -44,6 +46,8 @@ public class TranslationConverter extends AbstractConverter<DictionaryEntry, Tra
 			translation += "\n(" + source.getTranslation().getNotes() + ")";
 		}
 		row.setTranslation(translation);
+		row.setTranslationId(source.getTranslation().getId());
+//		row.setTranslationLangCode(source.getTranslation().getLanguage().getCode());
 		row.setTransCategories(source.getTranslation().getCategory() == null ? null
 				: source.getTranslation().getCategory().stream().map(cat -> cat.getName())
 						.reduce((a, b) -> a + "\n" + b).orElse(null));

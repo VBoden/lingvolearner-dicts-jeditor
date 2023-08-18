@@ -7,7 +7,11 @@ public class TranslationRow {
 	private int recordId;
 	private int number;
 	private String word;
+//	private String wordLangCode;
+	private int wordId;
 	private String translation;
+//	private String translationLangCode;
+	private int translationId;
 	private String transcription;
 	private String categories;
 	private String transCategories;
@@ -94,6 +98,38 @@ public class TranslationRow {
 
 	public static Comparator<? super TranslationRow> lastAtEndComparator() {
 		return (a, b) -> a.getNumber() - b.getNumber();
+	}
+
+//	public String getWordLangCode() {
+//		return wordLangCode;
+//	}
+//
+//	public void setWordLangCode(String wordLangCode) {
+//		this.wordLangCode = wordLangCode;
+//	}
+
+	public int getWordId() {
+		return wordId;
+	}
+
+	public void setWordId(int wordId) {
+		this.wordId = wordId;
+	}
+
+//	public String getTranslationLangCode() {
+//		return translationLangCode;
+//	}
+//
+//	public void setTranslationLangCode(String translationLangCode) {
+//		this.translationLangCode = translationLangCode;
+//	}
+
+	public int getTranslationId() {
+		return translationId;
+	}
+
+	public void setTranslationId(int translationId) {
+		this.translationId = translationId;
 	}
 
 	@Override

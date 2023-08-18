@@ -466,7 +466,7 @@ public class MainWindowController extends AbstractController {
 				});
 				entryService.deleteSelected(selectedEntries);
 
-				for (Word word : wordService.getAllById(usedWords)) {
+				for (Word word : wordService.getAllByIds(usedWords)) {
 					if (entryService.getWordUsages(word) == 0) {
 						wordService.delete(word);
 					} else {
@@ -522,5 +522,22 @@ public class MainWindowController extends AbstractController {
 	void reloadTranslations(ActionEvent event) {
 		entryService.loadTranslations(getSessionService().getTranslationIds());
 	}
+
+    @FXML
+    void doEditTranslationWord(ActionEvent event) throws IOException {
+		TranslationRow selected = mainTable.getSelectionModel().getSelectedItem();
+		wordEditorController.showStage(null, wordService.getDataById(selected.getTranslationId()));
+    }
+
+    @FXML
+    void doEidtWord(ActionEvent event) throws IOException {
+		TranslationRow selected = mainTable.getSelectionModel().getSelectedItem();
+		wordEditorController.showStage(null, wordService.getDataById(selected.getWordId()));
+    }
+
+    @FXML
+    void doSpeakWord(ActionEvent event) {
+
+    }
 
 }

@@ -1,5 +1,6 @@
 package ua.vboden.controllers;
 
+import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import ua.vboden.dto.CodeString;
 import ua.vboden.dto.IdString;
+import ua.vboden.dto.TranslationRow;
 import ua.vboden.dto.WordData;
 import ua.vboden.entities.Word;
 import ua.vboden.services.CategoryService;
@@ -112,6 +114,14 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 		categoryList.setItems(getSessionService().getCategories());
 		language.setItems(getSessionService().getLanguages());
 //		statusMessage.setText(MessageFormat.format(getResources().getString("word.status"), words.size()));
+		if (getCurrent() != null) {
+			populateFields(getCurrent());
+		}
+	}
+
+	public void showStage(Object object, WordData selected) throws IOException {
+		setCurrent(selected);
+		super.showStage(null);
 	}
 
 	@Override

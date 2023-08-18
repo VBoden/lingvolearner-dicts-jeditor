@@ -43,7 +43,7 @@ public class WordService implements EntityService<WordData, Word> {
 		return wordRepository.findById(current.getId()).get();
 	}
 
-	public List<Word> getAllById(List<Integer> ids) {
+	public List<Word> getAllByIds(List<Integer> ids) {
 		List<Word> result = new ArrayList<>();
 		wordRepository.findAllById(ids).forEach(result::add);
 		return result;
@@ -56,6 +56,9 @@ public class WordService implements EntityService<WordData, Word> {
 
 	public List<WordData> getAllByWord(String word) {
 		return wordConverter.convertAll(wordRepository.findByWordContaining(word));
+	}
+	public WordData getDataById(int id) {
+		return wordConverter.convert(wordRepository.findById(id).get());
 	}
 
 	public void delete(Word entity) {
