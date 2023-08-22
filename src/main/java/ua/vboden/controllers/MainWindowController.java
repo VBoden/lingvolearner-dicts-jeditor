@@ -7,7 +7,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.BiConsumer;
@@ -22,7 +25,6 @@ import org.springframework.stereotype.Component;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -206,7 +208,7 @@ public class MainWindowController extends AbstractController {
 //							.getTranslationLangCode().equals(getSessionService().getDefaultLanguageTo().getCode()));
 //			mainTable.setItems(filtered);
 //		} else {
-			mainTable.setItems(translations);
+		mainTable.setItems(translations);
 //		}
 		statusMessage1
 				.setText(MessageFormat.format(getResources().getString("translations.status"), translations.size()));
@@ -494,12 +496,11 @@ public class MainWindowController extends AbstractController {
 			}
 		}
 		DictionaryEntry firstEntity = entryService.findEntity(selectedEntries.get(0));
-		String name = firstEntity.getWord().getLanguage().getCode() + "-"
-				+ firstEntity.getTranslation().getLanguage().getCode() + '_';
+		String name = getLanguage(firstEntity.getWord()) + "-" + getLanguage(firstEntity.getTranslation()) + '_';
 		if (selectedCatOrDictName != null) {
 			name += selectedCatOrDictName;
 		}
-		name += "_" + (new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()));
+		name += "_" + getCurrentDate();
 		TextInputDialog dialog = new TextInputDialog(name);
 		dialog.setTitle("Export to file");
 		dialog.setHeaderText("Please enter file name. Will be saved with extension .vcb");
@@ -511,6 +512,39 @@ public class MainWindowController extends AbstractController {
 			name = result.get() + ".vcb";
 			ioService.exportToFile(selectedEntries, name);
 		}
+		showInformationAlert(getResources().getString("export.finished"));
+	}
+
+	private String getLanguage(Word word) {
+		return word.getLanguage().getCode();
+	}
+
+	@FXML
+	void exportEntriesAllCategories(ActionEvent event) {
+		ObservableList<IdString> categories = getSessionService().getCategories();
+		categories.add(0, new IdString(null, "No_Category"));
+		for (IdString category : categories) {
+			List<DictionaryEntry> entries = entryService.getAllByCategoryId(category.getId());
+			String dirName = "cagegories/";
+			ioService.exportEntries(category.getValue(), entries, dirName);
+		}
+		showInformationAlert(getResources().getString("export.finished"));
+	}
+
+	private String getCurrentDate() {
+		return new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
+	}
+
+	@FXML
+	void exportEntriesAllDictionaries(ActionEvent event) {
+		ObservableList<IdString> dictionaries = getSessionService().getDictionaries();
+		dictionaries.add(0, new IdString(null, "No_Dictionary"));
+		for (IdString dictionary : dictionaries) {
+			List<DictionaryEntry> entries = entryService.getAllByDictionaryId(dictionary.getId());
+			String dirName = "dictionaries/";
+			ioService.exportEntries(dictionary.getValue(), entries, dirName);
+		}
+		showInformationAlert(getResources().getString("export.finished"));
 	}
 
 	@FXML
@@ -523,21 +557,21 @@ public class MainWindowController extends AbstractController {
 		entryService.loadTranslations(getSessionService().getTranslationIds());
 	}
 
-    @FXML
-    void doEditTranslationWord(ActionEvent event) throws IOException {
+	@FXML
+	void doEditTranslationWord(ActionEvent event) throws IOException {
 		TranslationRow selected = mainTable.getSelectionModel().getSelectedItem();
 		wordEditorController.showStage(null, wordService.getDataById(selected.getTranslationId()));
-    }
+	}
 
-    @FXML
-    void doEidtWord(ActionEvent event) throws IOException {
+	@FXML
+	void doEidtWord(ActionEvent event) throws IOException {
 		TranslationRow selected = mainTable.getSelectionModel().getSelectedItem();
 		wordEditorController.showStage(null, wordService.getDataById(selected.getWordId()));
-    }
+	}
 
-    @FXML
-    void doSpeakWord(ActionEvent event) {
+	@FXML
+	void doSpeakWord(ActionEvent event) {
 
-    }
+	}
 
 }

@@ -4,14 +4,23 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javafx.collections.ObservableList;
 import ua.vboden.dto.TranslationRow;
+import ua.vboden.entities.DictionaryEntry;
+import ua.vboden.entities.Word;
 
 @Service
 public class IOService {
@@ -29,7 +38,6 @@ public class IOService {
 				String[] wordParts = row.getWord().split("\n");
 				String line = wordParts[0] + "|" + (wordParts.length == 2 ? wordParts[1] : "[]") + "|"
 						+ row.getTranslation().replaceAll("\n", " ");
-				System.out.println(line);
 				writer.write(line);
 				writer.newLine();
 			}
@@ -37,6 +45,58 @@ public class IOService {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void exportToFile(List<DictionaryEntry> entries, String dir, String fileName) {
+		Collections.sort(entries, (a, b) -> a.getId() - b.getId());
+		File directory = new File("io/exports/" + dir);
+		if (!directory.exists()) {
+			directory.mkdirs();
+		}
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter("io/exports/" + dir + fileName, true))) {
+			for (DictionaryEntry entry : entries) {
+				String line = entry.getWord().getWord() + "|["
+						+ (entry.getTranscription() != null ? entry.getTranscription() : "") + "]|"
+						+ entry.getTranslation().getWord()
+						+ (StringUtils.isNotBlank(entry.getTranslation().getNotes())
+								? " (" + entry.getTranslation().getNotes() + ")"
+								: "");
+				writer.write(line);
+				writer.newLine();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void exportEntries(String fileName, List<DictionaryEntry> entries, String dirName) {
+		Map<String, List<DictionaryEntry>> grouped = groupByLanguages(entries);
+		for (Entry<String, List<DictionaryEntry>> entry : grouped.entrySet()) {
+			List<DictionaryEntry> groupedEntries = entry.getValue();
+			if (groupedEntries.size() > 0) {
+				String name = entry.getKey().replace(">", "-") + '_';
+				name += fileName.replaceAll(" ", "_") + "_" + getCurrentDate() + ".vcb";
+				exportToFile(groupedEntries, dirName + getCurrentDate() + "/", name);
+			}
+		}
+	}
+
+	private String getCurrentDate() {
+		return new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
+	}
+
+	private Map<String, List<DictionaryEntry>> groupByLanguages(List<DictionaryEntry> entries) {
+		Map<String, List<DictionaryEntry>> grouped = new HashMap<>();
+		for (DictionaryEntry entry : entries) {
+			String lang = getLanguage(entry.getWord()) + ">" + getLanguage(entry.getTranslation());
+			grouped.putIfAbsent(lang, new ArrayList<>());
+			grouped.get(lang).add(entry);
+		}
+		return grouped;
+	}
+
+	private String getLanguage(Word word) {
+		return word.getLanguage().getCode();
 	}
 
 }

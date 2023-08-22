@@ -73,6 +73,14 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 		}
 	}
 
+	public List<DictionaryEntry> getAllByCategoryId(Integer categoryId) {
+		if (categoryId == null) {
+			return entryRepository.findByWordCategoryIsEmpty();
+		} else {
+			return entryRepository.findByWordCategoryId(categoryId);
+		}
+	}
+
 	public void loadTranslationsByDictionaries(List<Integer> selectedIds, boolean conditionAnd) {
 		List<DictionaryEntry> allEntries = filterByLanguages(getAllByDictionaryIds(selectedIds, conditionAnd));
 		sessionService.setTranslations(translationConverter.convertAll(allEntries));
@@ -98,6 +106,14 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 			return result;
 		} else {
 			return entryRepository.findByDictionaryIdIn(selectedIds);
+		}
+	}
+
+	public List<DictionaryEntry> getAllByDictionaryId(Integer dictionaryId) {
+		if (dictionaryId == null) {
+			return entryRepository.findByDictionaryIsEmpty();
+		} else {
+			return entryRepository.findByDictionaryId(dictionaryId);
 		}
 	}
 
@@ -137,7 +153,8 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 	}
 
 	public List<TranslationRow> getAllByTranslation(String word) {
-		return translationConverter.convertAll(filterByLanguages(entryRepository.findByTranslationWordContaining(word)));
+		return translationConverter
+				.convertAll(filterByLanguages(entryRepository.findByTranslationWordContaining(word)));
 	}
 
 	@Override
