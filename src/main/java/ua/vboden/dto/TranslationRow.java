@@ -7,10 +7,10 @@ public class TranslationRow {
 	private int recordId;
 	private int number;
 	private String word;
-//	private String wordLangCode;
+	private String wordLangCode;
 	private int wordId;
 	private String translation;
-//	private String translationLangCode;
+	private String translationLangCode;
 	private int translationId;
 	private String transcription;
 	private String categories;
@@ -100,13 +100,13 @@ public class TranslationRow {
 		return (a, b) -> a.getNumber() - b.getNumber();
 	}
 
-//	public String getWordLangCode() {
-//		return wordLangCode;
-//	}
-//
-//	public void setWordLangCode(String wordLangCode) {
-//		this.wordLangCode = wordLangCode;
-//	}
+	public String getWordLangCode() {
+		return wordLangCode;
+	}
+
+	public void setWordLangCode(String wordLangCode) {
+		this.wordLangCode = wordLangCode;
+	}
 
 	public int getWordId() {
 		return wordId;
@@ -116,13 +116,13 @@ public class TranslationRow {
 		this.wordId = wordId;
 	}
 
-//	public String getTranslationLangCode() {
-//		return translationLangCode;
-//	}
-//
-//	public void setTranslationLangCode(String translationLangCode) {
-//		this.translationLangCode = translationLangCode;
-//	}
+	public String getTranslationLangCode() {
+		return translationLangCode;
+	}
+
+	public void setTranslationLangCode(String translationLangCode) {
+		this.translationLangCode = translationLangCode;
+	}
 
 	public int getTranslationId() {
 		return translationId;

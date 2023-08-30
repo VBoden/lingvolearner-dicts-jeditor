@@ -19,6 +19,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -53,6 +55,8 @@ import ua.vboden.entities.Category;
 import ua.vboden.entities.Dictionary;
 import ua.vboden.entities.DictionaryEntry;
 import ua.vboden.entities.Word;
+import ua.vboden.fxservices.EntrySearchService;
+import ua.vboden.fxservices.WordSpeakService;
 import ua.vboden.services.CategoryService;
 import ua.vboden.services.DictionaryService;
 import ua.vboden.services.EntryService;
@@ -571,7 +575,10 @@ public class MainWindowController extends AbstractController {
 
 	@FXML
 	void doSpeakWord(ActionEvent event) {
-
+		TranslationRow selected = mainTable.getSelectionModel().getSelectedItem();
+		WordSpeakService speakSevice = new WordSpeakService(selected.getWord(), selected.getWordLangCode());
+		speakSevice.start();
+//		speakSevice.setOnSucceeded(e -> System.out.println(e));
 	}
 
 }
