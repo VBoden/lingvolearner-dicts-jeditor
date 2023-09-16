@@ -145,6 +145,9 @@ public class MainWindowController extends AbstractController {
 	private PrefsEditorController prefsEditorController;
 
 	@Autowired
+	private ImportDialogController importDialogController;
+
+	@Autowired
 	private EntryService entryService;
 
 	@Autowired
@@ -550,6 +553,11 @@ public class MainWindowController extends AbstractController {
 		}
 		showInformationAlert(getResources().getString("export.finished"));
 	}
+
+	@FXML
+    void importEntries(ActionEvent event) throws IOException {
+		importDialogController.showStage(null);
+    }
 
 	@FXML
 	void openSettings(ActionEvent event) throws IOException {

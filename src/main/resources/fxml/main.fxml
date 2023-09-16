@@ -67,6 +67,7 @@
                   <MenuItem mnemonicParsing="false" onAction="#exportEntries" text="%menu.file.export" />
                   <MenuItem mnemonicParsing="false" onAction="#exportEntriesAllCategories" text="%menu.file.export.all.categories" />
                   <MenuItem mnemonicParsing="false" onAction="#exportEntriesAllDictionaries" text="%menu.file.export.all.dictionaries" />
+                  <MenuItem mnemonicParsing="false" onAction="#importEntries" text="%menu.file.import" />
             <MenuItem mnemonicParsing="false" text="New" visible="false" />
             <MenuItem mnemonicParsing="false" text="Open…" visible="false" />
             <Menu mnemonicParsing="false" text="Open Recent" visible="false" />
