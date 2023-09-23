@@ -1,3 +1,6 @@
+There is empty db in
+/editorfx/src/main/resources/db/prod-db_emptyTemplate.sqlite3
+To use it put in the same folder with jar file and rename to prod-db.sqlite3.
 
 To run script for generate mp3:
 pip3 install gTTS
