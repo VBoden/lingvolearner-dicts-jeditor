@@ -52,11 +52,13 @@ public class PreferencesService {
 		SortedList<IdString> allDictionaries = sessionService.getDictionaries().sorted((a, b) -> {
 			return b.getId() - a.getId();
 		});
-		int dictId = preferences.getInt(DICTIONARY_LAST_SELECTED_ID, allDictionaries.get(0).getId());
+		if (allDictionaries != null && !allDictionaries.isEmpty()) {
+			int dictId = preferences.getInt(DICTIONARY_LAST_SELECTED_ID, allDictionaries.get(0).getId());
 
-		IdString dictionary = allDictionaries.stream().filter(dic -> dic.getId() == dictId).findAny()
-				.orElse(allDictionaries.get(0));
-		sessionService.setLastSelectedDictionary(dictionary);
+			IdString dictionary = allDictionaries.stream().filter(dic -> dic.getId() == dictId).findAny()
+					.orElse(allDictionaries.get(0));
+			sessionService.setLastSelectedDictionary(dictionary);
+		}
 	}
 
 	public void saveShowDefaultLanguagesOnly(boolean showDefaultsOnly) {
