@@ -179,6 +179,11 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 		entryRepository.save(entity);
 	}
 
+	@Override
+	public void saveAll(List<DictionaryEntry> entities) {
+		entryRepository.saveAll(entities);
+	}
+
 	public int getWordUsages(Word source) {
 		int inWord = getAllByWord(source).size();
 		int inTranslations = getAllByTranslation(source).size();

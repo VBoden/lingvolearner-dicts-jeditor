@@ -42,6 +42,11 @@ public class DictionaryService implements EntityService<DictionaryData, Dictiona
 		dictionaryRepository.save(entity);
 	}
 
+	@Override
+	public void saveAll(List<Dictionary> entities) {
+		dictionaryRepository.saveAll(entities);
+	}
+
 	public void loadData() {
 		List<IdString> dictionaries = new ArrayList<>();
 		List<DictionaryData> dictionaryData = new ArrayList<>();

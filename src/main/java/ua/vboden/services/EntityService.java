@@ -1,5 +1,7 @@
 package ua.vboden.services;
 
+import java.util.List;
+
 import javafx.collections.ObservableList;
 
 public interface EntityService<T, E> {
@@ -9,5 +11,7 @@ public interface EntityService<T, E> {
 	E findEntity(T current);
 
 	void save(E entity);
+
+	void saveAll(List<E> entities);
 
 }

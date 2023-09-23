@@ -54,6 +54,11 @@ public class WordService implements EntityService<WordData, Word> {
 		wordRepository.save(entity);
 	}
 
+	@Override
+	public void saveAll(List<Word> entities) {
+		wordRepository.saveAll(entities);
+	}
+
 	public List<WordData> getAllByWord(String word) {
 		return wordConverter.convertAll(wordRepository.findByWordContaining(word));
 	}

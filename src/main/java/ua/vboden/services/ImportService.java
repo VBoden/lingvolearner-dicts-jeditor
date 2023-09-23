@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -47,18 +48,25 @@ public class ImportService {
 			try (BufferedReader reader = new BufferedReader(
 					new InputStreamReader(Objects.requireNonNull(inputStream), "UTF8"))) {
 				String line;
+				Language languageFrom = languageService.findEntity(from);
+				Language languageTo = languageService.findEntity(to);
+				Dictionary dict = createDictionary(dictionaryName, languageFrom, languageTo);
+				List<DictionaryEntry> entries = new ArrayList<>();
 				while ((line = reader.readLine()) != null) {
 					if (linesWithPercent || line.contains("%")) {
 						linesWithPercent = true;
 						stringBuilder.append(line);
 					} else {
-						count = addWordsToDictionary(line, PATTERN_WITHOUT_PERCENT, from, to, dictionaryName);
+						entries.addAll(
+								createDictionaryEntries(line, PATTERN_WITHOUT_PERCENT, languageFrom, languageTo, dict));
 					}
 				}
 				if (linesWithPercent) {
-					count = addWordsToDictionary(stringBuilder.toString(), PATTERN_WITH_PERCENT, from, to,
-							dictionaryName);
+					entries.addAll(createDictionaryEntries(stringBuilder.toString(), PATTERN_WITH_PERCENT, languageFrom,
+							languageTo, dict));
 				}
+				entryService.saveAll(entries);
+				count = entries.size();
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
@@ -75,23 +83,19 @@ public class ImportService {
 		return count;
 	}
 
-	private int addWordsToDictionary(String line, Pattern pattern, CodeString from, CodeString to,
-			String dictionaryName) {
-		Language languageFrom = languageService.findEntity(from);
-		Language languageTo = languageService.findEntity(to);
-		Dictionary dict = createDictionary(dictionaryName, languageFrom, languageTo);
+	private List<DictionaryEntry> createDictionaryEntries(String line, Pattern pattern, Language languageFrom,
+			Language languageTo, Dictionary dict) {
 
-		int count = 0;
 		Matcher matcher = pattern.matcher(line);
+		List<DictionaryEntry> entries = new ArrayList<>();
 		while (matcher.find()) {
 			DictionaryEntry entry = createEntry(languageFrom, languageTo, matcher);
 			if (dict != null) {
 				entry.setDictionary(List.of(dict));
 			}
-			entryService.save(entry);
-			count++;
+			entries.add(entry);
 		}
-		return count;
+		return entries;
 	}
 
 	private Dictionary createDictionary(String dictionaryName, Language languageFrom, Language languageTo) {

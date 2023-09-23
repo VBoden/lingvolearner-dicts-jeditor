@@ -36,6 +36,11 @@ public class CategoryService implements EntityService<IdString, Category> {
 		categoryRepository.save(entity);
 	}
 
+	@Override
+	public void saveAll(List<Category> entities) {
+		categoryRepository.saveAll(entities);
+	}
+
 	public void loadCategories() {
 		List<IdString> categoryModels = new ArrayList<>();
 		categoryRepository.findAll().forEach(entry -> categoryModels.add(new IdString(entry.getId(), entry.getName())));
@@ -53,5 +58,6 @@ public class CategoryService implements EntityService<IdString, Category> {
 				.forEach(result::add);
 		return result;
 	}
+
 
 }
