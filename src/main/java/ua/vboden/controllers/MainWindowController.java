@@ -7,20 +7,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,10 +50,10 @@ import ua.vboden.entities.Category;
 import ua.vboden.entities.Dictionary;
 import ua.vboden.entities.DictionaryEntry;
 import ua.vboden.entities.Word;
-import ua.vboden.fxservices.EntrySearchService;
 import ua.vboden.fxservices.WordSpeakService;
 import ua.vboden.services.CategoryService;
 import ua.vboden.services.DictionaryService;
+import ua.vboden.services.EntityService;
 import ua.vboden.services.EntryService;
 import ua.vboden.services.IOService;
 import ua.vboden.services.WordService;
@@ -376,26 +371,26 @@ public class MainWindowController extends AbstractController {
 
 	@FXML
 	void addToCategory(ActionEvent event) {
-		checkSelectedAndExecute(getSessionService()::getCategories, this::doAddToCategory);
+		checkSelectedAndExecute(getSessionService()::getCategories, this::doAddToCategory, wordService);
 	}
 
 	@FXML
 	void removeFromCategory(ActionEvent event) {
-		checkSelectedAndExecute(getSessionService()::getCategories, this::doRemoveFromCategory);
+		checkSelectedAndExecute(getSessionService()::getCategories, this::doRemoveFromCategory, wordService);
 	}
 
 	@FXML
 	void addToDictionary(ActionEvent event) {
-		checkSelectedAndExecute(getSessionService()::getDictionaries, this::doAddToDictionary);
+		checkSelectedAndExecute(getSessionService()::getDictionaries, this::doAddToDictionary, entryService);
 	}
 
 	@FXML
 	void removeFromDictionary(ActionEvent event) {
-		checkSelectedAndExecute(getSessionService()::getDictionaries, this::doRemoveFromDictionary);
+		checkSelectedAndExecute(getSessionService()::getDictionaries, this::doRemoveFromDictionary, entryService);
 	}
 
 	private ObservableList<TranslationRow> checkSelectedAndExecute(Supplier<ObservableList<IdString>> itemsGetter,
-			BiConsumer<TranslationRow, List<IdString>> translationAction) {
+			BiFunction<TranslationRow, List<IdString>, List> translationAction, EntityService service) {
 		ObservableList<TranslationRow> selectedEntries = mainTable.getSelectionModel().getSelectedItems();
 		if (selectedEntries.size() == 0) {
 			showInformationAlert("No items selected!");
@@ -403,9 +398,11 @@ public class MainWindowController extends AbstractController {
 			ListChoiceDialog<IdString> dialog = new ListChoiceDialog<>(itemsGetter.get());
 			Optional<List<IdString>> result = dialog.showAndWait();
 			if (result.isPresent()) {
+				List<?> entities = new ArrayList<>();
 				for (TranslationRow translation : selectedEntries) {
-					translationAction.accept(translation, result.get());
+					entities.addAll(translationAction.apply(translation, result.get()));
 				}
+				service.saveAll(entities);
 				entryService.loadTranslations(getSessionService().getTranslationIds());
 				updateTranslationsView();
 			}
@@ -417,40 +414,45 @@ public class MainWindowController extends AbstractController {
 		return collection1.stream().filter(el -> !collection2.contains(el)).collect(Collectors.toList());
 	}
 
-	private void doAddToCategory(TranslationRow trnaslation, List<IdString> selectedCategories) {
+	private List<Word> doAddToCategory(TranslationRow trnaslation, List<IdString> selectedCategories) {
+		List<Word> entities = new ArrayList<>();
 		DictionaryEntry entryEntity = entryService.findEntity(trnaslation);
 		List<Category> categoryEntities = categoryService.findEntities(selectedCategories);
 		Word wordEntity = entryEntity.getWord();
 		wordEntity.getCategory().addAll(findNewOnly(categoryEntities, wordEntity.getCategory()));
-		wordService.save(wordEntity);
+		entities.add(wordEntity);
 		Word transEntity = entryEntity.getTranslation();
 		transEntity.getCategory().addAll(findNewOnly(categoryEntities, transEntity.getCategory()));
-		wordService.save(transEntity);
+		entities.add(transEntity);
+		return entities;
 	}
 
-	private void doRemoveFromCategory(TranslationRow trnaslation, List<IdString> selectedCategories) {
+	private List<Word> doRemoveFromCategory(TranslationRow trnaslation, List<IdString> selectedCategories) {
+		List<Word> entities = new ArrayList<>();
 		DictionaryEntry entryEntity = entryService.findEntity(trnaslation);
 		List<Category> categoryEntities = categoryService.findEntities(selectedCategories);
 		Word wordEntity = entryEntity.getWord();
 		wordEntity.getCategory().removeAll(categoryEntities);
-		wordService.save(wordEntity);
+		entities.add(wordEntity);
 		Word transEntity = entryEntity.getTranslation();
 		transEntity.getCategory().removeAll(categoryEntities);
-		wordService.save(transEntity);
+		entities.add(transEntity);
+		return entities;
 	}
 
-	private void doAddToDictionary(TranslationRow trnaslation, List<IdString> selectedDictionaries) {
+	private List<DictionaryEntry> doAddToDictionary(TranslationRow trnaslation, List<IdString> selectedDictionaries) {
 		DictionaryEntry entryEntity = entryService.findEntity(trnaslation);
 		List<Dictionary> dictionaryEntities = dictionaryService.findEntities(selectedDictionaries);
 		entryEntity.getDictionary().addAll(findNewOnly(dictionaryEntities, entryEntity.getDictionary()));
-		entryService.save(entryEntity);
+		return List.of(entryEntity);
 	}
 
-	private void doRemoveFromDictionary(TranslationRow trnaslation, List<IdString> selectedDictionaries) {
+	private List<DictionaryEntry> doRemoveFromDictionary(TranslationRow trnaslation,
+			List<IdString> selectedDictionaries) {
 		DictionaryEntry entryEntity = entryService.findEntity(trnaslation);
 		List<Dictionary> dictionaryEntities = dictionaryService.findEntities(selectedDictionaries);
 		entryEntity.getDictionary().removeAll(dictionaryEntities);
-		entryService.save(entryEntity);
+		return List.of(entryEntity);
 	}
 
 	@FXML
@@ -555,9 +557,9 @@ public class MainWindowController extends AbstractController {
 	}
 
 	@FXML
-    void importEntries(ActionEvent event) throws IOException {
+	void importEntries(ActionEvent event) throws IOException {
 		importDialogController.showStage(null);
-    }
+	}
 
 	@FXML
 	void openSettings(ActionEvent event) throws IOException {
