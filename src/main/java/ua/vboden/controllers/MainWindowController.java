@@ -16,6 +16,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -122,19 +123,19 @@ public class MainWindowController extends AbstractController {
 	private TableColumn<TranslationRow, String> dictionaryColumn;
 
 	@Autowired
-	private CategoryEditorController categoryEditorController;
+	private ObjectFactory<CategoryEditorController> categoryEditorController;
 
 	@Autowired
-	private DictionaryEditorController dictionaryEditorController;
+	private ObjectFactory<DictionaryEditorController> dictionaryEditorController;
 
 	@Autowired
-	private DictionaryEntryEditorController dictionaryEntryEditorController;
+	private ObjectFactory<DictionaryEntryEditorController> dictionaryEntryEditorController;
 
 	@Autowired
-	private WordEditorController wordEditorController;
+	private ObjectFactory<WordEditorController> wordEditorController;
 
 	@Autowired
-	private LanguageEditorController languageEditorController;
+	private ObjectFactory<LanguageEditorController> languageEditorController;
 
 	@Autowired
 	private PrefsEditorController prefsEditorController;
@@ -332,27 +333,27 @@ public class MainWindowController extends AbstractController {
 
 	@FXML
 	void manageCategories(ActionEvent event) throws IOException {
-		categoryEditorController.showStage(null);
+		categoryEditorController.getObject().showStage(null);
 	}
 
 	@FXML
 	void manageDictionaries(ActionEvent event) throws IOException {
-		dictionaryEditorController.showStage(null);
+		dictionaryEditorController.getObject().showStage(null);
 	}
 
 	@FXML
 	void manageDictionaryEntries(ActionEvent event) throws IOException {
-		dictionaryEntryEditorController.showStage(null);
+		dictionaryEntryEditorController.getObject().showStage(null);
 	}
 
 	@FXML
 	void manageWords(ActionEvent event) throws IOException {
-		wordEditorController.showStage(null);
+		wordEditorController.getObject().showStage(null);
 	}
 
 	@FXML
 	void manageLanguages(ActionEvent event) throws IOException {
-		languageEditorController.showStage(null);
+		languageEditorController.getObject().showStage(null);
 	}
 
 	@FXML
@@ -365,7 +366,7 @@ public class MainWindowController extends AbstractController {
 	void startEditing(MouseEvent event) throws IOException {
 		if (event.getClickCount() == 2) {
 			TranslationRow selected = mainTable.getSelectionModel().getSelectedItem();
-			dictionaryEntryEditorController.showStage(null, selected);
+			dictionaryEntryEditorController.getObject().showStage(null, selected);
 		}
 	}
 
@@ -574,13 +575,13 @@ public class MainWindowController extends AbstractController {
 	@FXML
 	void doEditTranslationWord(ActionEvent event) throws IOException {
 		TranslationRow selected = mainTable.getSelectionModel().getSelectedItem();
-		wordEditorController.showStage(null, wordService.getDataById(selected.getTranslationId()));
+		wordEditorController.getObject().showStage(null, wordService.getDataById(selected.getTranslationId()));
 	}
 
 	@FXML
 	void doEidtWord(ActionEvent event) throws IOException {
 		TranslationRow selected = mainTable.getSelectionModel().getSelectedItem();
-		wordEditorController.showStage(null, wordService.getDataById(selected.getWordId()));
+		wordEditorController.getObject().showStage(null, wordService.getDataById(selected.getWordId()));
 	}
 
 	@FXML

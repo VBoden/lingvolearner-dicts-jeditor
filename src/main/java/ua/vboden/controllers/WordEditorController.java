@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javafx.collections.FXCollections;
@@ -38,6 +39,7 @@ import ua.vboden.services.LanguageService;
 import ua.vboden.services.WordService;
 
 @Component
+@Scope(value="prototype")
 public class WordEditorController extends AbstractEditorController<WordData, Word> {
 
 	@FXML

@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javafx.collections.ObservableList;
@@ -22,6 +23,7 @@ import ua.vboden.services.CategoryService;
 import ua.vboden.services.EntityService;
 
 @Component
+@Scope(value="prototype")
 public class CategoryEditorController extends AbstractEditorController<IdString, Category> {
 
 	@FXML
