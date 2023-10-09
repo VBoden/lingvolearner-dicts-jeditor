@@ -31,6 +31,9 @@ public class PrefsEditorController extends AbstractController {
 	@FXML
 	private CheckBox useDefaultCheck;
 
+    @FXML
+    private CheckBox showTranscription;
+
 	@Autowired
 	private SessionService sessionService;
 
@@ -51,6 +54,7 @@ public class PrefsEditorController extends AbstractController {
 		languageTo.getSelectionModel().select(getSessionService().getDefaultLanguageTo());
 		displayDefaultsOnlyCheck.setSelected(sessionService.isDisplayDefaultLanguagesOnly());
 		useDefaultCheck.setSelected(sessionService.isFillDefaultLanguages());
+		showTranscription.setSelected(sessionService.isShowTranscription());
 	}
 
 	@Override
@@ -74,6 +78,7 @@ public class PrefsEditorController extends AbstractController {
 		preferencesService.saveLanguageTo(languageTo.getSelectionModel().getSelectedItem());
 		preferencesService.saveFillDefaultLanguage(useDefaultCheck.isSelected());
 		preferencesService.saveShowDefaultLanguagesOnly(displayDefaultsOnlyCheck.isSelected());
+		preferencesService.saveShowTranscription(showTranscription.isSelected());
 		getStage().close();
 	}
 

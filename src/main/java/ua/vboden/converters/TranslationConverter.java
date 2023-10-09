@@ -4,13 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ua.vboden.dto.TranslationRow;
 import ua.vboden.entities.DictionaryEntry;
+import ua.vboden.services.SessionService;
 
 @Component
 public class TranslationConverter extends AbstractConverter<DictionaryEntry, TranslationRow> {
+
+
+	@Autowired
+	private SessionService sessionService;
 
 	@Override
 	public List<TranslationRow> convertAll(List<DictionaryEntry> sources) {
@@ -31,7 +37,7 @@ public class TranslationConverter extends AbstractConverter<DictionaryEntry, Tra
 		row.setRecordId(source.getId());
 		if (source.getWord() != null) {
 			String word = source.getWord().getWord();
-			if (StringUtils.isNoneBlank(source.getTranscription())) {
+			if (sessionService.isShowTranscription() && StringUtils.isNoneBlank(source.getTranscription())) {
 				word += "\n[" + source.getTranscription() + "]";
 			}
 			row.setWord(word);

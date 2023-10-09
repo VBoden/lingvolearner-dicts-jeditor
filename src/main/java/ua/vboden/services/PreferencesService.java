@@ -1,6 +1,5 @@
 package ua.vboden.services;
 
-import java.util.List;
 import java.util.prefs.Preferences;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +22,10 @@ public class PreferencesService {
 
 	private static final String DICTIONARY_LAST_SELECTED_ID = "dictionary.last.selected.id";
 
-	@Autowired
-	private SessionService sessionService;
+	public static final String MAIN_TABLE_SHOW_TRANSCRIPTION = "main.table.show.transcription";
 
 	@Autowired
-	private DictionaryService dictionaryService;
+	private SessionService sessionService;
 
 	private Preferences preferences;
 
@@ -45,6 +43,7 @@ public class PreferencesService {
 		}
 		sessionService.setFillDefaultLanguages(preferences.getBoolean(FILL_DEFAULT_LANGUAGES, false));
 		sessionService.setDisplayDefaultLanguagesOnly(preferences.getBoolean(SHOW_DEFAULT_LANGUAGES, false));
+		sessionService.setShowTranscription(preferences.getBoolean(MAIN_TABLE_SHOW_TRANSCRIPTION, true));
 		loadLastDictionary();
 	}
 
@@ -88,6 +87,11 @@ public class PreferencesService {
 	public void saveLastSelectedDictionary(IdString dictionary) {
 		preferences.putInt(DICTIONARY_LAST_SELECTED_ID, dictionary.getId());
 		sessionService.setLastSelectedDictionary(dictionary);
+	}
+
+	public void saveShowTranscription(boolean showTranscription) {
+		preferences.putBoolean(MAIN_TABLE_SHOW_TRANSCRIPTION, showTranscription);
+		sessionService.setShowTranscription(showTranscription);
 	}
 
 }

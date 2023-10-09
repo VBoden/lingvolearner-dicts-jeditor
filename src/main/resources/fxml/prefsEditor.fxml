@@ -6,29 +6,58 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
-  <tabs>
-    <Tab text="%prefs.languages">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-               <children>
-                  <Label layoutX="23.0" layoutY="90.0" text="%dictionary.language.from" AnchorPane.leftAnchor="30.0" />
-                  <ComboBox fx:id="languageFrom" layoutX="15.0" layoutY="115.0" prefHeight="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
-                  <Label layoutX="345.0" layoutY="160.0" text="%dictionary.language.to" AnchorPane.leftAnchor="30.0" />
-                  <ComboBox fx:id="languageTo" layoutX="327.0" layoutY="185.0" prefHeight="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
-                  <CheckBox fx:id="useDefaultCheck" layoutX="15.0" layoutY="20.0" mnemonicParsing="false" text="%prefs.language.defaults.use" />
-                  <CheckBox fx:id="displayDefaultsOnlyCheck" layoutX="15.0" layoutY="55.0" mnemonicParsing="false" text="%prefs.language.defaults.display.only" />
-                  <Button layoutX="513.0" layoutY="331.0" mnemonicParsing="false" onAction="#onSave" text="%prefs.ok" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
-                  <Button layoutX="423.0" layoutY="331.0" mnemonicParsing="false" onAction="#onCancel" text="%prefs.cancel" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="100.0" />
-               </children></AnchorPane>
-      </content>
-    </Tab>
-    <Tab text="Untitled Tab 2">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-      </content>
-    </Tab>
-  </tabs>
-</TabPane>
+
+<BorderPane xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="%prefs.languages">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="359.0" prefWidth="600.0">
+                     <children>
+                        <Label layoutX="23.0" layoutY="90.0" text="%dictionary.language.from" AnchorPane.leftAnchor="30.0" />
+                        <ComboBox fx:id="languageFrom" layoutX="15.0" layoutY="115.0" prefHeight="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                        <Label layoutX="345.0" layoutY="160.0" text="%dictionary.language.to" AnchorPane.leftAnchor="30.0" />
+                        <ComboBox fx:id="languageTo" layoutX="327.0" layoutY="185.0" prefHeight="24.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+                        <CheckBox fx:id="useDefaultCheck" layoutX="15.0" layoutY="20.0" mnemonicParsing="false" text="%prefs.language.defaults.use" />
+                        <CheckBox fx:id="displayDefaultsOnlyCheck" layoutX="15.0" layoutY="55.0" mnemonicParsing="false" text="%prefs.language.defaults.display.only" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Untitled Tab 2">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="497.0" layoutY="44.0" mnemonicParsing="false" text="Button" />
+                        <TextField layoutX="23.0" layoutY="44.0" prefHeight="24.0" prefWidth="466.0" />
+                        <Label layoutX="31.0" layoutY="22.0" text="Label" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="%prefs.others">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <CheckBox fx:id="showTranscription" layoutX="24.0" layoutY="31.0" mnemonicParsing="false" text="%prefs.others.show.transcription" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </center>
+   <bottom>
+      <AnchorPane prefHeight="57.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button mnemonicParsing="false" onAction="#onSave" text="%prefs.ok" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+            <Button mnemonicParsing="false" onAction="#onCancel" text="%prefs.cancel" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="100.0" />
+         </children>
+      </AnchorPane>
+   </bottom>
+</BorderPane>

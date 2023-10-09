@@ -44,6 +44,8 @@ public class SessionService {
 
 	private boolean fillDefaultLanguages;
 
+	private boolean showTranscription;
+
 	private IdString lastSelectedDictionary;
 
 	public void increaseUsages(int id) {
@@ -200,6 +202,14 @@ public class SessionService {
 
 	public void setLastSelectedDictionary(IdString lastSelectedDictionary) {
 		this.lastSelectedDictionary = lastSelectedDictionary;
+	}
+
+	public boolean isShowTranscription() {
+		return showTranscription;
+	}
+
+	public void setShowTranscription(boolean showTranscription) {
+		this.showTranscription = showTranscription;
 	}
 
 }
