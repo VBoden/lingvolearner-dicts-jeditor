@@ -210,22 +210,63 @@
                   <Button fx:id="resetButton" layoutX="14.0" layoutY="526.0" mnemonicParsing="false" onAction="#resetFilters" prefHeight="24.0" prefWidth="171.0" text="%filters.selection.reset" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="14.0" />
                </children>
             </AnchorPane>
-          <AnchorPane>
+            <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Button layoutX="14.0" layoutY="6.0" mnemonicParsing="false" onAction="#reloadTranslations">
-                     <graphic>
-                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../img/refresh.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <TextField fx:id="findWordField" layoutX="112.0" layoutY="6.0" onKeyPressed="#findWordsEnter" prefHeight="24.0" prefWidth="171.0" />
-                  <CheckBox fx:id="inTranslationsCheck" layoutX="290.0" layoutY="9.0" mnemonicParsing="false" text="%search.in.translations" />
-                  <Label layoutX="59.0" layoutY="10.0" text="%search.text" />
-                  <ToggleButton fx:id="findButton" layoutX="404.0" layoutY="6.0" mnemonicParsing="false" onAction="#findWords" text="%search.find" AnchorPane.leftAnchor="408.0" />
-                  <TableView fx:id="mainTable" editable="true" layoutX="-150.0" layoutY="-83.0" onMouseClicked="#startEditing" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+                  <HBox prefHeight="37.0" prefWidth="189.0" spacing="5.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#reloadTranslations">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../img/refresh.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Label text="%search.text">
+                           <padding>
+                              <Insets top="5.0" />
+                           </padding>
+                        </Label>
+                        <ToggleButton fx:id="findButton" mnemonicParsing="false" onAction="#findWords">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../img/filter.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </ToggleButton>
+                        <TextField fx:id="findWordField" onKeyPressed="#findWordsEnter" prefHeight="24.0" prefWidth="171.0" />
+                        <CheckBox fx:id="inTranslationsCheck" layoutY="5.0" mnemonicParsing="false" text="%search.in.translations" HBox.hgrow="NEVER">
+                           <padding>
+                              <Insets top="3.0" />
+                           </padding>
+                        </CheckBox>
+                        <Button mnemonicParsing="false" onAction="#goPrevious">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../img/go-previous.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#goNext">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../img/go-next.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+                  <TableView fx:id="mainTable" editable="true" onMouseClicked="#startEditing" prefHeight="530.0" prefWidth="674.0" VBox.vgrow="ALWAYS">
                     <columns>
                       <TableColumn fx:id="numberColumn" editable="false" maxWidth="100.0" minWidth="50.0" prefWidth="-1.0" text="%translations.table.number" />
                       <TableColumn fx:id="wordColumn" editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="200.0" text="%translations.table.word" />
@@ -249,7 +290,7 @@
                      </contextMenu>
                   </TableView>
                </children>
-            </AnchorPane>
+            </VBox>
         </items>
       </SplitPane>
       <HBox prefHeight="10.0" prefWidth="827.0">

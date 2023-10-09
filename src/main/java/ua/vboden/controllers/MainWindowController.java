@@ -162,6 +162,8 @@ public class MainWindowController extends AbstractController {
 
 	private String selectedCatOrDictName;
 
+	private int searchIndex;
+
 	@Override
 	String getFXML() {
 		return "/fxml/main.fxml";
@@ -288,31 +290,23 @@ public class MainWindowController extends AbstractController {
 
 	@FXML
 	void findWords(ActionEvent event) {
-		findWords();
+		filterWords();
 	}
 
-	@FXML
-	void findWordsEnter(KeyEvent event) {
-		if (event.getCode().equals(KeyCode.ENTER)) {
-			findButton.setSelected(true);
-			findWords();
-		}
-	}
-
-	private void findWords() {
+	private void filterWords() {
 		if (findButton.isSelected()) {
 			ObservableList<TranslationRow> translations = FXCollections.observableArrayList();
 			List<TranslationRow> searchResults;
 			String word = findWordField.getText();
 			if (inTranslationsCheck.isSelected()) {
 				if (filtered) {
-					searchResults = findInDisplayed(TranslationRow::getTranslation, word);
+					searchResults = filterDisplayed(TranslationRow::getTranslation, word);
 				} else {
 					searchResults = entryService.getAllByTranslation(word);
 				}
 			} else {
 				if (filtered) {
-					searchResults = findInDisplayed(TranslationRow::getWord, word);
+					searchResults = filterDisplayed(TranslationRow::getWord, word);
 				} else {
 					searchResults = entryService.getAllByWord(word);
 				}
@@ -325,10 +319,79 @@ public class MainWindowController extends AbstractController {
 		}
 	}
 
-	private List<TranslationRow> findInDisplayed(Function<TranslationRow, String> getter, String word) {
+	private List<TranslationRow> filterDisplayed(Function<TranslationRow, String> getter, String word) {
 		return getSessionService().getTranslations().stream()
 				.filter(row -> getter.apply(row).toLowerCase().contains(word.toLowerCase()))
 				.collect(Collectors.toList());
+	}
+
+	@FXML
+	void findWordsEnter(KeyEvent event) {
+		if (event.getCode().equals(KeyCode.ENTER)) {
+			goNext();
+		} else {
+			searchIndex = -1;
+		}
+	}
+
+	@FXML
+	void goNext(ActionEvent event) {
+		goNext();
+	}
+
+	private void goNext() {
+		searchIndex = findNextInDisplayed(findWordField.getText(), searchIndex + 1);
+		if (searchIndex > -1) {
+			mainTable.getSelectionModel().clearAndSelect(searchIndex);
+			mainTable.scrollTo(searchIndex);
+		}
+	}
+
+	@FXML
+	void goPrevious(ActionEvent event) {
+		searchIndex = findPreviousInDisplayed(findWordField.getText(), searchIndex - 1);
+		if (searchIndex > -1) {
+			mainTable.getSelectionModel().clearAndSelect(searchIndex);
+			mainTable.scrollTo(searchIndex);
+		}
+	}
+
+	private int findPreviousInDisplayed(String word, int index) {
+		Function<TranslationRow, String> getter = getSearchFiledGetter();
+		ObservableList<TranslationRow> translations = getSessionService().getTranslations();
+		if (index < 0) {
+			index = translations.size() - 1;
+		}
+		for (int i = index; i >= 0; i--) {
+			if (getter.apply(translations.get(i)).toLowerCase().contains(word.toLowerCase())) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	private int findNextInDisplayed(String word, int index) {
+		Function<TranslationRow, String> getter = getSearchFiledGetter();
+		ObservableList<TranslationRow> translations = getSessionService().getTranslations();
+		if (index > translations.size() - 1) {
+			index = 0;
+		}
+		for (int i = index; i < translations.size(); i++) {
+			if (getter.apply(translations.get(i)).toLowerCase().contains(word.toLowerCase())) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	private Function<TranslationRow, String> getSearchFiledGetter() {
+		Function<TranslationRow, String> getter;
+		if (inTranslationsCheck.isSelected()) {
+			getter = TranslationRow::getTranslation;
+		} else {
+			getter = TranslationRow::getWord;
+		}
+		return getter;
 	}
 
 	@FXML
