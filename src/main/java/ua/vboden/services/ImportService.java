@@ -16,7 +16,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ua.vboden.dto.CodeString;
+import ua.vboden.dto.JsonIoObject;
 import ua.vboden.entities.Dictionary;
 import ua.vboden.entities.DictionaryEntry;
 import ua.vboden.entities.Language;
@@ -127,5 +130,46 @@ public class ImportService {
 		wordEntity.setNotes(notes);
 		wordService.save(wordEntity);
 		return wordEntity;
+	}
+
+	public int importFromJsonFile(File file, String dictionaryName) {
+		int count = 0;
+//		try (InputStream inputStream = new FileInputStream(file)) {
+			try {
+				JsonIoObject ioObject = new ObjectMapper().readValue(file, JsonIoObject.class);
+//			boolean linesWithPercent = false;
+//			StringBuilder stringBuilder = new StringBuilder();
+//			try (BufferedReader reader = new BufferedReader(
+//					new InputStreamReader(Objects.requireNonNull(inputStream), "UTF8"))) {
+//				String line;
+////				Language languageFrom = languageService.findEntity(from);
+////				Language languageTo = languageService.findEntity(to);
+////				Dictionary dict = createDictionary(dictionaryName, languageFrom, languageTo);
+////				List<DictionaryEntry> entries = new ArrayList<>();
+//				while ((line = reader.readLine()) != null) {
+//						stringBuilder.append(line);
+//				}
+				
+				
+//				if (linesWithPercent) {
+//					entries.addAll(createDictionaryEntries(stringBuilder.toString(), PATTERN_WITH_PERCENT, languageFrom,
+//							languageTo, dict));
+//				}
+//				entryService.saveAll(entries);
+//				count = entries.size();
+			} catch (IOException e) {
+				e.printStackTrace();
+//			} finally {
+//				try {
+//					inputStream.close();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+			}
+//		} catch (IOException e1) {
+//			e1.printStackTrace();
+//		}
+
+		return count;
 	}
 }

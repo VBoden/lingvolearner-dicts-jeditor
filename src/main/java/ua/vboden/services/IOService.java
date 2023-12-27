@@ -9,21 +9,32 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javafx.collections.ObservableList;
+import ua.vboden.dto.JsonIoObject;
 import ua.vboden.dto.TranslationRow;
 import ua.vboden.entities.DictionaryEntry;
+import ua.vboden.entities.Language;
 import ua.vboden.entities.Word;
 
 @Service
 public class IOService {
+
+	@Autowired
+	private EntryService entryService;
 
 	public void exportToFile(ObservableList<TranslationRow> selectedEntries, String fileName) {
 		List<TranslationRow> entries = selectedEntries.stream().collect(Collectors.toList());
@@ -97,6 +108,35 @@ public class IOService {
 
 	private String getLanguage(Word word) {
 		return word.getLanguage().getCode();
+	}
+
+	public void exportToJsonFile(ObservableList<TranslationRow> selectedEntries, String fileName) {
+		String filePath = "io/exports_json/";
+		File directory = new File(filePath);
+		if (!directory.exists()) {
+			directory.mkdirs();
+		}
+		JsonIoObject ioObject = new JsonIoObject();
+		ioObject.setEntries(entryService.getAllBySelected(selectedEntries));
+		Set<Language> languages = new HashSet<>();
+		ioObject.getEntries().forEach(entry ->languages.add(entry.getWord().getLanguage()));
+		ioObject.getEntries().forEach(entry ->languages.add(entry.getTranslation().getLanguage()));
+		ioObject.setLanguages(languages);
+		try {
+			new ObjectMapper().writeValue(new File(filePath + fileName), ioObject);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+//		try {
+//			String result = new ObjectMapper().writeValueAsString(ioObject);
+//			try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath + fileName, true))) {
+//					writer.write(result);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		} catch (JsonProcessingException je) {
+//			je.printStackTrace();
+//		}
 	}
 
 }

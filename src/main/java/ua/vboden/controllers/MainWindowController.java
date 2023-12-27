@@ -1,5 +1,6 @@
 package ua.vboden.controllers;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -44,6 +45,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import ua.vboden.components.ListChoiceDialog;
 import ua.vboden.dto.IdString;
 import ua.vboden.dto.TranslationRow;
@@ -57,6 +60,7 @@ import ua.vboden.services.DictionaryService;
 import ua.vboden.services.EntityService;
 import ua.vboden.services.EntryService;
 import ua.vboden.services.IOService;
+import ua.vboden.services.ImportService;
 import ua.vboden.services.WordService;
 
 @Component
@@ -157,6 +161,9 @@ public class MainWindowController extends AbstractController {
 
 	@Autowired
 	private IOService ioService;
+
+	@Autowired
+	private ImportService importService;
 
 	private boolean filtered;
 
@@ -623,6 +630,65 @@ public class MainWindowController extends AbstractController {
 	@FXML
 	void importEntries(ActionEvent event) throws IOException {
 		importDialogController.showStage(null);
+	}
+
+	@FXML
+	void exportEntriesToJson(ActionEvent event) {
+		ObservableList<TranslationRow> selectedEntries = mainTable.getSelectionModel().getSelectedItems();
+		if (selectedEntries.size() == 0) {
+			Alert alert = new Alert(AlertType.CONFIRMATION, "Not selected items, all displayed will be exported.",
+					ButtonType.YES, ButtonType.NO);
+			alert.showAndWait();
+			if (alert.getResult() == ButtonType.YES) {
+				selectedEntries = mainTable.getItems();
+			} else {
+				return;
+			}
+		}
+		DictionaryEntry firstEntity = entryService.findEntity(selectedEntries.get(0));
+		String name = getLanguage(firstEntity.getWord()) + "-" + getLanguage(firstEntity.getTranslation()) + '_';
+		if (selectedCatOrDictName != null) {
+			name += selectedCatOrDictName;
+		}
+		name += "_" + getCurrentDate();
+		TextInputDialog dialog = new TextInputDialog(name);
+		dialog.setTitle("Export to json file");
+		dialog.setHeaderText("Please enter file name. Will be saved with extension .json");
+		dialog.setContentText("File name:");
+
+		// Traditional way to get the response value.
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()) {
+			name = result.get() + ".json";
+			ioService.exportToJsonFile(selectedEntries, name);
+		}
+		showInformationAlert(getResources().getString("export.finished"));
+	}
+
+	@FXML
+	void importEntriesFromJson(ActionEvent event) {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open Image");
+		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Dicts files", "*.vcb"));
+//		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+		File file = fileChooser.showOpenDialog(getStage());
+		if (file != null) {
+			System.out.println(file.getAbsolutePath());
+//			filePath.setText(file.getAbsolutePath());
+//			newDictionaryName.setText(file.getName().replace(".vcb", ""));
+//			addToNewDictionaryCheck.setSelected(true);
+//			newDictionaryName.setDisable(false);
+//			fileToImport = file;
+			
+			String dictionaryName = null;
+//			if (addToNewDictionaryCheck.isSelected()) {
+//				dictionaryName = newDictionaryName.getText();
+//			}
+			int count = importService.importFromJsonFile(file, dictionaryName);
+			showInformationAlert(MessageFormat.format(getResources().getString("import.results"), count));
+			getStage().close();
+			entryService.loadTranslations();
+		}
 	}
 
 	@FXML
