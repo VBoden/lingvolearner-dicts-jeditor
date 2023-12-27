@@ -51,8 +51,11 @@ import ua.vboden.services.PreferencesService;
 import ua.vboden.services.WordService;
 
 @Component
-@Scope(value="prototype")
+@Scope(value = "prototype")
 public class DictionaryEntryEditorController extends AbstractEditorController<TranslationRow, DictionaryEntry> {
+
+	private static final List<String> CYRILLIC_LANGS = List.of("uk", "bg", "be", "mk", "hrv", "bos", "hbs", "cnr",
+			"srp", "svm", "ckm", "kjv", "sr", "bs", "mn");
 
 	private static Pattern CYRILLIC_LETTERS_PATTERN = Pattern.compile("([А-яІіЇї]+)");
 
@@ -316,7 +319,7 @@ public class DictionaryEntryEditorController extends AbstractEditorController<Tr
 
 	private String checkCyrillic(String result, TextField textField, ComboBox<CodeString> language, String fieldName) {
 		if (StringUtils.isNotBlank(textField.getText()) && language.getSelectionModel().getSelectedIndex() != -1
-				&& !"uk".equals(language.getSelectionModel().getSelectedItem().getCode())) {
+				&& !CYRILLIC_LANGS.contains(language.getSelectionModel().getSelectedItem().getCode())) {
 			Matcher cyrillicMatcher = CYRILLIC_LETTERS_PATTERN.matcher(textField.getText());
 			while (cyrillicMatcher.find()) {
 				result += "\n" + MessageFormat.format(getResources().getString("dictionaryEntry.check.cyrillic"),
