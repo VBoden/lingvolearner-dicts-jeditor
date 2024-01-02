@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ua.vboden.dto.CodeString;
 import ua.vboden.dto.JsonIoObject;
+import ua.vboden.entities.Category;
 import ua.vboden.entities.Dictionary;
 import ua.vboden.entities.DictionaryEntry;
 import ua.vboden.entities.Language;
@@ -39,6 +40,9 @@ public class ImportService {
 
 	@Autowired
 	private WordService wordService;
+
+	@Autowired
+	private CategoryService categoryService;
 
 	@Autowired
 	private DictionaryService dictionaryService;
@@ -151,7 +155,14 @@ public class ImportService {
 				saveWordAsNew(entry.getWord());
 				saveWordAsNew(entry.getTranslation());
 				entry.setId(0);
-				entry.setDictionary(List.of(dict));// to be changed to keep old dictionaries
+				for (Dictionary dictionary : entry.getDictionary()) {
+					Dictionary result = dictionaryService.findEntityByName(dictionary.getName());
+					if (result == null) {
+						dictionary.setId(0);
+						dictionaryService.save(dictionary);
+					}
+				}
+				entry.getDictionary().add(dict);
 			}
 			entryService.saveAll(entries);
 			count = entries.size();
@@ -164,7 +175,13 @@ public class ImportService {
 
 	private Word saveWordAsNew(Word wordEntity) {
 		wordEntity.setId(0);
-		wordEntity.setCategory(null);// to be changed to keep old categories
+		for (Category category : wordEntity.getCategory()) {
+			Category result = categoryService.findEntityByName(category.getName());
+			if (result == null) {
+				category.setId(0);
+				categoryService.save(category);
+			}
+		}
 		wordService.save(wordEntity);
 		return wordEntity;
 	}

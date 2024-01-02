@@ -59,5 +59,9 @@ public class CategoryService implements EntityService<IdString, Category> {
 		return result;
 	}
 
+	public Category findEntityByName(String name) {
+		return categoryRepository.findByName(name);
+	}
+
 
 }

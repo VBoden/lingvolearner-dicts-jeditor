@@ -80,4 +80,8 @@ public class DictionaryService implements EntityService<DictionaryData, Dictiona
 		return null;
 	}
 
+	public Dictionary findEntityByName(String name) {
+		return dictionaryRepository.findByName(name);
+	}
+
 }
