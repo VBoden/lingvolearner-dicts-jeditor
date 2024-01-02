@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "words_language")
 public class Language {
-	
+
 	@Id
 //	@Column(name = "id")
 //	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +40,11 @@ public class Language {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return name + " (" + code + ")";
 	}
 
 }

@@ -53,4 +53,9 @@ public class LanguageService implements EntityService<CodeString, Language> {
 		languageRepository.saveAll(entities);
 	}
 
+	public List<Language> findAll() {
+		List<Language> list = new ArrayList<>();
+		languageRepository.findAll().forEach(list::add);
+		return list;
+	}
 }

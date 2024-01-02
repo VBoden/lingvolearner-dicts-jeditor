@@ -134,42 +134,38 @@ public class ImportService {
 
 	public int importFromJsonFile(File file, String dictionaryName) {
 		int count = 0;
-//		try (InputStream inputStream = new FileInputStream(file)) {
-			try {
-				JsonIoObject ioObject = new ObjectMapper().readValue(file, JsonIoObject.class);
-//			boolean linesWithPercent = false;
-//			StringBuilder stringBuilder = new StringBuilder();
-//			try (BufferedReader reader = new BufferedReader(
-//					new InputStreamReader(Objects.requireNonNull(inputStream), "UTF8"))) {
-//				String line;
-////				Language languageFrom = languageService.findEntity(from);
-////				Language languageTo = languageService.findEntity(to);
-////				Dictionary dict = createDictionary(dictionaryName, languageFrom, languageTo);
-////				List<DictionaryEntry> entries = new ArrayList<>();
-//				while ((line = reader.readLine()) != null) {
-//						stringBuilder.append(line);
-//				}
-				
-				
-//				if (linesWithPercent) {
-//					entries.addAll(createDictionaryEntries(stringBuilder.toString(), PATTERN_WITH_PERCENT, languageFrom,
-//							languageTo, dict));
-//				}
-//				entryService.saveAll(entries);
-//				count = entries.size();
-			} catch (IOException e) {
-				e.printStackTrace();
-//			} finally {
-//				try {
-//					inputStream.close();
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
+		try {
+			JsonIoObject ioObject = new ObjectMapper().readValue(file, JsonIoObject.class);
+			List<Language> existingLanguages = languageService.findAll();
+			for (Language lang : ioObject.getLanguages()) {
+				if (!existingLanguages.contains(lang)) {
+					System.out.println(lang.toString() + " not exists! Will be created.");
+					languageService.save(lang);
+				}
 			}
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		}
+			List<DictionaryEntry> entries = ioObject.getEntries();
+			Language languageFrom = entries.get(0).getWord().getLanguage();
+			Language languageTo = entries.get(0).getTranslation().getLanguage();
+			Dictionary dict = createDictionary(dictionaryName, languageFrom, languageTo);
+			for (DictionaryEntry entry : entries) {
+				saveWordAsNew(entry.getWord());
+				saveWordAsNew(entry.getTranslation());
+				entry.setId(0);
+				entry.setDictionary(List.of(dict));// to be changed to keep old dictionaries
+			}
+			entryService.saveAll(entries);
+			count = entries.size();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		return count;
+	}
+
+	private Word saveWordAsNew(Word wordEntity) {
+		wordEntity.setId(0);
+		wordEntity.setCategory(null);// to be changed to keep old categories
+		wordService.save(wordEntity);
+		return wordEntity;
 	}
 }

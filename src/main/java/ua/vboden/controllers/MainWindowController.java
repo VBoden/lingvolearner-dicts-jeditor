@@ -61,6 +61,7 @@ import ua.vboden.services.EntityService;
 import ua.vboden.services.EntryService;
 import ua.vboden.services.IOService;
 import ua.vboden.services.ImportService;
+import ua.vboden.services.LanguageService;
 import ua.vboden.services.WordService;
 
 @Component
@@ -152,6 +153,9 @@ public class MainWindowController extends AbstractController {
 
 	@Autowired
 	private DictionaryService dictionaryService;
+
+	@Autowired
+	private LanguageService languageService;
 
 	@Autowired
 	private CategoryService categoryService;
@@ -656,7 +660,6 @@ public class MainWindowController extends AbstractController {
 		dialog.setHeaderText("Please enter file name. Will be saved with extension .json");
 		dialog.setContentText("File name:");
 
-		// Traditional way to get the response value.
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent()) {
 			name = result.get() + ".json";
@@ -668,25 +671,15 @@ public class MainWindowController extends AbstractController {
 	@FXML
 	void importEntriesFromJson(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open Image");
-		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Dicts files", "*.vcb"));
-//		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+		fileChooser.setTitle("Import from json file");
+		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("json files", "*.json"));
 		File file = fileChooser.showOpenDialog(getStage());
 		if (file != null) {
-			System.out.println(file.getAbsolutePath());
-//			filePath.setText(file.getAbsolutePath());
-//			newDictionaryName.setText(file.getName().replace(".vcb", ""));
-//			addToNewDictionaryCheck.setSelected(true);
-//			newDictionaryName.setDisable(false);
-//			fileToImport = file;
-			
-			String dictionaryName = null;
-//			if (addToNewDictionaryCheck.isSelected()) {
-//				dictionaryName = newDictionaryName.getText();
-//			}
-			int count = importService.importFromJsonFile(file, dictionaryName);
+			int count = importService.importFromJsonFile(file, "imported_" + getCurrentDate());
 			showInformationAlert(MessageFormat.format(getResources().getString("import.results"), count));
-			getStage().close();
+			categoryService.loadCategories();
+			dictionaryService.loadData();
+			languageService.loadLanguages();
 			entryService.loadTranslations();
 		}
 	}

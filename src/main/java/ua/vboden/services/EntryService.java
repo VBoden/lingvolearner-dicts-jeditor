@@ -124,10 +124,10 @@ public class EntryService implements EntityService<TranslationRow, DictionaryEnt
 	private List<DictionaryEntry> filterByLanguages(List<DictionaryEntry> result) {
 		if (sessionService.isDisplayDefaultLanguagesOnly()) {
 			return result.stream()
-					.filter(row -> row.getWord().getLanguage().getCode()
-							.equals(sessionService.getDefaultLanguageFrom().getCode())
-							&& row.getTranslation().getLanguage().getCode()
-									.equals(sessionService.getDefaultLanguageTo().getCode()))
+					.filter(row -> (sessionService.getDefaultLanguageFrom() == null || row.getWord().getLanguage()
+							.getCode().equals(sessionService.getDefaultLanguageFrom().getCode()))
+							&& (sessionService.getDefaultLanguageTo() == null || row.getTranslation().getLanguage()
+									.getCode().equals(sessionService.getDefaultLanguageTo().getCode())))
 					.collect(Collectors.toList());
 		}
 		return result;
