@@ -182,7 +182,7 @@ public class MainWindowController extends AbstractController {
 
 	@Override
 	String getTitle() {
-		return null;
+		return getSessionService().getCurrentDbFile();
 	}
 
 	@Override

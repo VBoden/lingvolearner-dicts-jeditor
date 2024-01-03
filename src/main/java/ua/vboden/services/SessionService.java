@@ -3,7 +3,6 @@ package ua.vboden.services;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
 import org.springframework.stereotype.Service;
 
@@ -47,6 +46,8 @@ public class SessionService {
 	private boolean showTranscription;
 
 	private IdString lastSelectedDictionary;
+
+	private String currentDbFile;
 
 	public void increaseUsages(int id) {
 		if (wordUsages.containsKey(id)) {
@@ -210,6 +211,14 @@ public class SessionService {
 
 	public void setShowTranscription(boolean showTranscription) {
 		this.showTranscription = showTranscription;
+	}
+
+	public String getCurrentDbFile() {
+		return currentDbFile;
+	}
+
+	public void setCurrentDbFile(String currentDbFile) {
+		this.currentDbFile = currentDbFile;
 	}
 
 }

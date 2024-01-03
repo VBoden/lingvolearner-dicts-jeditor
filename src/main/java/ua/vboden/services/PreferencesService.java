@@ -24,13 +24,33 @@ public class PreferencesService {
 
 	public static final String MAIN_TABLE_SHOW_TRANSCRIPTION = "main.table.show.transcription";
 
+	public static final String LAST_DB = "db.last.opened";
+
+	public static final String SELECT_DB_ON_START = "db.select.on.start";
+
 	@Autowired
 	private SessionService sessionService;
 
 	private Preferences preferences;
 
+	public static Preferences getPreferences() {
+		return Preferences.userRoot().node("lingvist.fxeditor");
+	}
+
+	public static void setLastDB(String dbFile) {
+		getPreferences().put(LAST_DB, dbFile);
+	}
+
+	public static String getLastDB() {
+		return getPreferences().get(LAST_DB, null);
+	}
+
+	public static boolean isSelectDbOnStart() {
+		return getPreferences().getBoolean(SELECT_DB_ON_START, true);
+	}
+
 	public void loadPreferences() {
-		preferences = Preferences.userRoot().node("lingvist.fxeditor");
+		preferences = getPreferences();
 		String langFromCode = preferences.get(DEFAULT_LANGUAGE_FROM, null);
 		if (langFromCode != null) {
 			sessionService.setDefaultLanguageFrom(sessionService.getLanguages().stream()
