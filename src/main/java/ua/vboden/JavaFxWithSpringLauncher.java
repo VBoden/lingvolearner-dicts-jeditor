@@ -54,6 +54,8 @@ public class JavaFxWithSpringLauncher extends Application {
 			fileChooser.setDialogTitle("Select DB file");
 			if (lastDB != null && new File(lastDB).exists()) {
 				fileChooser.setCurrentDirectory(new File(lastDB));
+			} else {
+				fileChooser.setCurrentDirectory(new File("."));
 			}
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			fileChooser.showOpenDialog(null);
