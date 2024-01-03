@@ -20,13 +20,13 @@ public class PreferencesService {
 
 	public static final String SHOW_DEFAULT_LANGUAGES = "show.default.languages.only";
 
+	public static final String AUTO_LOAD_LAST_SELECTED_DB = "auto.load.last.selected.db";
+
 	private static final String DICTIONARY_LAST_SELECTED_ID = "dictionary.last.selected.id";
 
 	public static final String MAIN_TABLE_SHOW_TRANSCRIPTION = "main.table.show.transcription";
 
 	public static final String LAST_DB = "db.last.opened";
-
-	public static final String SELECT_DB_ON_START = "db.select.on.start";
 
 	@Autowired
 	private SessionService sessionService;
@@ -46,7 +46,7 @@ public class PreferencesService {
 	}
 
 	public static boolean isSelectDbOnStart() {
-		return getPreferences().getBoolean(SELECT_DB_ON_START, true);
+		return !getPreferences().getBoolean(AUTO_LOAD_LAST_SELECTED_DB, false);
 	}
 
 	public void loadPreferences() {
@@ -63,6 +63,7 @@ public class PreferencesService {
 		}
 		sessionService.setFillDefaultLanguages(preferences.getBoolean(FILL_DEFAULT_LANGUAGES, false));
 		sessionService.setDisplayDefaultLanguagesOnly(preferences.getBoolean(SHOW_DEFAULT_LANGUAGES, false));
+		sessionService.setAutoLoadLastSelectedDb(preferences.getBoolean(AUTO_LOAD_LAST_SELECTED_DB, false));
 		sessionService.setShowTranscription(preferences.getBoolean(MAIN_TABLE_SHOW_TRANSCRIPTION, true));
 		loadLastDictionary();
 	}
@@ -83,6 +84,11 @@ public class PreferencesService {
 	public void saveShowDefaultLanguagesOnly(boolean showDefaultsOnly) {
 		preferences.putBoolean(SHOW_DEFAULT_LANGUAGES, showDefaultsOnly);
 		sessionService.setDisplayDefaultLanguagesOnly(showDefaultsOnly);
+	}
+
+	public void saveAutoLoadLastSelectedDb(boolean autoLoadLastDb) {
+		preferences.putBoolean(AUTO_LOAD_LAST_SELECTED_DB, autoLoadLastDb);
+		sessionService.setAutoLoadLastSelectedDb(autoLoadLastDb);
 	}
 
 	public void saveFillDefaultLanguage(boolean fillDefault) {

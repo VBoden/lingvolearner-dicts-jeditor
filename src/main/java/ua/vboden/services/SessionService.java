@@ -41,6 +41,8 @@ public class SessionService {
 
 	private boolean displayDefaultLanguagesOnly;
 
+	private boolean autoLoadLastSelectedDb;
+
 	private boolean fillDefaultLanguages;
 
 	private boolean showTranscription;
@@ -187,6 +189,14 @@ public class SessionService {
 
 	public void setDisplayDefaultLanguagesOnly(boolean displayDefaultLanguagesOnly) {
 		this.displayDefaultLanguagesOnly = displayDefaultLanguagesOnly;
+	}
+
+	public boolean isAutoLoadLastSelectedDb() {
+		return autoLoadLastSelectedDb;
+	}
+
+	public void setAutoLoadLastSelectedDb(boolean autoLoadLastSelectedDb) {
+		this.autoLoadLastSelectedDb = autoLoadLastSelectedDb;
 	}
 
 	public boolean isFillDefaultLanguages() {
