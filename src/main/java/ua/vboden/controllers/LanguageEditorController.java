@@ -2,6 +2,7 @@ package ua.vboden.controllers;
 
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +25,7 @@ import ua.vboden.services.EntityService;
 import ua.vboden.services.LanguageService;
 
 @Component
-@Scope(value="prototype")
+@Scope(value = "prototype")
 public class LanguageEditorController extends AbstractEditorController<CodeString, Language> {
 
 	@FXML
@@ -91,7 +92,22 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 	protected String checkFilledFields() {
 		String newCode = languageCode.getText();
 		String newTitle = languageTitle.getText();
+		if ((!StringUtils.isBlank(newCode) && newCode.toLowerCase().startsWith("ru"))
+				|| (!StringUtils.isBlank(newTitle) && checkru(newTitle.split(" ")[0]))) {
+			return getResources().getString("runot.allowed");
+		}
 		return StringUtils.isBlank(newTitle) || StringUtils.isBlank(newCode) ? "fill" : null;
+	}
+
+	private boolean checkru(String title) {
+		List<String> variants = List.of("russian", "russo", "русский", "русскый", "руский", "руський", "рускый",
+				"руськый", "російська", "російський");
+		for (String varian : variants) {
+			if (title.equalsIgnoreCase(varian)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	protected void populateFields(CodeString current) {

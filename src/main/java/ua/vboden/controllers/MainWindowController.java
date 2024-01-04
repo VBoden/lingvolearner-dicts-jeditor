@@ -534,14 +534,15 @@ public class MainWindowController extends AbstractController {
 	void removeSelected(ActionEvent event) {
 		ObservableList<TranslationRow> selectedEntries = mainTable.getSelectionModel().getSelectedItems();
 		if (selectedEntries.size() == 0) {
-			showInformationAlert("No items selected!");
+			showInformationAlert(getResources().getString("editor.popup.items.not.selected"));
 		} else {
 			List<String> deleteNames = new ArrayList<>();
 			selectedEntries.stream().forEach(entry -> {
 				deleteNames.add(entry.toString());
 
 			});
-			Alert alert = new Alert(AlertType.CONFIRMATION, "Delete  ?\n" + StringUtils.join(deleteNames, "\n"),
+			Alert alert = new Alert(AlertType.CONFIRMATION,
+					getResources().getString("editor.popup.delete") + StringUtils.join(deleteNames, "\n"),
 					ButtonType.YES, ButtonType.NO);
 			alert.showAndWait();
 			if (alert.getResult() == ButtonType.YES) {
@@ -570,7 +571,7 @@ public class MainWindowController extends AbstractController {
 	void exportEntries(ActionEvent event) {
 		ObservableList<TranslationRow> selectedEntries = mainTable.getSelectionModel().getSelectedItems();
 		if (selectedEntries.size() == 0) {
-			Alert alert = new Alert(AlertType.CONFIRMATION, "Not selected items, all displayed will be exported.",
+			Alert alert = new Alert(AlertType.CONFIRMATION, getResources().getString("export.popup.items.not.selected"),
 					ButtonType.YES, ButtonType.NO);
 			alert.showAndWait();
 			if (alert.getResult() == ButtonType.YES) {
@@ -586,11 +587,10 @@ public class MainWindowController extends AbstractController {
 		}
 		name += "_" + getCurrentDate();
 		TextInputDialog dialog = new TextInputDialog(name);
-		dialog.setTitle("Export to file");
-		dialog.setHeaderText("Please enter file name. Will be saved with extension .vcb");
-		dialog.setContentText("File name:");
+		dialog.setTitle(getResources().getString("export.dictionary.popup.title"));
+		dialog.setHeaderText(getResources().getString("export.dictionary.popup"));
+		dialog.setContentText(getResources().getString("export.dictionary.popup.file.name"));
 
-		// Traditional way to get the response value.
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent()) {
 			name = result.get() + ".vcb";
@@ -640,7 +640,7 @@ public class MainWindowController extends AbstractController {
 	void exportEntriesToJson(ActionEvent event) {
 		ObservableList<TranslationRow> selectedEntries = mainTable.getSelectionModel().getSelectedItems();
 		if (selectedEntries.size() == 0) {
-			Alert alert = new Alert(AlertType.CONFIRMATION, "Not selected items, all displayed will be exported.",
+			Alert alert = new Alert(AlertType.CONFIRMATION, getResources().getString("export.popup.items.not.selected"),
 					ButtonType.YES, ButtonType.NO);
 			alert.showAndWait();
 			if (alert.getResult() == ButtonType.YES) {
@@ -656,9 +656,9 @@ public class MainWindowController extends AbstractController {
 		}
 		name += "_" + getCurrentDate();
 		TextInputDialog dialog = new TextInputDialog(name);
-		dialog.setTitle("Export to json file");
-		dialog.setHeaderText("Please enter file name. Will be saved with extension .json");
-		dialog.setContentText("File name:");
+		dialog.setTitle(getResources().getString("export.json.popup.title"));
+		dialog.setHeaderText(getResources().getString("export.json.popup"));
+		dialog.setContentText(getResources().getString("export.dictionary.popup.file.name"));
 
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent()) {
@@ -671,8 +671,9 @@ public class MainWindowController extends AbstractController {
 	@FXML
 	void importEntriesFromJson(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Import from json file");
-		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("json files", "*.json"));
+		fileChooser.setTitle(getResources().getString("import.from.json.title"));
+		fileChooser.getExtensionFilters()
+				.addAll(new ExtensionFilter(getResources().getString("import.from.json.filter"), "*.json"));
 		File file = fileChooser.showOpenDialog(getStage());
 		if (file != null) {
 			int count = importService.importFromJsonFile(file, "imported_" + getCurrentDate());
@@ -711,7 +712,6 @@ public class MainWindowController extends AbstractController {
 		TranslationRow selected = mainTable.getSelectionModel().getSelectedItem();
 		WordSpeakService speakSevice = new WordSpeakService(selected.getWord(), selected.getWordLangCode());
 		speakSevice.start();
-//		speakSevice.setOnSucceeded(e -> System.out.println(e));
 	}
 
 }

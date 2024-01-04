@@ -70,8 +70,9 @@ public abstract class AbstractEditorController<T, E> extends AbstractController 
 			}
 		}
 
-		Alert alert = new Alert(AlertType.CONFIRMATION, "Delete  ?\n" + StringUtils.join(deleteNames, "\n"),
-				ButtonType.YES, ButtonType.NO);
+		Alert alert = new Alert(AlertType.CONFIRMATION,
+				getResources().getString("editor.popup.delete") + StringUtils.join(deleteNames, "\n"), ButtonType.YES,
+				ButtonType.NO);
 		alert.showAndWait();
 		if (alert.getResult() == ButtonType.YES) {
 			getService().deleteSelected(forDelete);

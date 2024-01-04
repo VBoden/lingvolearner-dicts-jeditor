@@ -3,6 +3,8 @@ package ua.vboden.controllers;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -19,6 +21,8 @@ import javafx.stage.Stage;
 import ua.vboden.services.SessionService;
 
 public abstract class AbstractController implements ApplicationContextAware, Initializable {
+
+	Logger logger = LoggerFactory.getLogger(AbstractController.class);
 
 	@Autowired
 	private SessionService sessionService;
@@ -79,6 +83,8 @@ public abstract class AbstractController implements ApplicationContextAware, Ini
 
 	protected void showInformationAlert(String message) {
 		Alert alert = new Alert(AlertType.INFORMATION, message, ButtonType.OK);
+		alert.setTitle(resources.getString("error.message.title"));
+		alert.setHeaderText(resources.getString("error.message.header"));
 		alert.showAndWait();
 	}
 

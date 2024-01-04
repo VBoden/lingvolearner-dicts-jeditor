@@ -95,9 +95,10 @@ public class ImportDialogController extends AbstractController {
 	@FXML
 	void selectFile(ActionEvent event) {
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open Image");
-		fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Dicts files", "*.vcb"));
-//		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+		fileChooser.setTitle(getResources().getString("import.dictionary.title"));
+		fileChooser.getExtensionFilters()
+				.addAll(new ExtensionFilter(getResources().getString("import.dictionary.filter"), "*.vcb"));
+		fileChooser.setInitialDirectory(new File(System.getProperty(".")));
 		File file = fileChooser.showOpenDialog(getStage());
 		if (file != null) {
 			System.out.println(file.getAbsolutePath());

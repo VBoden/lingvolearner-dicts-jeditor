@@ -39,7 +39,7 @@ import ua.vboden.services.LanguageService;
 import ua.vboden.services.WordService;
 
 @Component
-@Scope(value="prototype")
+@Scope(value = "prototype")
 public class WordEditorController extends AbstractEditorController<WordData, Word> {
 
 	@FXML
@@ -89,7 +89,7 @@ public class WordEditorController extends AbstractEditorController<WordData, Wor
 
 	@Autowired
 	private CategoryService categoryService;
-	
+
 	@Autowired
 	private EntryService entryService;
 
