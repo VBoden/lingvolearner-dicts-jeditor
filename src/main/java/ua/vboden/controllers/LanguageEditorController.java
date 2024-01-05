@@ -96,7 +96,15 @@ public class LanguageEditorController extends AbstractEditorController<CodeStrin
 				|| (!StringUtils.isBlank(newTitle) && checkru(newTitle.split(" ")[0]))) {
 			return getResources().getString("runot.allowed");
 		}
-		return StringUtils.isBlank(newTitle) || StringUtils.isBlank(newCode) ? "fill" : null;
+		if (StringUtils.isBlank(newTitle)) {
+			return MessageFormat.format(getResources().getString("error.message.fill"),
+					getResources().getString("language.title"));
+		}
+		if (StringUtils.isBlank(newCode)) {
+			return MessageFormat.format(getResources().getString("error.message.fill"),
+					getResources().getString("language.code"));
+		}
+		return null;
 	}
 
 	private boolean checkru(String title) {

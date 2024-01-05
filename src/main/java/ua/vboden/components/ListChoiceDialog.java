@@ -2,8 +2,6 @@ package ua.vboden.components;
 
 import java.util.List;
 
-import com.sun.javafx.scene.control.skin.resources.ControlResources;
-
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -23,7 +21,7 @@ public class ListChoiceDialog<T> extends Dialog<List<T>> {
 	private final Label label;
 	private ListView<T> dataList;
 
-	public ListChoiceDialog(ObservableList<T> items) {
+	public ListChoiceDialog(ObservableList<T> items, String title, String header) {
 		final DialogPane dialogPane = getDialogPane();
 
 		this.grid = new GridPane();
@@ -37,8 +35,8 @@ public class ListChoiceDialog<T> extends Dialog<List<T>> {
 
 		dialogPane.contentTextProperty().addListener(o -> updateGrid());
 
-		setTitle(ControlResources.getString("Dialog.confirm.title"));
-		dialogPane.setHeaderText(ControlResources.getString("Dialog.confirm.header"));
+		setTitle(title);
+		dialogPane.setHeaderText(header);
 		dialogPane.getStyleClass().add("choice-dialog");
 		dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 

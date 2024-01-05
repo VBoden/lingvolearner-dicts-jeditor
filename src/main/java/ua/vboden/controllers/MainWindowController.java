@@ -446,31 +446,43 @@ public class MainWindowController extends AbstractController {
 
 	@FXML
 	void addToCategory(ActionEvent event) {
-		checkSelectedAndExecute(getSessionService()::getCategories, this::doAddToCategory, wordService);
+		String title = getResources().getString("menu.edit.addToCategory");
+		String header = getResources().getString("category.select");
+		checkSelectedAndExecute(getSessionService()::getCategories, this::doAddToCategory, wordService, title, header);
 	}
 
 	@FXML
 	void removeFromCategory(ActionEvent event) {
-		checkSelectedAndExecute(getSessionService()::getCategories, this::doRemoveFromCategory, wordService);
+		String title = getResources().getString("menu.edit.removeFromCategory");
+		String header = getResources().getString("category.select");
+		checkSelectedAndExecute(getSessionService()::getCategories, this::doRemoveFromCategory, wordService, title,
+				header);
 	}
 
 	@FXML
 	void addToDictionary(ActionEvent event) {
-		checkSelectedAndExecute(getSessionService()::getDictionaries, this::doAddToDictionary, entryService);
+		String title = getResources().getString("menu.edit.addToDictionary");
+		String header = getResources().getString("dictionary.select");
+		checkSelectedAndExecute(getSessionService()::getDictionaries, this::doAddToDictionary, entryService, title,
+				header);
 	}
 
 	@FXML
 	void removeFromDictionary(ActionEvent event) {
-		checkSelectedAndExecute(getSessionService()::getDictionaries, this::doRemoveFromDictionary, entryService);
+		String title = getResources().getString("menu.edit.removeFromDictionary");
+		String header = getResources().getString("dictionary.select");
+		checkSelectedAndExecute(getSessionService()::getDictionaries, this::doRemoveFromDictionary, entryService, title,
+				header);
 	}
 
 	private ObservableList<TranslationRow> checkSelectedAndExecute(Supplier<ObservableList<IdString>> itemsGetter,
-			BiFunction<TranslationRow, List<IdString>, List> translationAction, EntityService service) {
+			BiFunction<TranslationRow, List<IdString>, List> translationAction, EntityService service, String title,
+			String header) {
 		ObservableList<TranslationRow> selectedEntries = mainTable.getSelectionModel().getSelectedItems();
 		if (selectedEntries.size() == 0) {
-			showInformationAlert("No items selected!");
+			showInformationAlert(getResources().getString("editor.popup.items.not.selected"));
 		} else {
-			ListChoiceDialog<IdString> dialog = new ListChoiceDialog<>(itemsGetter.get());
+			ListChoiceDialog<IdString> dialog = new ListChoiceDialog<>(itemsGetter.get(), title, header);
 			Optional<List<IdString>> result = dialog.showAndWait();
 			if (result.isPresent()) {
 				List<?> entities = new ArrayList<>();
@@ -714,4 +726,12 @@ public class MainWindowController extends AbstractController {
 		speakSevice.start();
 	}
 
+	@FXML
+	void showAboutProgram(ActionEvent event) {
+		Alert alert = new Alert(AlertType.INFORMATION, getResources().getString("menu.help.about.content"),
+				ButtonType.OK);
+		alert.setTitle(getResources().getString("menu.help.about"));
+		alert.setHeaderText(getResources().getString("menu.help.about.header"));
+		alert.showAndWait();
+	}
 }

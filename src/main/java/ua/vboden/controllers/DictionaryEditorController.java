@@ -27,7 +27,7 @@ import ua.vboden.services.EntityService;
 import ua.vboden.services.LanguageService;
 
 @Component
-@Scope(value="prototype")
+@Scope(value = "prototype")
 public class DictionaryEditorController extends AbstractEditorController<DictionaryData, Dictionary> {
 
 	@FXML
@@ -136,10 +136,13 @@ public class DictionaryEditorController extends AbstractEditorController<Diction
 	protected String checkFilledFields() {
 
 		if (languageFrom.getSelectionModel().getSelectedIndex() == -1)
-			return "Fill word";
+			return MessageFormat.format(getResources().getString("error.message.fill"),
+					getResources().getString("dictionary.language.from"));
 		if (languageTo.getSelectionModel().getSelectedIndex() == -1)
-			return "Fill word";
-		return StringUtils.isBlank(dictionaryName.getText()) ? "fill" : null;
+			return MessageFormat.format(getResources().getString("error.message.fill"),
+					getResources().getString("dictionary.language.to"));
+		return StringUtils.isBlank(dictionaryName.getText()) ? MessageFormat.format(
+				getResources().getString("error.message.fill"), getResources().getString("dictionary.name")) : null;
 	}
 
 	@Override

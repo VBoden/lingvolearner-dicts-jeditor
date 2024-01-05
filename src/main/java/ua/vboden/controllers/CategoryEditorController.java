@@ -23,7 +23,7 @@ import ua.vboden.services.CategoryService;
 import ua.vboden.services.EntityService;
 
 @Component
-@Scope(value="prototype")
+@Scope(value = "prototype")
 public class CategoryEditorController extends AbstractEditorController<IdString, Category> {
 
 	@FXML
@@ -104,7 +104,10 @@ public class CategoryEditorController extends AbstractEditorController<IdString,
 	@Override
 	protected String checkFilledFields() {
 		String newTitle = categoryName.getText();
-		return StringUtils.isBlank(newTitle)? "Fill": null;
+		return StringUtils.isBlank(newTitle)
+				? MessageFormat.format(getResources().getString("error.message.fill"),
+						getResources().getString("category.name"))
+				: null;
 	}
 
 	@Override
